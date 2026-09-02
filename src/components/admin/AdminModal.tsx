@@ -1,8 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Lock, Plus, Trash2, Edit3, Save, Upload, CheckCircle2, AlertCircle, LogOut } from 'lucide-react';
-import { api } from '../../services/api';
+import {
+  X,
+  Plus,
+  Trash2,
+  Edit2,
+  Lock,
+  Upload,
+  Calendar,
+  CheckCircle2,
+  LogOut,
+  Mail,
+  Clock,
+  Sparkles,
+  Building,
+  Radio,
+  FileText,
+  Image as ImageIcon
+} from 'lucide-react';
 import { CalendarEvent } from '../../types';
+import { api } from '../../services/api';
 
 interface AdminModalProps {
   isOpen: boolean;
@@ -10,46 +27,50 @@ interface AdminModalProps {
   onEventsUpdated: () => void;
 }
 
-export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEventsUpdated }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [pinInput, setPinInput] = useState('');
-  const [authError, setAuthError] = useState('');
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+export const AdminModal: React.FC<AdminModalProps> = ({
+  isOpen,
+  onClose,
+  onEventsUpdated,
+}) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [pinInput, setPinInput] = useState<string>('');
+  const [authError, setAuthError] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'events' | 'inquiries'>('events');
 
+  // Events Management State
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [inquiries, setInquiries] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-
-  // Form State for Adding / Editing Event
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  // Minimalist Form State
+  const [formDay, setFormDay] = useState<number>(2);
+  const [formDateStr, setFormDateStr] = useState<string>('Wednesday, 02 September 2026');
+  const [formRawDate, setFormRawDate] = useState<string>('2026-09-02');
+  const [formClubName, setFormClubName] = useState<string>('');
+  const [formEventTitle, setFormEventTitle] = useState<string>('');
+  const [formDescription, setFormDescription] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [formData, setFormData] = useState<Partial<CalendarEvent>>({
-    day: 1,
-    dateStr: '',
-    clubName: '',
-    eventTitle: '',
-    city: 'Jakarta',
-    country: 'Indonesia',
-    venueAddress: '',
-    time: '22:00 - 04:00 (Set: 01:00)',
-    genre: 'Mainstage Techno',
-    ticketStatus: 'AVAILABLE',
-    ticketPrice: 'IDR 250,000',
-    flyerImage: '/assets/image-1.jpeg',
-    supportingDJs: [],
-    description: '',
-    googleMapsUrl: '',
-  });
+  const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
 
   useEffect(() => {
-    if (api.isAuthenticated()) {
-      setIsAuthenticated(true);
-      loadData();
+    if (isOpen) {
+      if (api.isAuthenticated()) {
+        setIsAuthenticated(true);
+        loadData();
+      } else {
+        setIsAuthenticated(false);
+      }
     }
   }, [isOpen]);
 
@@ -81,6 +102,28 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
     onClose();
   };
 
+  // Helper to handle date picker changes and auto-calculate day & date string
+  const handleDateChange = (dateVal: string) => {
+    setFormRawDate(dateVal);
+    if (!dateVal) return;
+    try {
+      const parts = dateVal.split('-');
+      if (parts.length === 3) {
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const day = parseInt(parts[2], 10);
+        const dateObj = new Date(year, month, day);
+
+        const dayName = DAY_NAMES[dateObj.getDay()] || 'Day';
+        const monthName = MONTH_NAMES[month] || 'September';
+        const formattedDay = day < 10 ? `0${day}` : `${day}`;
+        
+        setFormDay(day);
+        setFormDateStr(`${dayName}, ${formattedDay} ${monthName} ${year}`);
+      }
+    } catch {}
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -92,32 +135,29 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
   const openCreateForm = () => {
     setEditingEventId(null);
     setSelectedFile(null);
-    setFilePreview(null);
-    setFormData({
-      day: 15,
-      dateStr: 'Tuesday, 15 September 2026',
-      clubName: '',
-      eventTitle: '',
-      city: 'Jakarta',
-      country: 'Indonesia',
-      venueAddress: '',
-      time: '22:00 - Late (Headline Set: 01:00)',
-      genre: 'Hard Techno / Future Bass',
-      ticketStatus: 'AVAILABLE',
-      ticketPrice: 'IDR 300,000',
-      flyerImage: '/assets/image-1.jpeg',
-      supportingDJs: ['Cyber Echo'],
-      description: '',
-      googleMapsUrl: '',
-    });
+    setFilePreview('/assets/image-1.jpeg');
+    setFormDay(2);
+    setFormRawDate('2026-09-02');
+    setFormDateStr('Wednesday, 02 September 2026');
+    setFormClubName('');
+    setFormEventTitle('');
+    setFormDescription('');
     setIsFormOpen(true);
   };
 
   const openEditForm = (ev: CalendarEvent) => {
     setEditingEventId(ev.id);
     setSelectedFile(null);
-    setFilePreview(ev.flyerImage);
-    setFormData({ ...ev });
+    setFilePreview(ev.flyerImage || '/assets/image-1.jpeg');
+    setFormDay(ev.day || 1);
+    setFormDateStr(ev.dateStr || `Day ${ev.day} September 2026`);
+    setFormClubName(ev.clubName || '');
+    setFormEventTitle(ev.eventTitle || '');
+    setFormDescription(ev.description || '');
+
+    // Try to infer raw date from dateStr or default to September 2026
+    const dayStr = (ev.day || 1) < 10 ? `0${ev.day || 1}` : `${ev.day || 1}`;
+    setFormRawDate(`2026-09-${dayStr}`);
     setIsFormOpen(true);
   };
 
@@ -125,7 +165,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
     e.preventDefault();
     setLoading(true);
 
-    let flyerImageUrl = formData.flyerImage || '/assets/image-1.jpeg';
+    let flyerImageUrl = filePreview || '/assets/image-1.jpeg';
     if (selectedFile) {
       try {
         flyerImageUrl = await new Promise<string>((resolve) => {
@@ -137,25 +177,21 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
     }
 
     const payload = {
-      day: parseInt(formData.day?.toString() || '1', 10),
-      dateStr: formData.dateStr || `Day ${formData.day || 1} September 2026`,
-      clubName: formData.clubName?.trim() || 'CLUB VENUE',
-      eventTitle: formData.eventTitle?.trim() || 'NOKA AXL LIVE',
-      city: formData.city?.trim() || 'Jakarta',
-      country: formData.country?.trim() || 'Indonesia',
-      venueAddress: formData.venueAddress?.trim() || '',
-      time: formData.time?.trim() || '22:00 - Late',
-      genre: formData.genre?.trim() || 'Mainstage Techno',
-      ticketStatus: (formData.ticketStatus as any) || 'AVAILABLE',
-      ticketPrice: formData.ticketPrice?.trim() || 'IDR 250,000',
-      description: formData.description?.trim() || '',
-      googleMapsUrl: formData.googleMapsUrl?.trim() || `https://maps.google.com/?q=${encodeURIComponent(formData.clubName || '')}`,
+      day: formDay || 1,
+      dateStr: formDateStr || `Day ${formDay || 1} September 2026`,
+      clubName: formClubName.trim() || 'CLUB VENUE',
+      eventTitle: formEventTitle.trim() || 'NOKA AXL LIVE',
+      city: 'Indonesia',
+      country: 'Indonesia',
+      venueAddress: formClubName.trim(),
+      time: '22:00 - Late',
+      genre: 'Breakbeat / Mainstage Techno',
+      ticketStatus: 'AVAILABLE' as const,
+      ticketPrice: 'IDR 250,000',
+      description: formDescription.trim(),
+      googleMapsUrl: `https://maps.google.com/?q=${encodeURIComponent(formClubName || '')}`,
       flyerImage: flyerImageUrl,
-      supportingDJs: Array.isArray(formData.supportingDJs)
-        ? formData.supportingDJs
-        : (typeof formData.supportingDJs === 'string'
-            ? (formData.supportingDJs as string).split(',').map((s) => s.trim()).filter(Boolean)
-            : []),
+      supportingDJs: [],
     };
 
     let res;
@@ -195,25 +231,27 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-          {/* Backdrop */}
+          {/* Modal Backdrop (Locked focus - does not close on accidental outside click when logged in) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/90 backdrop-blur-md"
+            onClick={() => {
+              if (!isAuthenticated) onClose();
+            }}
+            className="fixed inset-0 bg-black/90 backdrop-blur-md cursor-default"
           />
 
-          {/* Modal Card */}
+          {/* Modal Container */}
           <motion.div
             initial={{ opacity: 0, scale: 0.92, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 30 }}
             transition={{ type: 'spring', stiffness: 220, damping: 22 }}
-            className="relative w-full max-w-5xl bg-[#0E0E14] border border-white/15 rounded-3xl sm:rounded-[36px] overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.95)] z-10 max-h-[92vh] flex flex-col"
+            className="relative w-full max-w-4xl bg-[#0E0E14] border border-white/15 rounded-3xl sm:rounded-[36px] overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.95)] z-10 max-h-[92vh] flex flex-col"
           >
             {/* Header */}
-            <div className="p-5 sm:p-6 border-b border-white/10 flex items-center justify-between bg-black/40">
+            <div className="p-5 sm:p-6 border-b border-white/10 flex items-center justify-between bg-black/50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-volt/10 border border-volt/30 flex items-center justify-center text-volt">
                   <Lock className="w-5 h-5" />
@@ -237,10 +275,11 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
                 {isAuthenticated && (
                   <button
                     onClick={handleLogout}
-                    className="p-2 rounded-xl bg-white/5 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 border border-white/10 transition-colors"
-                    title="Logout"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 border border-white/10 transition-colors font-mono text-xs uppercase"
+                    title="Logout & Close CMS"
                   >
-                    <LogOut className="w-4 h-4" />
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>LOG OUT</span>
                   </button>
                 )}
                 <button
@@ -256,49 +295,43 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
             {/* Content Body */}
             <div className="overflow-y-auto p-5 sm:p-8 flex-1">
               {!isAuthenticated ? (
-                /* Step 1: Security PIN Login */
-                <div className="max-w-md mx-auto py-12 text-center flex flex-col items-center">
-                  <div className="w-16 h-16 rounded-full bg-volt/10 border border-volt/40 flex items-center justify-center text-volt mb-4">
+                /* Admin PIN Authentication Screen */
+                <div className="max-w-md mx-auto py-12 text-center">
+                  <div className="w-16 h-16 rounded-3xl bg-volt/10 border border-volt/30 flex items-center justify-center text-volt mx-auto mb-6 shadow-volt-sm">
                     <Lock className="w-8 h-8" />
                   </div>
-                  <h3 className="font-kanit font-black text-2xl text-white uppercase tracking-wider">
-                    ENTER ADMIN PIN
+                  <h3 className="font-kanit font-black text-2xl sm:text-3xl uppercase tracking-wide text-white mb-2">
+                    MANAGEMENT ACCESS ONLY
                   </h3>
-                  <p className="text-xs font-mono text-slate-400 mt-1 mb-6">
-                    Enter the management security code to manage 30-day events and promoter bookings.
+                  <p className="text-xs sm:text-sm font-mono text-slate-400 mb-8">
+                    Enter your management security PIN to create, edit, or remove live tour dates from the Cloudflare D1 database.
                   </p>
 
-                  <form onSubmit={handleLogin} className="w-full flex flex-col gap-4">
-                    <div>
-                      <input
-                        type="password"
-                        required
-                        value={pinInput}
-                        onChange={(e) => setPinInput(e.target.value)}
-                        placeholder="Enter PIN (Default: NOKA2026)"
-                        className="w-full text-center px-4 py-3.5 rounded-2xl bg-black/60 border border-white/15 text-white font-mono text-base tracking-widest focus:outline-none focus:border-volt transition-colors"
-                      />
-                      {authError && (
-                        <p className="text-xs font-mono text-rose-400 mt-2 flex items-center justify-center gap-1">
-                          <AlertCircle className="w-3.5 h-3.5" />
-                          <span>{authError}</span>
-                        </p>
-                      )}
-                    </div>
-
+                  <form onSubmit={handleLogin} className="flex flex-col gap-4">
+                    <input
+                      type="password"
+                      value={pinInput}
+                      onChange={(e) => setPinInput(e.target.value)}
+                      placeholder="ENTER PIN (DEFAULT: NOKA2026)"
+                      className="w-full text-center px-6 py-4 rounded-2xl bg-black/60 border border-white/20 text-white font-mono text-lg tracking-widest focus:outline-none focus:border-volt focus:ring-1 focus:ring-volt transition-all placeholder:text-slate-600 placeholder:text-sm"
+                      autoFocus
+                    />
+                    {authError && (
+                      <p className="text-rose-400 font-mono text-xs">{authError}</p>
+                    )}
                     <button
                       type="submit"
-                      className="w-full py-3.5 rounded-2xl bg-volt text-black font-kanit font-bold text-sm tracking-wider uppercase hover:bg-volt-hover shadow-volt-sm transition-all"
+                      className="w-full py-4 rounded-2xl bg-volt text-black font-kanit font-bold text-sm tracking-wider uppercase hover:bg-volt-hover transition-all shadow-volt-sm active:scale-98"
                     >
-                      AUTHENTICATE SESSION
+                      AUTHENTICATE CMS
                     </button>
                   </form>
                 </div>
               ) : (
-                /* Step 2: Full Admin Dashboard */
+                /* Authenticated CMS Dashboard */
                 <div>
-                  {/* Dashboard Nav Tabs */}
-                  <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+                  {/* Top Bar Tabs & Actions */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => {
@@ -342,7 +375,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
                   {saveSuccess && (
                     <div className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>Changes successfully synchronized with backend database!</span>
+                      <span>Changes successfully synchronized with Cloudflare D1 SQL database!</span>
                     </div>
                   )}
 
@@ -350,11 +383,12 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
                   {activeTab === 'events' && (
                     <>
                       {isFormOpen ? (
-                        /* Create / Edit Event Form */
+                        /* Minimalist Create / Edit Event Form */
                         <form onSubmit={handleSaveEvent} className="bg-black/40 border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col gap-5">
                           <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                            <h4 className="font-kanit font-black text-xl text-white uppercase tracking-wide">
-                              {editingEventId ? 'EDIT EVENT DETAILS' : 'ADD NEW CLUB / FESTIVAL EVENT'}
+                            <h4 className="font-kanit font-black text-xl text-white uppercase tracking-wide flex items-center gap-2">
+                              <Sparkles className="w-5 h-5 text-volt" />
+                              <span>{editingEventId ? 'EDIT EVENT DETAILS' : 'ADD NEW EVENT'}</span>
                             </h4>
                             <button
                               type="button"
@@ -365,324 +399,274 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
                             </button>
                           </div>
 
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                                DAY OF MONTH (1 - 31) *
+                          {/* Row 1: Day of Month & Date Picker Combobox */}
+                          <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                            <div className="sm:col-span-4">
+                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1 flex items-center gap-1">
+                                <Calendar className="w-3.5 h-3.5 text-volt" />
+                                <span>DAY OF MONTH (1 - 31) *</span>
                               </label>
                               <input
                                 type="number"
                                 min="1"
                                 max="31"
                                 required
-                                value={formData.day || 1}
-                                onChange={(e) => setFormData({ ...formData, day: parseInt(e.target.value, 10) })}
-                                className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
+                                value={formDay}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value, 10) || 1;
+                                  setFormDay(val);
+                                  const dStr = val < 10 ? `0${val}` : `${val}`;
+                                  setFormRawDate(`2026-09-${dStr}`);
+                                  setFormDateStr(`Day ${val} September 2026`);
+                                }}
+                                className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
                               />
                             </div>
-                            <div className="sm:col-span-2">
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                                DATE STRING *
+
+                            <div className="sm:col-span-8">
+                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1 flex items-center justify-between">
+                                <span className="flex items-center gap-1">
+                                  <Clock className="w-3.5 h-3.5 text-volt" />
+                                  <span>DATE PICKER / COMBOBOX *</span>
+                                </span>
+                                <span className="text-[10px] text-volt">Auto-Calculates Day</span>
                               </label>
-                              <input
-                                type="text"
-                                required
-                                value={formData.dateStr || ''}
-                                onChange={(e) => setFormData({ ...formData, dateStr: e.target.value })}
-                                placeholder="e.g. Saturday, 12 September 2026"
-                                className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
-                              />
+                              <div className="relative flex items-center">
+                                <input
+                                  type="date"
+                                  value={formRawDate}
+                                  onChange={(e) => handleDateChange(e.target.value)}
+                                  className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt [color-scheme:dark]"
+                                />
+                              </div>
                             </div>
                           </div>
 
+                          {/* Row 2: Formatted Date String Preview */}
+                          <div>
+                            <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
+                              DISPLAY DATE STRING (FORMATTED)
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={formDateStr}
+                              onChange={(e) => setFormDateStr(e.target.value)}
+                              placeholder="e.g. Wednesday, 02 September 2026"
+                              className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
+                            />
+                          </div>
+
+                          {/* Row 3: Club Name & Event Head Title */}
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                                CLUB / FESTIVAL VENUE NAME *
+                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1 flex items-center gap-1">
+                                <Building className="w-3.5 h-3.5 text-volt" />
+                                <span>CLUB / VENUE NAME *</span>
                               </label>
                               <input
                                 type="text"
                                 required
-                                value={formData.clubName || ''}
-                                onChange={(e) => setFormData({ ...formData, clubName: e.target.value })}
-                                placeholder="e.g. SAVAYA BALI / COLOSSEUM"
-                                className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
+                                value={formClubName}
+                                onChange={(e) => setFormClubName(e.target.value)}
+                                placeholder="e.g. W CLUB SAMARINDA"
+                                className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
                               />
                             </div>
+
                             <div>
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                                EVENT HEADLINE TITLE *
+                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1 flex items-center gap-1">
+                                <Radio className="w-3.5 h-3.5 text-volt" />
+                                <span>EVENT HEADLINE TITLE *</span>
                               </label>
                               <input
                                 type="text"
                                 required
-                                value={formData.eventTitle || ''}
-                                onChange={(e) => setFormData({ ...formData, eventTitle: e.target.value })}
-                                placeholder="e.g. NEO HORIZON SUNSET RESIDENCY"
-                                className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
+                                value={formEventTitle}
+                                onChange={(e) => setFormEventTitle(e.target.value)}
+                                placeholder="e.g. Breaks Dealer"
+                                className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
                               />
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                                CITY
-                              </label>
-                              <input
-                                type="text"
-                                value={formData.city || ''}
-                                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                placeholder="e.g. Uluwatu, Bali"
-                                className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                                COUNTRY
-                              </label>
-                              <input
-                                type="text"
-                                value={formData.country || ''}
-                                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                                placeholder="e.g. Indonesia / Japan"
-                                className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                                DJ SET TIME / DOORS
-                              </label>
-                              <input
-                                type="text"
-                                value={formData.time || ''}
-                                onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                                placeholder="e.g. 21:00 - Late (Set: 01:30)"
-                                className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                                TICKET STATUS
-                              </label>
-                              <select
-                                value={formData.ticketStatus}
-                                onChange={(e) => setFormData({ ...formData, ticketStatus: e.target.value as any })}
-                                className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
-                              >
-                                <option value="AVAILABLE">AVAILABLE</option>
-                                <option value="FEW TICKETS">FEW TICKETS</option>
-                                <option value="SOLD OUT">SOLD OUT</option>
-                                <option value="VIP EXCLUSIVE">VIP EXCLUSIVE</option>
-                                <option value="GUESTLIST ONLY">GUESTLIST ONLY</option>
-                              </select>
-                            </div>
-                            <div>
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                                TICKET PRICE / TIER
-                              </label>
-                              <input
-                                type="text"
-                                value={formData.ticketPrice || ''}
-                                onChange={(e) => setFormData({ ...formData, ticketPrice: e.target.value })}
-                                placeholder="e.g. IDR 350,000 / VIP Sofa"
-                                className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                                GENRE / VIBE
-                              </label>
-                              <input
-                                type="text"
-                                value={formData.genre || ''}
-                                onChange={(e) => setFormData({ ...formData, genre: e.target.value })}
-                                placeholder="e.g. Hard Techno / Future Bass"
-                                className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
-                              />
-                            </div>
-                          </div>
-
-                          {/* Flyer Upload & Preview */}
-                          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row items-center gap-6">
-                            <div className="w-28 h-28 rounded-2xl overflow-hidden bg-black border border-white/15 shrink-0 flex items-center justify-center">
+                          {/* Row 4: Flyer Poster Upload & Preview */}
+                          <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row items-center gap-5">
+                            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-black border border-white/15 shrink-0 flex items-center justify-center relative group">
                               {filePreview ? (
                                 <img src={filePreview} alt="Flyer Preview" className="w-full h-full object-cover" />
                               ) : (
-                                <Upload className="w-8 h-8 text-slate-500" />
+                                <ImageIcon className="w-8 h-8 text-slate-500" />
                               )}
                             </div>
 
-                            <div className="flex-1">
+                            <div className="flex-1 w-full text-center sm:text-left">
                               <span className="block text-[11px] font-mono text-volt uppercase tracking-wider mb-1">
                                 UPLOAD EVENT FLYER POSTER IMAGE
                               </span>
                               <p className="text-xs font-mono text-slate-400 mb-3">
-                                Upload a high-resolution festival flyer or stage photo (PNG, JPG, WebP up to 10MB).
+                                Upload a high-resolution festival flyer or stage photo (PNG, JPG, WebP).
                               </p>
-                              <input
-                                ref={fileInputRef}
-                                type="file"
-                                accept="image/*"
-                                onChange={handleFileChange}
-                                className="hidden"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => fileInputRef.current?.click()}
-                                className="px-4 py-2 rounded-xl bg-white/10 hover:bg-volt hover:text-black border border-white/20 text-white font-mono text-xs uppercase tracking-wider transition-all"
-                              >
-                                CHOOSE IMAGE FILE...
-                              </button>
+
+                              <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-volt hover:text-black text-white font-kanit font-bold text-xs uppercase tracking-wider cursor-pointer transition-all border border-white/10">
+                                <Upload className="w-3.5 h-3.5" />
+                                <span>CHOOSE IMAGE FILE...</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={handleFileChange}
+                                  className="hidden"
+                                />
+                              </label>
+                              {selectedFile && (
+                                <span className="ml-3 text-xs font-mono text-slate-300">
+                                  {selectedFile.name} ({(selectedFile.size / 1024).toFixed(0)} KB)
+                                </span>
+                              )}
                             </div>
                           </div>
 
+                          {/* Row 5: Description (Optional) */}
                           <div>
-                            <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                              VENUE ADDRESS & GOOGLE MAPS LINK
-                            </label>
-                            <input
-                              type="text"
-                              value={formData.venueAddress || ''}
-                              onChange={(e) => setFormData({ ...formData, venueAddress: e.target.value })}
-                              placeholder="Full street address (e.g. Jl. Senopati No. 74, Jakarta Selatan)"
-                              className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt mb-2"
-                            />
-                            <input
-                              type="url"
-                              value={formData.googleMapsUrl || ''}
-                              onChange={(e) => setFormData({ ...formData, googleMapsUrl: e.target.value })}
-                              placeholder="Google Maps URL (e.g. https://maps.google.com/?q=...)"
-                              className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                              EVENT DESCRIPTION & RAVE NOTES
+                            <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1 flex items-center gap-1">
+                              <FileText className="w-3.5 h-3.5 text-slate-500" />
+                              <span>DESCRIPTION (OPTIONAL)</span>
                             </label>
                             <textarea
-                              rows={3}
-                              value={formData.description || ''}
-                              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                              placeholder="Tell ravers what to expect (lasers, special IDs, duration, age limit...)"
-                              className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt resize-none"
+                              rows={2}
+                              value={formDescription}
+                              onChange={(e) => setFormDescription(e.target.value)}
+                              placeholder="Add special notes, guest details, or event highlights..."
+                              className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt resize-none"
                             />
                           </div>
 
-                          <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+                          {/* Submit Actions */}
+                          <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
                             <button
                               type="button"
                               onClick={() => setIsFormOpen(false)}
-                              className="px-6 py-3 rounded-full border border-white/20 text-slate-300 hover:text-white font-kanit font-bold text-xs uppercase tracking-wider"
+                              className="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-kanit text-xs font-bold uppercase tracking-wider"
                             >
                               CANCEL
                             </button>
-
                             <button
                               type="submit"
                               disabled={loading}
-                              className="px-8 py-3 rounded-full bg-volt text-black font-kanit font-bold text-xs sm:text-sm uppercase tracking-wider hover:bg-volt-hover shadow-volt-sm flex items-center gap-2"
+                              className="px-6 py-2.5 rounded-xl bg-volt text-black font-kanit font-bold text-xs uppercase tracking-wider hover:bg-volt-hover shadow-volt-sm transition-all disabled:opacity-50"
                             >
-                              <Save className="w-4 h-4" />
-                              <span>{editingEventId ? 'UPDATE EVENT' : 'PUBLISH EVENT TO CALENDAR'}</span>
+                              {loading ? 'SAVING TO D1 SQL...' : editingEventId ? 'UPDATE EVENT' : 'PUBLISH EVENT'}
                             </button>
                           </div>
                         </form>
                       ) : (
-                        /* Events Table / List */
+                        /* Events List Cards */
                         <div className="flex flex-col gap-3">
-                          {events.map((ev) => (
-                            <div
-                              key={ev.id}
-                              className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/25 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors"
-                            >
-                              <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 rounded-xl overflow-hidden bg-black border border-white/15 shrink-0">
-                                  <img src={ev.flyerImage} alt={ev.clubName} className="w-full h-full object-cover" />
-                                </div>
-                                <div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-kanit font-bold text-sm text-volt uppercase bg-volt/10 px-2 py-0.5 rounded border border-volt/20">
-                                      SEPT {ev.day < 10 ? `0${ev.day}` : ev.day}
-                                    </span>
-                                    <span className="text-[10px] font-mono text-slate-400 uppercase">
-                                      {ev.city}, {ev.country}
-                                    </span>
-                                  </div>
-                                  <h5 className="font-kanit font-bold text-base text-white uppercase mt-0.5">
-                                    {ev.clubName} — {ev.eventTitle}
-                                  </h5>
-                                  <p className="text-[11px] font-mono text-slate-400">
-                                    {ev.time} • {ev.ticketStatus} ({ev.ticketPrice})
-                                  </p>
-                                </div>
-                              </div>
-
-                              <div className="flex items-center gap-2 self-end sm:self-center">
-                                <button
-                                  onClick={() => openEditForm(ev)}
-                                  className="p-2.5 rounded-xl bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-slate-300 transition-colors"
-                                  title="Edit Event"
-                                >
-                                  <Edit3 className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteEvent(ev.id, ev.clubName)}
-                                  className="p-2.5 rounded-xl bg-white/5 hover:bg-rose-500 hover:text-white border border-white/10 text-rose-400 transition-colors"
-                                  title="Delete Event"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
+                          {events.length === 0 ? (
+                            <div className="p-12 text-center rounded-2xl bg-black/30 border border-white/10">
+                              <Calendar className="w-8 h-8 text-slate-600 mx-auto mb-3" />
+                              <p className="text-slate-400 font-mono text-sm mb-4">No events registered yet.</p>
+                              <button
+                                onClick={openCreateForm}
+                                className="px-5 py-2 rounded-xl bg-volt text-black font-kanit font-bold text-xs uppercase tracking-wider shadow-volt-sm"
+                              >
+                                CREATE FIRST EVENT
+                              </button>
                             </div>
-                          ))}
+                          ) : (
+                            events.map((ev) => (
+                              <div
+                                key={ev.id}
+                                className="p-4 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-between gap-4 hover:border-white/20 transition-colors"
+                              >
+                                <div className="flex items-center gap-4">
+                                  <div className="w-14 h-14 rounded-xl overflow-hidden bg-black border border-white/15 shrink-0">
+                                    <img src={ev.flyerImage || '/assets/image-1.jpeg'} alt={ev.clubName} className="w-full h-full object-cover" />
+                                  </div>
+                                  <div>
+                                    <div className="flex items-center gap-2 mb-0.5">
+                                      <span className="px-2 py-0.5 rounded bg-volt/10 text-volt text-[10px] font-mono font-bold">
+                                        DAY {ev.day < 10 ? `0${ev.day}` : ev.day}
+                                      </span>
+                                      <span className="text-[11px] font-mono text-slate-400">
+                                        {ev.dateStr}
+                                      </span>
+                                    </div>
+                                    <h5 className="font-kanit font-black text-sm sm:text-base text-white uppercase">
+                                      {ev.clubName} — <span className="text-volt">{ev.eventTitle}</span>
+                                    </h5>
+                                    {ev.description && (
+                                      <p className="text-[11px] font-mono text-slate-400 line-clamp-1 mt-0.5">
+                                        {ev.description}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 shrink-0">
+                                  <button
+                                    onClick={() => openEditForm(ev)}
+                                    className="p-2 rounded-xl bg-white/5 hover:bg-white/15 text-slate-300 hover:text-volt border border-white/10 transition-colors"
+                                    title="Edit Event"
+                                  >
+                                    <Edit2 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteEvent(ev.id, ev.clubName)}
+                                    className="p-2 rounded-xl bg-white/5 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 border border-white/10 transition-colors"
+                                    title="Delete Event"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            ))
+                          )}
                         </div>
                       )}
                     </>
                   )}
 
-                  {/* Tab 2: Inquiries Manager */}
+                  {/* Tab 2: Promoter Inquiries */}
                   {activeTab === 'inquiries' && (
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-3">
                       {inquiries.length === 0 ? (
-                        <div className="text-center py-16 text-slate-400 font-mono text-xs">
-                          No promoter booking inquiries yet. Submissions from the booking modal will appear here.
+                        <div className="p-12 text-center rounded-2xl bg-black/30 border border-white/10">
+                          <Mail className="w-8 h-8 text-slate-600 mx-auto mb-3" />
+                          <p className="text-slate-400 font-mono text-sm">No promoter booking inquiries received yet.</p>
                         </div>
                       ) : (
-                        inquiries.map((inq) => (
-                          <div key={inq.id} className="p-5 rounded-2xl bg-white/[0.03] border border-white/10">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-3 mb-3 gap-2">
-                              <div>
-                                <h5 className="font-kanit font-bold text-base text-white uppercase">
+                        inquiries.map((inq: any) => (
+                          <div
+                            key={inq.id}
+                            className="p-5 rounded-2xl bg-black/40 border border-white/10 flex flex-col gap-3"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="font-kanit font-black text-sm text-white uppercase">
                                   {inq.promoterName}
-                                </h5>
-                                <p className="text-xs font-mono text-volt">
-                                  {inq.email} • {inq.phone || 'No phone provided'}
-                                </p>
+                                </span>
+                                <span className="px-2 py-0.5 rounded bg-volt/10 text-volt text-[10px] font-mono">
+                                  {inq.eventType}
+                                </span>
                               </div>
-                              <span className="px-3 py-1 rounded-full bg-volt/10 border border-volt/30 text-volt text-[10px] font-mono uppercase font-bold self-start sm:self-auto">
-                                {inq.eventType} ({inq.budgetTier})
+                              <span className="text-[10px] font-mono text-slate-400">
+                                {new Date(inq.createdAt || Date.now()).toLocaleDateString('id-ID')}
                               </span>
                             </div>
 
-                            <div className="text-xs font-mono text-slate-300 mb-3">
-                              <p><strong>Target Date:</strong> {inq.eventDate || 'TBD'}</p>
-                              <p><strong>Location:</strong> {inq.venueLocation || 'TBD'}</p>
-                              <p className="mt-2 text-slate-400 italic">"{inq.message}"</p>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono text-slate-300">
+                              <div><span className="text-slate-400 block text-[10px]">EMAIL:</span> {inq.email}</div>
+                              <div><span className="text-slate-400 block text-[10px]">PHONE/WA:</span> {inq.phone}</div>
+                              <div><span className="text-slate-400 block text-[10px]">DATE:</span> {inq.eventDate}</div>
+                              <div><span className="text-slate-400 block text-[10px]">BUDGET:</span> {inq.budgetTier}</div>
                             </div>
 
-                            <div className="flex items-center gap-3 pt-2">
-                              <a
-                                href={`mailto:${inq.email}?subject=NOKA%20AXL%20Booking%20Inquiry%20Confirmation`}
-                                className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-mono text-xs uppercase"
-                              >
-                                REPLY VIA EMAIL
-                              </a>
-                            </div>
+                            {inq.message && (
+                              <p className="text-xs font-mono text-slate-300 bg-white/[0.02] p-3 rounded-xl border border-white/5">
+                                "{inq.message}"
+                              </p>
+                            )}
                           </div>
                         ))
                       )}

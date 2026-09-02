@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Calendar, MapPin, Ticket, Flame, Clock, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Calendar, MapPin, Flame, Clock, Sparkles } from 'lucide-react';
 import { CalendarEvent } from '../types';
 import { FadeIn } from './common/FadeIn';
 
@@ -14,9 +14,8 @@ const StackingTourCard: React.FC<{
   event: CalendarEvent;
   index: number;
   totalCards: number;
-  onOpenBooking: () => void;
   onSelectEvent?: (event: CalendarEvent) => void;
-}> = ({ event, index, totalCards, onOpenBooking, onSelectEvent }) => {
+}> = ({ event, index, totalCards, onSelectEvent }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -82,21 +81,6 @@ const StackingTourCard: React.FC<{
                 {event.dateStr} // {event.clubName}
               </span>
             </div>
-
-            <button
-              onClick={() => {
-                if (onSelectEvent) {
-                  onSelectEvent(event);
-                } else {
-                  onOpenBooking();
-                }
-              }}
-              className="px-6 sm:px-8 py-3 rounded-full bg-volt text-black font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center gap-2 hover:bg-volt-hover transition-all shadow-volt-sm active:scale-95 shrink-0"
-            >
-              <Ticket className="w-4 h-4" />
-              <span>GET PASS</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
           </div>
         </div>
 
@@ -152,12 +136,13 @@ const StackingTourCard: React.FC<{
               </div>
             </div>
 
+            {/* Mandatory bottom telemetry: 22:00 - Late & 18+ ONLY */}
             <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
-              <div className="flex items-center gap-1.5 text-slate-400">
+              <div className="flex items-center gap-1.5 text-slate-300 font-bold">
                 <Clock className="w-3.5 h-3.5 text-volt" />
-                <span>{event.time || '22:00 - LATE'}</span>
+                <span>22:00 - Late</span>
               </div>
-              <span className="text-volt font-bold uppercase">18+ ONLY</span>
+              <span className="text-volt font-bold uppercase tracking-wider">18+ ONLY</span>
             </div>
           </div>
         </div>
@@ -199,7 +184,6 @@ export const TourDatesSection: React.FC<TourDatesSectionProps> = ({ events = [],
                 event={event}
                 index={index}
                 totalCards={events.length}
-                onOpenBooking={onOpenBooking}
                 onSelectEvent={onSelectEvent}
               />
             ))}

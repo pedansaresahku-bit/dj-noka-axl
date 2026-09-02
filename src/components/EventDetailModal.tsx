@@ -213,7 +213,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                       className="w-full sm:w-auto flex-1 px-6 py-3.5 rounded-full bg-volt text-black font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:bg-volt-hover shadow-volt-sm transition-all"
                     >
                       <Ticket className="w-4 h-4" />
-                      <span>RESERVE VIP TABLE / PASS</span>
+                      <span>RESERVE VIP TABLE / WHATSAPP</span>
                     </button>
 
                     <button
