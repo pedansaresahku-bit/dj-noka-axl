@@ -133,7 +133,7 @@ export const TRACKS_DATA: Track[] = [
 export const TOUR_DATES: TourDate[] = [
   {
     id: "tour-1",
-    date: "OCT 24, 2026",
+    date: "SEPT 24, 2026",
     city: "JAKARTA",
     country: "INDONESIA",
     venue: "JIEXPO STAGE ONE",
@@ -145,7 +145,7 @@ export const TOUR_DATES: TourDate[] = [
   },
   {
     id: "tour-2",
-    date: "NOV 12, 2026",
+    date: "OCT 12, 2026",
     city: "BALI",
     country: "INDONESIA",
     venue: "SAVAYA CLIFFTOP",
@@ -157,7 +157,7 @@ export const TOUR_DATES: TourDate[] = [
   },
   {
     id: "tour-3",
-    date: "DEC 05, 2026",
+    date: "NOV 05, 2026",
     city: "TOKYO",
     country: "JAPAN",
     venue: "AGEHA // STUDIO COAST",
@@ -253,12 +253,12 @@ export const FESTIVAL_BADGES = [
   "EDC REZONATOR"
 ];
 
-// 30-Day Monthly Tour & Club Calendar Data
+// 30-Day Monthly Tour & Club Calendar Data (September 2026)
 export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
   2: {
     id: "cal-2",
     day: 2,
-    dateStr: "Friday, 02 October 2026",
+    dateStr: "Wednesday, 02 September 2026",
     clubName: "VALHALLA JAKARTA",
     eventTitle: "UNDERGROUND TECHNO PROTOCOL",
     city: "Senopati, South Jakarta",
@@ -276,7 +276,7 @@ export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
   4: {
     id: "cal-4",
     day: 4,
-    dateStr: "Sunday, 04 October 2026",
+    dateStr: "Friday, 04 September 2026",
     clubName: "W BALI SEMINYAK",
     eventTitle: "WOOBAR SUNSET SONIC REZONANCE",
     city: "Seminyak, Bali",
@@ -294,7 +294,7 @@ export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
   7: {
     id: "cal-7",
     day: 7,
-    dateStr: "Wednesday, 07 October 2026",
+    dateStr: "Monday, 07 September 2026",
     clubName: "DRAGONFLY JAKARTA",
     eventTitle: "MIDWEEK BASS INVASION",
     city: "Gatot Subroto, Jakarta",
@@ -312,7 +312,7 @@ export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
   10: {
     id: "cal-10",
     day: 10,
-    dateStr: "Saturday, 10 October 2026",
+    dateStr: "Thursday, 10 September 2026",
     clubName: "COLOSSEUM JAKARTA",
     eventTitle: "MEGACLUB ARENA: NEO ECLIPSE",
     city: "Kota Tua, West Jakarta",
@@ -330,7 +330,7 @@ export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
   12: {
     id: "cal-12",
     day: 12,
-    dateStr: "Monday, 12 October 2026",
+    dateStr: "Saturday, 12 September 2026",
     clubName: "SAVAYA BALI",
     eventTitle: "NEO HORIZON SUNSET RESIDENCY",
     city: "Uluwatu, Bali",
@@ -348,7 +348,7 @@ export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
   16: {
     id: "cal-16",
     day: 16,
-    dateStr: "Friday, 16 October 2026",
+    dateStr: "Wednesday, 16 September 2026",
     clubName: "ZOUK SINGAPORE",
     eventTitle: "PHUTURE ROOM OVERDRIVE",
     city: "Clarke Quay, Singapore",
@@ -366,7 +366,7 @@ export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
   18: {
     id: "cal-18",
     day: 18,
-    dateStr: "Sunday, 18 October 2026",
+    dateStr: "Friday, 18 September 2026",
     clubName: "ATLAS BEACH CLUB",
     eventTitle: "ATLAS FEST: MEGA DAYCLUB SHOWCASE",
     city: "Canggu, Bali",
@@ -384,7 +384,7 @@ export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
   21: {
     id: "cal-21",
     day: 21,
-    dateStr: "Wednesday, 21 October 2026",
+    dateStr: "Monday, 21 September 2026",
     clubName: "HW TIGER SURABAYA",
     eventTitle: "EASTERN JAVA TOUR: BASS SHOCK",
     city: "Surabaya, East Java",
@@ -402,8 +402,8 @@ export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
   24: {
     id: "cal-24",
     day: 24,
-    dateStr: "Saturday, 24 October 2026",
-    clubName: "JIEXPO STAGE ONE // DWP",
+    dateStr: "Thursday, 24 September 2026",
+    clubName: "JIEXPO STAGE ONE // DWP LAUNCH",
     eventTitle: "DJAKARTA WAREHOUSE PROJECT 2026",
     city: "Kemayoran, Jakarta",
     country: "Indonesia",
@@ -420,7 +420,7 @@ export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
   27: {
     id: "cal-27",
     day: 27,
-    dateStr: "Tuesday, 27 October 2026",
+    dateStr: "Sunday, 27 September 2026",
     clubName: "SHIKU CLUB BANDUNG",
     eventTitle: "HIGHLAND BASS VELOCITY",
     city: "Bandung, West Java",
@@ -438,9 +438,9 @@ export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
   30: {
     id: "cal-30",
     day: 30,
-    dateStr: "Friday, 30 October 2026",
+    dateStr: "Wednesday, 30 September 2026",
     clubName: "AGEHA // TOKYO",
-    eventTitle: "TOKYO BASS SENSATION: HALLOWEEN",
+    eventTitle: "TOKYO BASS SENSATION: CLOSING",
     city: "Koto City, Tokyo",
     country: "Japan",
     venueAddress: "2-2-10 Shinkiba, Koto-ku, Tokyo 136-0082",
@@ -450,25 +450,7 @@ export const MONTHLY_CALENDAR_EVENTS: Record<number, CalendarEvent> = {
     ticketPrice: "¥ 5,500 (Early Bird Sold Out)",
     flyerImage: "/assets/image-5.jpeg",
     supportingDJs: ["DJ Taku Takahashi", "Ken Ishii", "Vexen"],
-    description: "Japan's legendary clubbing landmark hosts NOKA AXL for a midnight-to-dawn auditory storm with octagonal arena lasers.",
+    description: "Japan's legendary clubbing landmark hosts NOKA AXL for a midnight-to-dawn auditory storm as NOKA AXL caps off September with an unforgettable show.",
     googleMapsUrl: "https://maps.google.com/?q=ageHa+Tokyo"
-  },
-  31: {
-    id: "cal-31",
-    day: 31,
-    dateStr: "Saturday, 31 October 2026",
-    clubName: "MARQUEE SINGAPORE",
-    eventTitle: "HALLOWEEN FINALE // 2027 OVERDRIVE",
-    city: "Marina Bay Sands, Singapore",
-    country: "Singapore",
-    venueAddress: "2 Bayfront Avenue B1-67, Galleria Level, The Shoppes at Marina Bay Sands",
-    time: "22:00 - 05:00 (Headline Set: 01:00)",
-    genre: "Festival Anthems & Future Rave",
-    ticketStatus: "FEW TICKETS",
-    ticketPrice: "SGD $60 (Includes 1 Drink)",
-    flyerImage: "/assets/image-6.jpeg",
-    supportingDJs: ["Marquee Resident DJs", "Aerialist Dancers"],
-    description: "Ride the full-sized indoor Ferris Wheel and plunge into sensory overload as NOKA AXL caps off October with an unforgettable show.",
-    googleMapsUrl: "https://maps.google.com/?q=Marquee+Nightclub+Singapore"
   }
 };

@@ -155,7 +155,7 @@ app.post('/api/events', verifyAdminAuth, upload.single('flyerFile'), (req: Reque
 
     const newEvent = db.createEvent({
       day,
-      dateStr: body.dateStr || `Day ${day} October 2026`,
+      dateStr: body.dateStr || `Day ${day} September 2026`,
       clubName: body.clubName,
       eventTitle: body.eventTitle,
       city: body.city || 'Jakarta',

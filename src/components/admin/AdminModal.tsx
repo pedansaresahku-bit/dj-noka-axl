@@ -95,7 +95,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
     setFilePreview(null);
     setFormData({
       day: 15,
-      dateStr: 'Thursday, 15 October 2026',
+      dateStr: 'Tuesday, 15 September 2026',
       clubName: '',
       eventTitle: '',
       city: 'Jakarta',
@@ -127,7 +127,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
 
     const data = new FormData();
     data.append('day', formData.day?.toString() || '1');
-    data.append('dateStr', formData.dateStr || `Day ${formData.day} October 2026`);
+    data.append('dateStr', formData.dateStr || `Day ${formData.day} September 2026`);
     data.append('clubName', formData.clubName || 'Club Venue');
     data.append('eventTitle', formData.eventTitle || 'NOKA AXL LIVE');
     data.append('city', formData.city || 'Jakarta');
@@ -382,7 +382,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
                                 required
                                 value={formData.dateStr || ''}
                                 onChange={(e) => setFormData({ ...formData, dateStr: e.target.value })}
-                                placeholder="e.g. Saturday, 24 October 2026"
+                                placeholder="e.g. Saturday, 12 September 2026"
                                 className="w-full px-4 py-2.5 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
                               />
                             </div>
@@ -600,7 +600,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
                                 <div>
                                   <div className="flex items-center gap-2">
                                     <span className="font-kanit font-bold text-sm text-volt uppercase bg-volt/10 px-2 py-0.5 rounded border border-volt/20">
-                                      OCT {ev.day < 10 ? `0${ev.day}` : ev.day}
+                                      SEPT {ev.day < 10 ? `0${ev.day}` : ev.day}
                                     </span>
                                     <span className="text-[10px] font-mono text-slate-400 uppercase">
                                       {ev.city}, {ev.country}

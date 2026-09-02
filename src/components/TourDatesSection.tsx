@@ -162,10 +162,10 @@ export const TourDatesSection: React.FC<TourDatesSectionProps> = ({ onOpenBookin
           <FadeIn delay={0}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase mb-3">
               <Calendar className="w-3.5 h-3.5" />
-              <span>GLOBAL LIVE ITINERARY</span>
+              <span>Event Calendar</span>
             </div>
             <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl uppercase tracking-tighter text-white">
-              <span className="chrome-heading">WORLD TOUR 2026</span>
+              <span className="chrome-heading">Tour September</span>
             </h2>
           </FadeIn>
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar as CalendarIcon, MapPin, Flame, Eye, ShieldCheck, ChevronRight, Settings } from 'lucide-react';
+import { Calendar as CalendarIcon, MapPin, Flame, Eye, ChevronRight, Settings } from 'lucide-react';
 import { CalendarEvent } from '../types';
 import { FadeIn } from './common/FadeIn';
 
@@ -24,10 +24,10 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
     eventsByDay[ev.day] = ev;
   });
 
-  // Days in October: 31 days. Oct 1, 2026 is Thursday.
-  const daysOfWeek = ['THU', 'FRI', 'SAT', 'SUN', 'MON', 'TUE', 'WED'];
-  
-  const calendarDays = Array.from({ length: 31 }, (_, i) => {
+  // Days in September 2026: 30 days. Sept 1, 2026 is Tuesday.
+  const daysOfWeek = ['TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'MON'];
+
+  const calendarDays = Array.from({ length: 30 }, (_, i) => {
     const dayNumber = i + 1;
     const dayOfWeekIndex = i % 7;
     const dayOfWeek = daysOfWeek[dayOfWeekIndex];
@@ -65,7 +65,7 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
             <div className="flex items-center gap-3 mb-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase">
                 <CalendarIcon className="w-3.5 h-3.5" />
-                <span>30-DAY MONTHLY SCHEDULE // OCTOBER 2026</span>
+                <span>30-DAY SCHEDULE // SEPTEMBER 2026</span>
               </div>
               <button
                 onClick={onOpenAdmin}
@@ -77,10 +77,10 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
               </button>
             </div>
             <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl uppercase tracking-tighter text-white">
-              <span className="chrome-heading">CLUB & GIG CALENDAR</span>
+              <span className="chrome-heading">SEPTEMBER TOUR CALENDAR</span>
             </h2>
             <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 max-w-xl">
-              Live database of verified headline gigs and festival dates. Click any column to inspect flyer poster and location map.
+              Live schedule of verified headline gigs, club takeovers, and festival dates. Click any date to inspect flyer poster and venue map.
             </p>
           </FadeIn>
 
@@ -94,7 +94,7 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
                   : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10'
               }`}
             >
-              FULL 31 DAYS
+              FULL 30 DAYS
             </button>
             <button
               onClick={() => setFilterMode('GIGS_ONLY')}
@@ -129,135 +129,141 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
           </FadeIn>
         </div>
 
-        {/* 30/31-Day Calendar Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
-          {filteredDays.map((item) => {
+        {/* 30-Day Grid Layout */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+          {filteredDays.map((item, index) => {
             const hasEvent = item.event !== null;
-            const event = item.event;
 
-            if (hasEvent && event) {
+            if (hasEvent && item.event) {
+              const ev = item.event;
               return (
-                <div
+                <FadeIn
                   key={item.day}
-                  onClick={() => onSelectEvent(event)}
-                  className="group relative rounded-2xl border border-volt/50 bg-[#12121A] hover:bg-[#181824] p-3.5 sm:p-4 min-h-[140px] sm:min-h-[160px] flex flex-col justify-between cursor-pointer transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_10px_30px_rgba(212,255,0,0.2)] hover:border-volt select-none"
+                  delay={(index % 12) * 0.03}
+                  className="h-full"
                 >
-                  {/* Top Bar with Date & Live Radar */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-baseline gap-1">
-                      <span className="font-kanit font-black text-2xl sm:text-3xl text-white group-hover:text-volt transition-colors">
-                        {item.day < 10 ? `0${item.day}` : item.day}
-                      </span>
-                      <span className="text-[10px] font-mono font-semibold text-volt uppercase">
+                  <div
+                    onClick={() => onSelectEvent(ev)}
+                    className="group relative h-full min-h-[170px] sm:min-h-[190px] rounded-2xl bg-[#111118] hover:bg-[#161622] border border-volt/50 hover:border-volt transition-all duration-300 p-4 flex flex-col justify-between cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-volt-sm hover:-translate-y-1 overflow-hidden"
+                  >
+                    {/* Top Glow bar */}
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-volt via-cyan-400 to-volt" />
+
+                    {/* Header: Date Number & Day Tag */}
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="font-kanit font-black text-2xl sm:text-3xl text-white group-hover:text-volt transition-colors">
+                          {item.day < 10 ? `0${item.day}` : item.day}
+                        </span>
+                        <span className="text-[10px] font-mono text-slate-400 font-bold uppercase">
+                          SEPT
+                        </span>
+                      </div>
+                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full uppercase font-bold tracking-wider ${
+                        item.isWeekend ? 'bg-volt/20 text-volt border border-volt/30' : 'bg-white/10 text-slate-300'
+                      }`}>
                         {item.dayOfWeek}
                       </span>
                     </div>
 
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-volt opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-volt" />
-                    </span>
-                  </div>
+                    {/* Middle: Club & City */}
+                    <div className="my-2">
+                      <div className="flex items-center gap-1 text-[10px] font-mono text-volt mb-1 uppercase tracking-wider line-clamp-1">
+                        <Flame className="w-3 h-3 shrink-0" />
+                        <span className="truncate">{ev.eventTitle}</span>
+                      </div>
+                      <h4 className="font-kanit font-black text-sm sm:text-base text-white uppercase tracking-tight group-hover:text-volt transition-colors line-clamp-1">
+                        {ev.clubName}
+                      </h4>
+                      <div className="flex items-center gap-1 text-[11px] font-mono text-slate-400 mt-1">
+                        <MapPin className="w-3 h-3 text-slate-500 shrink-0" />
+                        <span className="truncate">{ev.city}</span>
+                      </div>
+                    </div>
 
-                  {/* Club & Event Info */}
-                  <div className="my-2">
-                    <span className="text-[9px] font-mono tracking-widest text-volt/80 uppercase block truncate">
-                      {event.city}
-                    </span>
-                    <h4 className="font-kanit font-black text-sm sm:text-base text-white uppercase leading-tight line-clamp-2 group-hover:text-volt transition-colors">
-                      {event.clubName}
-                    </h4>
-                  </div>
+                    {/* Bottom: Status & Quick Action */}
+                    <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono">
+                      <span className={`px-1.5 py-0.5 rounded uppercase font-bold ${
+                        ev.ticketStatus === 'SOLD OUT'
+                          ? 'text-red-400 bg-red-500/10'
+                          : ev.ticketStatus === 'FEW TICKETS'
+                          ? 'text-amber-400 bg-amber-500/10'
+                          : 'text-emerald-400 bg-emerald-500/10'
+                      }`}>
+                        {ev.ticketStatus}
+                      </span>
 
-                  {/* Bottom Action / View Details hint */}
-                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-400 group-hover:text-white">
-                    <span className="truncate max-w-[100px]">{event.genre.split('/')[0]}</span>
-                    <span className="text-volt font-bold flex items-center gap-0.5">
-                      <Eye className="w-3 h-3" />
-                      <span>FLYER</span>
-                    </span>
+                      <div className="flex items-center gap-1 text-volt group-hover:translate-x-0.5 transition-transform font-bold">
+                        <span>DETAIL</span>
+                        <Eye className="w-3 h-3" />
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </FadeIn>
               );
             }
 
-            // Off-tour / Studio session day
+            // Open date / Available date
             return (
-              <div
+              <FadeIn
                 key={item.day}
-                className="rounded-2xl border border-white/5 bg-[#09090D] p-3.5 sm:p-4 min-h-[140px] sm:min-h-[160px] flex flex-col justify-between opacity-50 hover:opacity-80 transition-opacity"
+                delay={(index % 12) * 0.03}
+                className="h-full"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-baseline gap-1">
-                    <span className="font-kanit font-bold text-xl sm:text-2xl text-slate-600">
-                      {item.day < 10 ? `0${item.day}` : item.day}
-                    </span>
-                    <span className="text-[10px] font-mono text-slate-600 uppercase">
+                <div
+                  onClick={onOpenBooking}
+                  className="group relative h-full min-h-[170px] sm:min-h-[190px] rounded-2xl bg-[#09090D] hover:bg-[#0E0E14] border border-white/5 hover:border-white/20 transition-all duration-300 p-4 flex flex-col justify-between cursor-pointer"
+                >
+                  {/* Header: Date Number & Day */}
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="font-kanit font-bold text-xl sm:text-2xl text-slate-600 group-hover:text-slate-300 transition-colors">
+                        {item.day < 10 ? `0${item.day}` : item.day}
+                      </span>
+                      <span className="text-[9px] font-mono text-slate-600 uppercase">
+                        SEPT
+                      </span>
+                    </div>
+                    <span className="text-[9px] font-mono text-slate-600 uppercase">
                       {item.dayOfWeek}
                     </span>
                   </div>
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-700" />
-                </div>
 
-                <div className="my-2">
-                  <span className="text-[9px] font-mono text-slate-600 uppercase block">
-                    HQ / LAB
-                  </span>
-                  <p className="text-xs font-mono text-slate-500 uppercase leading-tight">
-                    Studio Session // ID Production
-                  </p>
-                </div>
+                  {/* Middle: Open date text */}
+                  <div className="my-2">
+                    <span className="text-[10px] font-mono text-slate-500 block uppercase tracking-wider">
+                      AVAILABLE DATE
+                    </span>
+                    <span className="text-xs font-kanit text-slate-400 group-hover:text-volt transition-colors font-medium">
+                      Open for Booking
+                    </span>
+                  </div>
 
-                <div className="pt-2 border-t border-white/5 text-[9px] font-mono text-slate-600">
-                  PRIVATE LAB
+                  {/* Bottom: Inquire Action */}
+                  <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-500 group-hover:text-white transition-colors">
+                    <span>INQUIRE</span>
+                    <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform text-volt" />
+                  </div>
                 </div>
-              </div>
+              </FadeIn>
             );
           })}
         </div>
 
-        {/* Bottom Calendar Summary Bar */}
-        <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-white/[0.02] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-wrap items-center gap-6 sm:gap-10">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-volt/10 border border-volt/30 text-volt">
-                <Flame className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-mono text-slate-400 uppercase block">MONTHLY DATES</span>
-                <span className="font-kanit font-black text-xl text-white">{totalGigsCount} CONFIRMED SHOWS</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-cyan-400/10 border border-cyan-400/30 text-cyan-400">
-                <MapPin className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-mono text-slate-400 uppercase block">ACTIVE CITIES</span>
-                <span className="font-kanit font-black text-xl text-white">6 CITIES • 3 NATIONS</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-300">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-mono text-slate-400 uppercase block">TICKETING</span>
-                <span className="font-kanit font-black text-xl text-white">100% VERIFIED VENUES</span>
-              </div>
-            </div>
+        {/* Bottom Banner Note */}
+        <FadeIn delay={0.2} className="mt-10 p-5 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3 text-xs font-mono text-slate-300">
+            <div className="w-2 h-2 rounded-full bg-volt animate-ping" />
+            <span>Dates marked with club titles are confirmed. Open dates are available for club residencies and festival bookings.</span>
           </div>
 
           <button
             onClick={onOpenBooking}
-            className="w-full md:w-auto px-8 py-3.5 rounded-full bg-volt text-black font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:bg-volt-hover shadow-volt-sm transition-all shrink-0"
+            className="px-6 py-2.5 rounded-full bg-volt hover:bg-volt-hover text-black font-kanit font-bold text-xs uppercase tracking-wider transition-all shrink-0 shadow-volt-sm"
           >
-            <span>BOOK PROMOTER DATE</span>
-            <ChevronRight className="w-4 h-4" />
+            REQUEST EVENT DATE
           </button>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );
