@@ -64,7 +64,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
       {/* Center Cinematic Stage Hero */}
       <motion.div
         style={{ y: yParallax, opacity: opacityFade }}
-        className="relative z-10 my-auto flex flex-col items-center text-center max-w-5xl mx-auto py-8 sm:py-12"
+        className="relative z-10 my-auto flex flex-col items-center text-center max-w-6xl w-full mx-auto py-6 sm:py-10 px-2"
       >
         {/* Floating Futuristic Badge */}
         <motion.div
@@ -78,14 +78,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
           <Sparkles className="w-3.5 h-3.5 text-volt" />
         </motion.div>
 
-        {/* Massive DJ Name */}
+        {/* Massive DJ Name (Responsive without cutoff) */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full overflow-hidden"
+          className="w-full flex justify-center py-2"
         >
-          <h1 className="font-kanit font-black uppercase tracking-tighter leading-none text-[15vw] sm:text-[14vw] md:text-[13.5vw] text-white whitespace-nowrap drop-shadow-2xl">
+          <h1 className="font-kanit font-black uppercase tracking-tight sm:tracking-tight leading-none text-[11.5vw] sm:text-[10vw] md:text-[8.5vw] lg:text-[7.2vw] xl:text-[6.2rem] 2xl:text-[7.2rem] text-white whitespace-nowrap drop-shadow-2xl">
             <span className="hero-heading inline-block hover:scale-[1.02] transition-transform duration-300">
               NOKA AXL
             </span>

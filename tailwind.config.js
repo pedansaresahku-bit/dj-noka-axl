@@ -13,13 +13,13 @@ export default {
           card: "#121218",
           cardHover: "#181822",
           border: "rgba(255, 255, 255, 0.08)",
-          borderBright: "rgba(212, 255, 0, 0.35)",
+          borderBright: "rgba(255, 208, 0, 0.35)",
         },
         volt: {
-          DEFAULT: "#D4FF00",
-          hover: "#BCE600",
-          dim: "#8CA800",
-          glow: "rgba(212, 255, 0, 0.25)",
+          DEFAULT: "#FFD000",
+          hover: "#E6B800",
+          dim: "#B88E00",
+          glow: "rgba(255, 208, 0, 0.35)",
         },
         electric: {
           cyan: "#00F0FF",
@@ -46,8 +46,8 @@ export default {
       },
       keyframes: {
         pulseGlow: {
-          '0%, 100%': { opacity: '0.6', filter: 'drop-shadow(0 0 15px rgba(212,255,0,0.4))' },
-          '50%': { opacity: '1', filter: 'drop-shadow(0 0 25px rgba(212,255,0,0.8))' },
+          '0%, 100%': { opacity: '0.6', filter: 'drop-shadow(0 0 15px rgba(255,208,0,0.4))' },
+          '50%': { opacity: '1', filter: 'drop-shadow(0 0 25px rgba(255,208,0,0.8))' },
         },
         marquee: {
           '0%': { transform: 'translateX(0%)' },
@@ -63,9 +63,9 @@ export default {
         }
       },
       boxShadow: {
-        'volt-sm': '0 0 10px rgba(212, 255, 0, 0.25)',
-        'volt-md': '0 0 20px rgba(212, 255, 0, 0.4)',
-        'volt-lg': '0 0 35px rgba(212, 255, 0, 0.55)',
+        'volt-sm': '0 0 10px rgba(255, 208, 0, 0.3)',
+        'volt-md': '0 0 20px rgba(255, 208, 0, 0.45)',
+        'volt-lg': '0 0 35px rgba(255, 208, 0, 0.6)',
         'card-glow': '0 10px 30px -10px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.08)',
         'inner-glow': 'inset 0 1px 1px rgba(255,255,255,0.15)',
       }
