@@ -39,13 +39,50 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
   const [activeYear, setActiveYear] = useState<number>(wibNow.getFullYear());
   const [activeMonth, setActiveMonth] = useState<number>(wibNow.getMonth()); // 0-indexed (8 = Sept)
 
+  // Auto switch active month if events exist for a particular month
+  React.useEffect(() => {
+    if (events && events.length > 0) {
+      for (const ev of events) {
+        const dateLower = (ev.dateStr || '').toLowerCase();
+        const foundIdx = MONTH_NAMES.findIndex((m) => dateLower.includes(m.toLowerCase()));
+        if (foundIdx !== -1) {
+          setActiveMonth(foundIdx);
+          break;
+        }
+      }
+    }
+  }, [events]);
+
   // Days in selected month (e.g. 30 in Sept, 31 in Oct)
   const daysInMonth = new Date(activeYear, activeMonth + 1, 0).getDate();
 
-  // Map events by day number
+  // Helper to count events in a specific month
+  const getEventCountForMonth = (monthIdx: number) => {
+    const currentMonthName = MONTH_NAMES[monthIdx].toLowerCase();
+    const currentMonthShort = MONTH_SHORT[monthIdx].toLowerCase();
+    return events.filter((ev) => {
+      const dateLower = (ev.dateStr || '').toLowerCase();
+      const hasAnyMonth =
+        MONTH_NAMES.some((m) => dateLower.includes(m.toLowerCase())) ||
+        MONTH_SHORT.some((m) => dateLower.includes(m.toLowerCase()));
+      return !hasAnyMonth || dateLower.includes(currentMonthName) || dateLower.includes(currentMonthShort);
+    }).length;
+  };
+
+  // Map events by day number specifically for the active month
   const eventsByDay: Record<number, CalendarEvent> = {};
+  const currentMonthName = MONTH_NAMES[activeMonth].toLowerCase();
+  const currentMonthShort = MONTH_SHORT[activeMonth].toLowerCase();
+
   events.forEach((ev) => {
-    eventsByDay[ev.day] = ev;
+    const dateLower = (ev.dateStr || '').toLowerCase();
+    const hasAnyMonth =
+      MONTH_NAMES.some((m) => dateLower.includes(m.toLowerCase())) ||
+      MONTH_SHORT.some((m) => dateLower.includes(m.toLowerCase()));
+
+    if (!hasAnyMonth || dateLower.includes(currentMonthName) || dateLower.includes(currentMonthShort)) {
+      eventsByDay[ev.day] = ev;
+    }
   });
 
   // Generate dynamic days array for active month
@@ -173,17 +210,27 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
               <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-12 gap-1.5 w-full lg:flex-1 lg:ml-4">
                 {MONTH_SHORT.map((mName, index) => {
                   const isSelected = activeMonth === index;
+                  const count = getEventCountForMonth(index);
                   return (
                     <button
                       key={mName}
                       onClick={() => setActiveMonth(index)}
-                      className={`py-2 px-1 text-center rounded-xl font-mono text-xs sm:text-sm transition-all duration-200 uppercase font-bold ${
+                      className={`py-2 px-1 text-center rounded-xl font-mono text-xs sm:text-sm transition-all duration-200 uppercase font-bold flex items-center justify-center gap-1 ${
                         isSelected
                           ? 'bg-volt text-black shadow-[0_0_16px_rgba(212,255,0,0.5)] scale-[1.03] z-10'
                           : 'bg-white/[0.03] hover:bg-white/10 text-slate-300 hover:text-white border border-white/5'
                       }`}
                     >
-                      {mName}
+                      <span>{mName}</span>
+                      {count > 0 && (
+                        <span
+                          className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                            isSelected ? 'bg-black text-volt' : 'bg-volt/20 text-volt border border-volt/40'
+                          }`}
+                        >
+                          {count}
+                        </span>
+                      )}
                     </button>
                   );
                 })}

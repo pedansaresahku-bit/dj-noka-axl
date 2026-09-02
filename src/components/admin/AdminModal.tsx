@@ -125,38 +125,44 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
     e.preventDefault();
     setLoading(true);
 
-    const data = new FormData();
-    data.append('day', formData.day?.toString() || '1');
-    data.append('dateStr', formData.dateStr || `Day ${formData.day} September 2026`);
-    data.append('clubName', formData.clubName || 'Club Venue');
-    data.append('eventTitle', formData.eventTitle || 'NOKA AXL LIVE');
-    data.append('city', formData.city || 'Jakarta');
-    data.append('country', formData.country || 'Indonesia');
-    data.append('venueAddress', formData.venueAddress || '');
-    data.append('time', formData.time || '22:00 - Late');
-    data.append('genre', formData.genre || 'Mainstage Techno');
-    data.append('ticketStatus', formData.ticketStatus || 'AVAILABLE');
-    data.append('ticketPrice', formData.ticketPrice || 'IDR 250,000');
-    data.append('description', formData.description || '');
-    data.append('googleMapsUrl', formData.googleMapsUrl || `https://maps.google.com/?q=${encodeURIComponent(formData.clubName || '')}`);
-    
-    if (Array.isArray(formData.supportingDJs)) {
-      data.append('supportingDJs', formData.supportingDJs.join(', '));
-    } else if (typeof formData.supportingDJs === 'string') {
-      data.append('supportingDJs', formData.supportingDJs);
+    let flyerImageUrl = formData.flyerImage || '/assets/image-1.jpeg';
+    if (selectedFile) {
+      try {
+        flyerImageUrl = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(selectedFile);
+        });
+      } catch {}
     }
 
-    if (selectedFile) {
-      data.append('flyerFile', selectedFile);
-    } else if (formData.flyerImage) {
-      data.append('flyerImage', formData.flyerImage);
-    }
+    const payload = {
+      day: parseInt(formData.day?.toString() || '1', 10),
+      dateStr: formData.dateStr || `Day ${formData.day || 1} September 2026`,
+      clubName: formData.clubName?.trim() || 'CLUB VENUE',
+      eventTitle: formData.eventTitle?.trim() || 'NOKA AXL LIVE',
+      city: formData.city?.trim() || 'Jakarta',
+      country: formData.country?.trim() || 'Indonesia',
+      venueAddress: formData.venueAddress?.trim() || '',
+      time: formData.time?.trim() || '22:00 - Late',
+      genre: formData.genre?.trim() || 'Mainstage Techno',
+      ticketStatus: (formData.ticketStatus as any) || 'AVAILABLE',
+      ticketPrice: formData.ticketPrice?.trim() || 'IDR 250,000',
+      description: formData.description?.trim() || '',
+      googleMapsUrl: formData.googleMapsUrl?.trim() || `https://maps.google.com/?q=${encodeURIComponent(formData.clubName || '')}`,
+      flyerImage: flyerImageUrl,
+      supportingDJs: Array.isArray(formData.supportingDJs)
+        ? formData.supportingDJs
+        : (typeof formData.supportingDJs === 'string'
+            ? (formData.supportingDJs as string).split(',').map((s) => s.trim()).filter(Boolean)
+            : []),
+    };
 
     let res;
     if (editingEventId) {
-      res = await api.updateEvent(editingEventId, data);
+      res = await api.updateEvent(editingEventId, payload);
     } else {
-      res = await api.createEvent(data);
+      res = await api.createEvent(payload);
     }
 
     setLoading(false);
@@ -164,6 +170,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
       setIsFormOpen(false);
+      setSelectedFile(null);
       loadData();
       onEventsUpdated();
     } else {

@@ -1,4 +1,33 @@
 // Cloudflare Pages Function: /api/events/[id] with D1 SQL
+
+async function getRequestBody(request: Request) {
+  const contentType = request.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    try {
+      return await request.json();
+    } catch {
+      return {};
+    }
+  }
+  if (contentType.includes('multipart/form-data') || contentType.includes('application/x-www-form-urlencoded')) {
+    try {
+      const formData = await request.formData();
+      const obj: any = {};
+      for (const [key, value] of formData.entries()) {
+        obj[key] = value;
+      }
+      return obj;
+    } catch {
+      return {};
+    }
+  }
+  try {
+    return await request.json();
+  } catch {
+    return {};
+  }
+}
+
 export async function onRequestDelete(context: any) {
   try {
     const { params, env } = context;
@@ -31,51 +60,65 @@ export async function onRequestPut(context: any) {
   try {
     const { request, params, env } = context;
     const eventId = params.id;
-    let body: any = {};
-    try {
-      body = await request.json();
-    } catch {}
+    const body: any = await getRequestBody(request);
+
+    const day = body.day !== undefined ? parseInt(body.day, 10) : 1;
+    const dateStr = body.dateStr || `Day ${day} September 2026`;
+    const clubName = body.clubName || 'VENUE';
+    const eventTitle = body.eventTitle || 'NOKA AXL LIVE';
+    const city = body.city || 'Jakarta';
+    const country = body.country || 'Indonesia';
+    const venueAddress = body.venueAddress || '';
+    const time = body.time || '22:00 - Late';
+    const genre = body.genre || 'Mainstage Techno';
+    const ticketStatus = body.ticketStatus || 'AVAILABLE';
+    const ticketPrice = body.ticketPrice || 'IDR 250,000';
+    const flyerImage = body.flyerImage || '/assets/image-1.jpeg';
+    const supportingDJs = typeof body.supportingDJs === 'string' ? body.supportingDJs : JSON.stringify(body.supportingDJs || []);
+    const description = body.description || '';
+    const googleMapsUrl = body.googleMapsUrl || `https://maps.google.com/?q=${encodeURIComponent(clubName)}`;
 
     if (env?.DB) {
       try {
         await env.DB.prepare(`
-          UPDATE events
-          SET day = COALESCE(?, day),
-              dateStr = COALESCE(?, dateStr),
-              clubName = COALESCE(?, clubName),
-              eventTitle = COALESCE(?, eventTitle),
-              city = COALESCE(?, city),
-              country = COALESCE(?, country),
-              venueAddress = COALESCE(?, venueAddress),
-              time = COALESCE(?, time),
-              genre = COALESCE(?, genre),
-              ticketStatus = COALESCE(?, ticketStatus),
-              ticketPrice = COALESCE(?, ticketPrice),
-              flyerImage = COALESCE(?, flyerImage),
-              supportingDJs = COALESCE(?, supportingDJs),
-              description = COALESCE(?, description),
-              googleMapsUrl = COALESCE(?, googleMapsUrl)
-          WHERE id = ?
+          INSERT INTO events (id, day, dateStr, clubName, eventTitle, city, country, venueAddress, time, genre, ticketStatus, ticketPrice, flyerImage, supportingDJs, description, googleMapsUrl)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          ON CONFLICT(id) DO UPDATE SET
+            day = excluded.day,
+            dateStr = excluded.dateStr,
+            clubName = excluded.clubName,
+            eventTitle = excluded.eventTitle,
+            city = excluded.city,
+            country = excluded.country,
+            venueAddress = excluded.venueAddress,
+            time = excluded.time,
+            genre = excluded.genre,
+            ticketStatus = excluded.ticketStatus,
+            ticketPrice = excluded.ticketPrice,
+            flyerImage = excluded.flyerImage,
+            supportingDJs = excluded.supportingDJs,
+            description = excluded.description,
+            googleMapsUrl = excluded.googleMapsUrl;
         `).bind(
-          body.day !== undefined ? parseInt(body.day, 10) : null,
-          body.dateStr || null,
-          body.clubName || null,
-          body.eventTitle || null,
-          body.city || null,
-          body.country || null,
-          body.venueAddress || null,
-          body.time || null,
-          body.genre || null,
-          body.ticketStatus || null,
-          body.ticketPrice || null,
-          body.flyerImage || null,
-          body.supportingDJs ? JSON.stringify(body.supportingDJs) : null,
-          body.description || null,
-          body.googleMapsUrl || null,
-          eventId
+          eventId,
+          day,
+          dateStr,
+          clubName,
+          eventTitle,
+          city,
+          country,
+          venueAddress,
+          time,
+          genre,
+          ticketStatus,
+          ticketPrice,
+          flyerImage,
+          supportingDJs,
+          description,
+          googleMapsUrl
         ).run();
       } catch (dbErr) {
-        console.error('D1 update error:', dbErr);
+        console.error('D1 upsert error:', dbErr);
       }
     }
 
@@ -83,6 +126,24 @@ export async function onRequestPut(context: any) {
       JSON.stringify({
         success: true,
         message: `Event ${eventId} updated successfully in D1 database.`,
+        data: {
+          id: eventId,
+          day,
+          dateStr,
+          clubName,
+          eventTitle,
+          city,
+          country,
+          venueAddress,
+          time,
+          genre,
+          ticketStatus,
+          ticketPrice,
+          flyerImage,
+          supportingDJs: typeof supportingDJs === 'string' ? JSON.parse(supportingDJs || '[]') : supportingDJs,
+          description,
+          googleMapsUrl,
+        }
       }),
       { status: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
     );
