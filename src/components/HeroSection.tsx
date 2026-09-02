@@ -74,7 +74,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-volt/30 bg-volt/10 text-volt text-xs sm:text-sm font-mono tracking-widest uppercase mb-4 backdrop-blur-md shadow-volt-sm"
         >
           <Flame className="w-3.5 h-3.5 text-volt animate-pulse" />
-          <span>INDONESIAN BREAKBEAT PIONEER // WORLD TOUR</span>
+          <span>INDONESIAN BREAKBEAT PIONEER</span>
           <Sparkles className="w-3.5 h-3.5 text-volt" />
         </motion.div>
 

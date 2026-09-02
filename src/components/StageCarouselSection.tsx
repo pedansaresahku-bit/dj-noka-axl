@@ -56,7 +56,7 @@ export const StageCarouselSection: React.FC = () => {
             </h2>
             <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 flex items-center gap-2">
               <MoveHorizontal className="w-4 h-4 text-volt animate-pulse" />
-              <span>5s Continuous auto-rotation • Drag / swipe with mouse to navigate</span>
+              <span>Swipe right or left to navigate</span>
             </p>
           </FadeIn>
 
@@ -133,11 +133,10 @@ export const StageCarouselSection: React.FC = () => {
                     stiffness: 180,
                     damping: 22,
                   }}
-                  className={`pointer-events-auto absolute w-[280px] sm:w-[350px] md:w-[410px] h-[460px] sm:h-[560px] md:h-[640px] rounded-[32px] overflow-hidden border select-none ${
-                    isCenter
+                  className={`pointer-events-auto absolute w-[280px] sm:w-[350px] md:w-[410px] h-[460px] sm:h-[560px] md:h-[640px] rounded-[32px] overflow-hidden border select-none ${isCenter
                       ? 'border-volt/80 shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(212,255,0,0.3)] z-30'
                       : 'border-white/10 hover:border-white/30 z-10'
-                  }`}
+                    }`}
                   style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
                 >
                   <img

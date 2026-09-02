@@ -179,6 +179,17 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
             </button>
           </div>
 
+
+
+          {/* Back To Top Button */}
+          <button
+            onClick={scrollToTop}
+            className="flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-volt transition-colors group px-3.5 py-1.5 rounded-full border border-white/10 hover:border-volt/40 bg-white/[0.02]"
+          >
+            <span className="uppercase tracking-widest text-[10px]">BACK TO TOP</span>
+            <ArrowUp className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform text-volt" />
+          </button>
+
           {/* KAKODETA ID Watermark Agency Badge */}
           <div className="flex items-center">
             <a
@@ -198,15 +209,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
               </span>
             </a>
           </div>
-
-          {/* Back To Top Button */}
-          <button
-            onClick={scrollToTop}
-            className="flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-volt transition-colors group px-3.5 py-1.5 rounded-full border border-white/10 hover:border-volt/40 bg-white/[0.02]"
-          >
-            <span className="uppercase tracking-widest text-[10px]">BACK TO TOP</span>
-            <ArrowUp className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform text-volt" />
-          </button>
         </div>
       </div>
     </footer>

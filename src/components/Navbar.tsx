@@ -23,9 +23,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
   const navLinks = [
     { name: 'ABOUT', href: '#about' },
     { name: 'DISCOGRAPHY', href: '#tracks' },
+    { name: 'STAGE GALLERY', href: '#gallery' },
     { name: 'TOUR DATES', href: '#tour' },
     { name: 'CALENDAR', href: '#calendar' },
-    { name: 'STAGE GALLERY', href: '#gallery' },
     { name: 'EPK & RIDER', href: '#epk', onClick: onOpenEPK },
   ];
 
@@ -35,16 +35,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
         initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 flex justify-center py-3 sm:py-4 ${
-          scrolled ? 'sm:py-3' : 'sm:py-5'
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 flex justify-center py-3 sm:py-4 ${scrolled ? 'sm:py-3' : 'sm:py-5'
+          }`}
       >
         <div
-          className={`w-[95%] rounded-full border border-white/10 transition-all duration-300 px-4 sm:px-8 py-2.5 sm:py-3 flex items-center justify-between ${
-            scrolled
+          className={`w-[95%] rounded-full border border-white/10 transition-all duration-300 px-4 sm:px-8 py-2.5 sm:py-3 flex items-center justify-between ${scrolled
               ? 'bg-[#0E0E14]/90 backdrop-blur-md shadow-[0_10px_35px_rgba(0,0,0,0.85)] border-volt/20'
               : 'bg-[#08080A]/70 backdrop-blur-md'
-          }`}
+            }`}
         >
           {/* Brand Logo & Name */}
           <a href="#" className="flex items-center gap-3 group">
