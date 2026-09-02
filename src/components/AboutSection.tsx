@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Disc3, Zap, Activity, Cpu, ArrowRight, Flame, Radio, Award, Sparkles, Music2, ShieldCheck } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Flame, Award, Activity, Zap, Radio, Music2, ShieldCheck, Sparkles, Disc3, Cpu, ArrowRight } from 'lucide-react';
 import { Magnet } from './common/Magnet';
 import { FadeIn } from './common/FadeIn';
 
@@ -9,64 +9,8 @@ interface AboutSectionProps {
   onOpenEPK: () => void;
 }
 
-// Character scroll reveal component
-const CharacterScrollReveal: React.FC<{ text: string }> = ({ text }) => {
-  const containerRef = useRef<HTMLParagraphElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start 0.85', 'end 0.35'],
-  });
-
-  const characters = text.split('');
-
-  return (
-    <p
-      ref={containerRef}
-      className="flex flex-wrap justify-center text-center max-w-4xl font-kanit text-lg sm:text-2xl md:text-3xl lg:text-4xl font-medium leading-relaxed tracking-tight text-slate-100 select-none"
-    >
-      {characters.map((char, index) => {
-        const start = index / characters.length;
-        const end = start + 1 / characters.length;
-        return (
-          <CharacterSpan
-            key={index}
-            char={char}
-            progress={scrollYProgress}
-            range={[start, end]}
-          />
-        );
-      })}
-    </p>
-  );
-};
-
-const CharacterSpan: React.FC<{
-  char: string;
-  progress: any;
-  range: [number, number];
-}> = ({ char, progress, range }) => {
-  const opacity = useTransform(progress, range, [0.15, 1]);
-  const color = useTransform(progress, range, ['#475569', '#FFFFFF']);
-
-  if (char === ' ') {
-    return <span className="inline-block w-2 sm:w-3">&nbsp;</span>;
-  }
-
-  return (
-    <motion.span
-      style={{ opacity, color }}
-      className="inline-block transition-colors duration-75"
-    >
-      {char}
-    </motion.span>
-  );
-};
-
 export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpenEPK }) => {
   const [activeEra, setActiveEra] = useState<number>(0);
-
-  const manifestoText =
-    "Pelopor sejati skena Breakbeat dan Jungle Dutch tanah air. NOKA AXL merevolusi panggung elektronik Indonesia lewat bassline berfrekuensi rendah yang tebal, ritme syncopated 138 BPM berenergi murni, dan performa panggung legendaris yang mempersatukan ratusan ribu ravers di panggung festival dan clubbing Asia.";
 
   const milestones = [
     {
@@ -92,36 +36,50 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
   return (
     <section
       id="about"
-      className="relative w-full bg-[#08080A] py-24 sm:py-32 px-4 sm:px-8 md:px-12 flex flex-col justify-center items-center overflow-hidden border-b border-white/5"
+      className="relative w-full bg-[#08080A] py-20 sm:py-28 px-4 sm:px-8 md:px-12 flex flex-col justify-center items-center overflow-hidden border-b border-white/5"
     >
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[500px] bg-volt/5 blur-[170px] rounded-full pointer-events-none" />
+      {/* Lightweight GPU-accelerated background lighting */}
+      <div 
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[800px] h-[400px] pointer-events-none opacity-20"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(212, 255, 0, 0.18) 0%, rgba(8, 8, 10, 0) 70%)',
+          willChange: 'transform'
+        }}
+      />
 
       {/* Main Container */}
       <div className="relative z-10 max-w-6xl mx-auto flex flex-col items-center">
         
         {/* Section Heading */}
-        <FadeIn delay={0} y={30} className="text-center">
+        <FadeIn delay={0} y={20} className="text-center">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase mb-4">
             <Flame className="w-3.5 h-3.5" />
             <span>INDONESIAN BREAKBEAT PIONEER & PRODUCER</span>
           </div>
-          <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl uppercase tracking-tighter leading-none mb-6">
-            <span className="chrome-heading">THE SONIC REVOLUTION</span>
+          <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl uppercase tracking-tighter leading-none mb-4">
+            <span className="chrome-heading">ABOUT NOKA AXL</span>
           </h2>
           <p className="text-xs sm:text-sm font-mono text-slate-400 max-w-2xl mx-auto uppercase tracking-wider">
             Meracik gelombang suara full bass berfrekuensi tebal, drop kinetik tanpa kompromi, dan energi dancefloor tanpa batas.
           </p>
         </FadeIn>
 
-        {/* Character By Character Scroll-Driven Paragraph */}
-        <div className="my-10 sm:my-14 px-2">
-          <CharacterScrollReveal text={manifestoText} />
-        </div>
+        {/* Lightweight Performant Manifesto Quote Box */}
+        <FadeIn delay={0.15} y={20} className="my-8 sm:my-10 max-w-4xl text-center px-4">
+          <div className="p-6 sm:p-8 rounded-3xl bg-white/[0.02] border border-white/10 relative">
+            <div className="text-volt font-mono text-xs tracking-widest uppercase mb-3 flex items-center justify-center gap-2">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>THE SONIC MANIFESTO</span>
+            </div>
+            <blockquote className="font-kanit text-lg sm:text-2xl md:text-3xl font-medium leading-relaxed tracking-tight text-white select-none">
+              "Pelopor sejati skena Breakbeat dan Jungle Dutch tanah air. NOKA AXL merevolusi panggung elektronik Indonesia lewat bassline berfrekuensi rendah yang tebal, ritme syncopated 138 BPM berenergi murni, dan performa panggung legendaris yang mempersatukan ratusan ribu ravers di panggung festival dan clubbing Asia."
+            </blockquote>
+          </div>
+        </FadeIn>
 
         {/* Live Performance HUD Telemetry Stats */}
-        <FadeIn delay={0.2} y={30} className="w-full grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 my-8">
-          <div className="p-5 rounded-2xl bg-[#0E0E14] border border-white/10 relative overflow-hidden group hover:border-volt/40 transition-colors">
+        <FadeIn delay={0.2} y={20} className="w-full grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 my-6">
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#0E0E14] border border-white/10 hover:border-volt/40 transition-colors">
             <div className="flex items-center justify-between text-volt mb-2">
               <span className="text-[10px] font-mono tracking-widest uppercase">LEGACY</span>
               <Award className="w-4 h-4" />
@@ -134,7 +92,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[#0E0E14] border border-white/10 relative overflow-hidden group hover:border-volt/40 transition-colors">
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#0E0E14] border border-white/10 hover:border-cyan-400/40 transition-colors">
             <div className="flex items-center justify-between text-cyan-400 mb-2">
               <span className="text-[10px] font-mono tracking-widest uppercase">DIGITAL REACH</span>
               <Activity className="w-4 h-4" />
@@ -147,7 +105,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[#0E0E14] border border-white/10 relative overflow-hidden group hover:border-volt/40 transition-colors">
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#0E0E14] border border-white/10 hover:border-volt/40 transition-colors">
             <div className="flex items-center justify-between text-volt mb-2">
               <span className="text-[10px] font-mono tracking-widest uppercase">HEADLINE SHOWS</span>
               <Zap className="w-4 h-4" />
@@ -160,7 +118,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[#0E0E14] border border-white/10 relative overflow-hidden group hover:border-volt/40 transition-colors">
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#0E0E14] border border-white/10 hover:border-purple-400/40 transition-colors">
             <div className="flex items-center justify-between text-purple-400 mb-2">
               <span className="text-[10px] font-mono tracking-widest uppercase">PULSE TEMPO</span>
               <Radio className="w-4 h-4" />
@@ -175,11 +133,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
         </FadeIn>
 
         {/* 4 Bento Grid Pillars of Sound */}
-        <FadeIn delay={0.25} y={30} className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 my-6">
+        <FadeIn delay={0.25} y={20} className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 my-4">
           {/* Bento Card 1: Breakbeat Mastery */}
           <div className="p-6 sm:p-8 rounded-3xl bg-[#0C0C12] border border-white/10 hover:border-volt/40 transition-all flex flex-col justify-between group">
             <div>
-              <div className="w-12 h-12 rounded-2xl bg-volt/10 border border-volt/30 flex items-center justify-center text-volt mb-5 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-2xl bg-volt/10 border border-volt/30 flex items-center justify-center text-volt mb-5 group-hover:scale-105 transition-transform">
                 <Music2 className="w-6 h-6" />
               </div>
               <span className="text-[10px] font-mono tracking-widest text-volt uppercase block mb-1">
@@ -193,15 +151,15 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
               </p>
             </div>
             <div className="pt-5 mt-5 border-t border-white/5 flex items-center gap-2 text-[11px] font-mono text-slate-400">
-              <ShieldCheck className="w-3.5 h-3.5 text-volt" />
+              <ShieldCheck className="w-3.5 h-3.5 text-volt shrink-0" />
               <span>Diakui sebagai Suhu & Inspirasi Komunitas Remixer Indonesia</span>
             </div>
           </div>
 
           {/* Bento Card 2: Viral Anthem Architecture */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-[#0C0C12] border border-white/10 hover:border-volt/40 transition-all flex flex-col justify-between group">
+          <div className="p-6 sm:p-8 rounded-3xl bg-[#0C0C12] border border-white/10 hover:border-cyan-400/40 transition-all flex flex-col justify-between group">
             <div>
-              <div className="w-12 h-12 rounded-2xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 mb-5 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-2xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 mb-5 group-hover:scale-105 transition-transform">
                 <Sparkles className="w-6 h-6" />
               </div>
               <span className="text-[10px] font-mono tracking-widest text-cyan-400 uppercase block mb-1">
@@ -215,7 +173,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
               </p>
             </div>
             <div className="pt-5 mt-5 border-t border-white/5 flex items-center gap-2 text-[11px] font-mono text-slate-400">
-              <Activity className="w-3.5 h-3.5 text-cyan-400" />
+              <Activity className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
               <span>Kanal Resmi: YouTube Noka AxL OFFICIAL & Apple Music</span>
             </div>
           </div>
@@ -223,7 +181,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
           {/* Bento Card 3: Stage Command */}
           <div className="p-6 sm:p-8 rounded-3xl bg-[#0C0C12] border border-white/10 hover:border-volt/40 transition-all flex flex-col justify-between group">
             <div>
-              <div className="w-12 h-12 rounded-2xl bg-volt/10 border border-volt/30 flex items-center justify-center text-volt mb-5 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-2xl bg-volt/10 border border-volt/30 flex items-center justify-center text-volt mb-5 group-hover:scale-105 transition-transform">
                 <Disc3 className="w-6 h-6 animate-spin-slow" />
               </div>
               <span className="text-[10px] font-mono tracking-widest text-volt uppercase block mb-1">
@@ -237,15 +195,15 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
               </p>
             </div>
             <div className="pt-5 mt-5 border-t border-white/5 flex items-center gap-2 text-[11px] font-mono text-slate-400">
-              <Zap className="w-3.5 h-3.5 text-volt" />
+              <Zap className="w-3.5 h-3.5 text-volt shrink-0" />
               <span>Headline Festival DWP, Zouk Singapore, Ageha Tokyo</span>
             </div>
           </div>
 
           {/* Bento Card 4: Hardware & Live Craft */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-[#0C0C12] border border-white/10 hover:border-volt/40 transition-all flex flex-col justify-between group">
+          <div className="p-6 sm:p-8 rounded-3xl bg-[#0C0C12] border border-white/10 hover:border-purple-400/40 transition-all flex flex-col justify-between group">
             <div>
-              <div className="w-12 h-12 rounded-2xl bg-purple-400/10 border border-purple-400/30 flex items-center justify-center text-purple-400 mb-5 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-2xl bg-purple-400/10 border border-purple-400/30 flex items-center justify-center text-purple-400 mb-5 group-hover:scale-105 transition-transform">
                 <Cpu className="w-6 h-6" />
               </div>
               <span className="text-[10px] font-mono tracking-widest text-purple-400 uppercase block mb-1">
@@ -259,14 +217,14 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
               </p>
             </div>
             <div className="pt-5 mt-5 border-t border-white/5 flex items-center gap-2 text-[11px] font-mono text-slate-400">
-              <Cpu className="w-3.5 h-3.5 text-purple-400" />
+              <Cpu className="w-3.5 h-3.5 text-purple-400 shrink-0" />
               <span>Full Technical Rider & Stage Specification Ready</span>
             </div>
           </div>
         </FadeIn>
 
         {/* Interactive Career Timeline / Highlights */}
-        <FadeIn delay={0.3} y={30} className="w-full my-8 p-6 sm:p-8 rounded-3xl bg-[#0A0A10] border border-white/10">
+        <FadeIn delay={0.3} y={20} className="w-full my-6 p-6 sm:p-8 rounded-3xl bg-[#0A0A10] border border-white/10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-4 mb-6 gap-3">
             <div>
               <span className="text-[10px] font-mono text-volt uppercase tracking-widest block">
@@ -295,7 +253,13 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
             </div>
           </div>
 
-          <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5">
+          <motion.div
+            key={activeEra}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5"
+          >
             <span className="px-3 py-1 rounded-full bg-volt/10 border border-volt/30 text-volt text-[10px] font-mono uppercase font-bold inline-block mb-3">
               {milestones[activeEra].badge}
             </span>
@@ -305,11 +269,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
             <p className="text-xs sm:text-sm font-mono text-slate-300 leading-relaxed">
               {milestones[activeEra].desc}
             </p>
-          </div>
+          </motion.div>
         </FadeIn>
 
         {/* Action CTAs */}
-        <FadeIn delay={0.35} y={30} className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+        <FadeIn delay={0.35} y={20} className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
           <Magnet padding={50} strength={3}>
             <button
               onClick={onOpenBooking}

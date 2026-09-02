@@ -24,9 +24,9 @@ export const MarqueeSection: React.FC = () => {
     { type: 'image', src: '/assets/image-1.jpeg', label: 'HYBRID SYNTH DROP', loc: 'FESTIVAL 2026' },
   ];
 
-  // Tripled for infinite seamless loop
-  const marqueeRow1 = [...row1Items, ...row1Items, ...row1Items];
-  const marqueeRow2 = [...row2Items, ...row2Items, ...row2Items];
+  // Duplicated once for infinite seamless loop with minimum DOM nodes
+  const marqueeRow1 = [...row1Items, ...row1Items];
+  const marqueeRow2 = [...row2Items, ...row2Items];
 
   return (
     <section className="relative w-full py-16 sm:py-24 bg-[#08080A] overflow-hidden border-y border-white/5">
@@ -57,7 +57,8 @@ export const MarqueeSection: React.FC = () => {
       <div className="relative w-full overflow-hidden flex gap-4 py-2 group">
         <motion.div
           animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 38, ease: 'linear', repeat: Infinity }}
+          transition={{ duration: 32, ease: 'linear', repeat: Infinity }}
+          style={{ willChange: 'transform' }}
           className="flex gap-4 items-center shrink-0 group-hover:[animation-play-state:paused]"
         >
           {marqueeRow1.map((item, idx) => (
@@ -115,7 +116,8 @@ export const MarqueeSection: React.FC = () => {
       <div className="relative w-full overflow-hidden flex gap-4 py-2 mt-2 group">
         <motion.div
           animate={{ x: ['-50%', '0%'] }}
-          transition={{ duration: 42, ease: 'linear', repeat: Infinity }}
+          transition={{ duration: 36, ease: 'linear', repeat: Infinity }}
+          style={{ willChange: 'transform' }}
           className="flex gap-4 items-center shrink-0 group-hover:[animation-play-state:paused]"
         >
           {marqueeRow2.map((item, idx) => (
