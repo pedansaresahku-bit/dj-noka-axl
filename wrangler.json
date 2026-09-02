@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dj-noka-axl",
+  "pages_build_output_dir": "dist",
+  "compatibility_date": "2026-09-01",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dj-noka-axl-db",
+      "database_id": "c07fcb52-48f0-4c10-b833-5023d39fad31"
+    }
+  ],
+  "vars": {
+    "ADMIN_PIN": "NOKA2026"
+  }
+}
