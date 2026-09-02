@@ -99,9 +99,11 @@ export const App: React.FC = () => {
         {/* 5. 3D Perspective Stage Carousel */}
         <StageCarouselSection />
 
-        {/* 6. Sticky Stacking Tour Cards */}
+        {/* 6. Sticky Stacking Tour Cards (Dynamically Synced with D1 SQL Database) */}
         <TourDatesSection
+          events={eventsList}
           onOpenBooking={handleOpenBooking}
+          onSelectEvent={handleSelectEvent}
         />
 
         {/* 7. Interactive 30-Day Club & Festival Calendar */}

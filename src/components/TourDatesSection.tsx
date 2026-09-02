@@ -1,20 +1,22 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Calendar, MapPin, Ticket, Flame, Clock, ArrowUpRight } from 'lucide-react';
-import { TOUR_DATES } from '../data/djData';
-import { TourDate } from '../types';
+import { Calendar, MapPin, Ticket, Flame, Clock, ArrowUpRight, Sparkles } from 'lucide-react';
+import { CalendarEvent } from '../types';
 import { FadeIn } from './common/FadeIn';
 
 interface TourDatesSectionProps {
+  events?: CalendarEvent[];
   onOpenBooking: () => void;
+  onSelectEvent?: (event: CalendarEvent) => void;
 }
 
 const StackingTourCard: React.FC<{
-  tour: TourDate;
+  event: CalendarEvent;
   index: number;
   totalCards: number;
   onOpenBooking: () => void;
-}> = ({ tour, index, totalCards, onOpenBooking }) => {
+  onSelectEvent?: (event: CalendarEvent) => void;
+}> = ({ event, index, totalCards, onOpenBooking, onSelectEvent }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -24,12 +26,15 @@ const StackingTourCard: React.FC<{
   const targetScale = 1 - (totalCards - 1 - index) * 0.04;
   const scale = useTransform(scrollYProgress, [0, 1], [targetScale, 1]);
 
-  const statusColors = {
+  const statusColors: Record<string, string> = {
     'AVAILABLE': 'text-volt border-volt/40 bg-volt/10',
     'FEW TICKETS': 'text-amber-400 border-amber-400/40 bg-amber-400/10',
     'SOLD OUT': 'text-rose-500 border-rose-500/40 bg-rose-500/10',
     'VIP EXCLUSIVE': 'text-cyan-400 border-cyan-400/40 bg-cyan-400/10',
+    'GUESTLIST ONLY': 'text-purple-400 border-purple-400/40 bg-purple-400/10',
   };
+
+  const statusColorClass = statusColors[event.ticketStatus] || statusColors['AVAILABLE'];
 
   return (
     <div
@@ -53,19 +58,19 @@ const StackingTourCard: React.FC<{
         <div className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-white/10 pb-6 mb-6 gap-4">
           <div className="flex items-center gap-4 sm:gap-6">
             <span className="font-kanit font-black text-4xl sm:text-6xl text-slate-600">
-              0{index + 1}
+              {index + 1 < 10 ? `0${index + 1}` : index + 1}
             </span>
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className={`text-[10px] font-mono tracking-widest uppercase px-2.5 py-0.5 rounded-full border ${statusColors[tour.status]}`}>
-                  {tour.status}
+                <span className={`text-[10px] font-mono tracking-widest uppercase px-2.5 py-0.5 rounded-full border ${statusColorClass}`}>
+                  {event.ticketStatus}
                 </span>
                 <span className="text-[10px] font-mono text-volt tracking-widest uppercase bg-white/5 px-2 py-0.5 rounded">
-                  {tour.badge}
+                  {event.genre || 'HEADLINE SHOW'}
                 </span>
               </div>
               <h3 className="font-kanit font-black text-2xl sm:text-4xl text-white uppercase tracking-wider">
-                {tour.city}, {tour.country}
+                {event.city}{event.country ? `, ${event.country}` : ''}
               </h3>
             </div>
           </div>
@@ -74,12 +79,18 @@ const StackingTourCard: React.FC<{
             <div className="flex flex-col text-left lg:text-right">
               <span className="text-[10px] font-mono text-slate-400 uppercase">DATE & VENUE</span>
               <span className="font-kanit font-bold text-sm sm:text-base text-white uppercase">
-                {tour.date} // {tour.venue}
+                {event.dateStr} // {event.clubName}
               </span>
             </div>
 
             <button
-              onClick={onOpenBooking}
+              onClick={() => {
+                if (onSelectEvent) {
+                  onSelectEvent(event);
+                } else {
+                  onOpenBooking();
+                }
+              }}
               className="px-6 sm:px-8 py-3 rounded-full bg-volt text-black font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center gap-2 hover:bg-volt-hover transition-all shadow-volt-sm active:scale-95 shrink-0"
             >
               <Ticket className="w-4 h-4" />
@@ -92,21 +103,24 @@ const StackingTourCard: React.FC<{
         {/* Bottom Media and Stage Teaser Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
           {/* Left Column: Stage Image & Detail */}
-          <div className="md:col-span-7 h-[220px] sm:h-[300px] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 relative group">
+          <div
+            onClick={() => onSelectEvent && onSelectEvent(event)}
+            className="md:col-span-7 h-[220px] sm:h-[300px] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 relative group cursor-pointer"
+          >
             <img
-              src={tour.image}
-              alt={`${tour.city} show`}
+              src={event.flyerImage || '/assets/image-1.jpeg'}
+              alt={`${event.clubName} show`}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
               <div>
                 <p className="font-kanit font-bold text-base sm:text-lg text-white uppercase tracking-wider">
-                  {tour.event}
+                  {event.eventTitle}
                 </p>
                 <p className="text-xs font-mono text-volt tracking-widest uppercase flex items-center gap-1 mt-0.5">
                   <MapPin className="w-3 h-3" />
-                  {tour.venue}
+                  {event.clubName}
                 </p>
               </div>
               <span className="p-2 rounded-full bg-black/60 border border-white/20 text-volt">
@@ -119,27 +133,29 @@ const StackingTourCard: React.FC<{
           <div className="md:col-span-5 flex flex-col justify-between h-full gap-4 bg-white/[0.03] p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-white/5">
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                <span className="text-xs font-mono text-slate-400 uppercase">SET DURATION</span>
-                <span className="text-xs font-mono text-white font-bold">90 MIN EXTENDED HEADLINE</span>
+                <span className="text-xs font-mono text-slate-400 uppercase">TICKET PRICE</span>
+                <span className="text-xs font-mono text-white font-bold">{event.ticketPrice || 'IDR 250,000'}</span>
               </div>
               <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                <span className="text-xs font-mono text-slate-400 uppercase">AUDIO SETUP</span>
-                <span className="text-xs font-mono text-white font-bold">FUNKTION-ONE / L-ACOUSTICS</span>
+                <span className="text-xs font-mono text-slate-400 uppercase">VENUE / ADDRESS</span>
+                <span className="text-xs font-mono text-white font-bold truncate max-w-[200px]">{event.venueAddress || event.clubName}</span>
               </div>
               <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                <span className="text-xs font-mono text-slate-400 uppercase">VISUAL RIG</span>
-                <span className="text-xs font-mono text-volt font-bold">4K LED WALL + 30W RGB LASERS</span>
+                <span className="text-xs font-mono text-slate-400 uppercase">GENRE / VIBE</span>
+                <span className="text-xs font-mono text-volt font-bold">{event.genre || 'Mainstage Techno'}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-slate-400 uppercase">SUPPORTING ACTS</span>
-                <span className="text-xs font-mono text-white font-bold">CYBER ECHO & GUEST DJS</span>
+                <span className="text-xs font-mono text-slate-400 uppercase">LINEUP / GUESTS</span>
+                <span className="text-xs font-mono text-white font-bold truncate max-w-[200px]">
+                  {event.supportingDJs && event.supportingDJs.length > 0 ? event.supportingDJs.join(', ') : 'NOKA AXL & Resident DJs'}
+                </span>
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
               <div className="flex items-center gap-1.5 text-slate-400">
                 <Clock className="w-3.5 h-3.5 text-volt" />
-                <span>DOORS: 21:00 // SHOW: 01:00</span>
+                <span>{event.time || '22:00 - LATE'}</span>
               </div>
               <span className="text-volt font-bold uppercase">18+ ONLY</span>
             </div>
@@ -150,7 +166,7 @@ const StackingTourCard: React.FC<{
   );
 };
 
-export const TourDatesSection: React.FC<TourDatesSectionProps> = ({ onOpenBooking }) => {
+export const TourDatesSection: React.FC<TourDatesSectionProps> = ({ events = [], onOpenBooking, onSelectEvent }) => {
   return (
     <section id="tour" className="relative w-full py-24 sm:py-32 bg-[#08080A] px-4 sm:px-8 md:px-12 border-b border-white/5">
       {/* Background ambient lighting */}
@@ -162,30 +178,53 @@ export const TourDatesSection: React.FC<TourDatesSectionProps> = ({ onOpenBookin
           <FadeIn delay={0}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase mb-3">
               <Calendar className="w-3.5 h-3.5" />
-              <span>Event Calendar</span>
+              <span>LIVE TOUR SCHEDULE</span>
             </div>
             <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl uppercase tracking-tighter text-white">
-              <span className="chrome-heading">Tour September</span>
+              <span className="chrome-heading">CONFIRMED DATES</span>
             </h2>
           </FadeIn>
 
           <FadeIn delay={0.15} className="max-w-md text-slate-400 font-mono text-xs sm:text-sm">
-            Scroll down to inspect upcoming festival headline stages and exclusive club residencies. VIP tables and promoter bookings available.
+            Synchronized live from NOKA AXL Cloud Database. Scroll down to inspect upcoming headline stages and exclusive club residencies.
           </FadeIn>
         </div>
 
         {/* Stacking Cards Container */}
-        <div className="relative w-full">
-          {TOUR_DATES.map((tour, index) => (
-            <StackingTourCard
-              key={tour.id}
-              tour={tour}
-              index={index}
-              totalCards={TOUR_DATES.length}
-              onOpenBooking={onOpenBooking}
-            />
-          ))}
-        </div>
+        {events.length > 0 ? (
+          <div className="relative w-full">
+            {events.map((event, index) => (
+              <StackingTourCard
+                key={event.id || index}
+                event={event}
+                index={index}
+                totalCards={events.length}
+                onOpenBooking={onOpenBooking}
+                onSelectEvent={onSelectEvent}
+              />
+            ))}
+          </div>
+        ) : (
+          <FadeIn delay={0.2}>
+            <div className="w-full max-w-4xl mx-auto rounded-3xl border border-white/10 bg-[#0E0E14]/80 p-8 sm:p-12 text-center backdrop-blur-xl">
+              <div className="w-12 h-12 rounded-2xl bg-volt/10 border border-volt/30 flex items-center justify-center text-volt mx-auto mb-4">
+                <Sparkles className="w-6 h-6 animate-pulse" />
+              </div>
+              <h3 className="font-kanit font-black text-2xl sm:text-3xl text-white uppercase tracking-wider mb-2">
+                ACCEPTING FESTIVAL & CLUB BOOKINGS
+              </h3>
+              <p className="text-slate-400 font-mono text-xs sm:text-sm max-w-lg mx-auto mb-6">
+                All upcoming tour dates are actively being scheduled. Promoters and event organizers can submit date requests directly to management.
+              </p>
+              <button
+                onClick={onOpenBooking}
+                className="px-8 py-3.5 rounded-full bg-volt hover:bg-volt-hover text-black font-kanit font-bold text-sm uppercase tracking-wider shadow-volt-sm transition-all"
+              >
+                REQUEST BOOKING INQUIRY
+              </button>
+            </div>
+          </FadeIn>
+        )}
       </div>
     </section>
   );
