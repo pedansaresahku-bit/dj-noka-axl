@@ -8,7 +8,6 @@ const SLIDE_DURATION_SECONDS = 5;
 
 export const StageCarouselSection: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % STAGE_GALLERY.length);
@@ -18,16 +17,14 @@ export const StageCarouselSection: React.FC = () => {
     setCurrentIndex((prev) => (prev - 1 + STAGE_GALLERY.length) % STAGE_GALLERY.length);
   };
 
-  // Automatic slide rotation every 5 seconds
+  // Continuous automatic slide rotation every 5 seconds (runs nonstop)
   useEffect(() => {
-    if (isPaused) return;
-
     const interval = setInterval(() => {
       nextSlide();
     }, SLIDE_DURATION_SECONDS * 1000);
 
     return () => clearInterval(interval);
-  }, [isPaused, currentIndex]);
+  }, [currentIndex]);
 
   const handleDragEnd = (_: any, info: PanInfo) => {
     const swipeThreshold = 50;
@@ -42,10 +39,6 @@ export const StageCarouselSection: React.FC = () => {
     <section 
       id="gallery" 
       className="relative w-full py-24 sm:py-32 bg-[#08080A] px-4 sm:px-8 md:px-12 border-b border-white/5 overflow-hidden select-none"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onTouchStart={() => setIsPaused(true)}
-      onTouchEnd={() => setIsPaused(false)}
     >
       {/* Ambient background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-volt/5 blur-[160px] rounded-full pointer-events-none" />
@@ -63,7 +56,7 @@ export const StageCarouselSection: React.FC = () => {
             </h2>
             <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 flex items-center gap-2">
               <MoveHorizontal className="w-4 h-4 text-volt animate-pulse" />
-              <span>5s Auto-rotation • Drag / swipe with mouse to navigate</span>
+              <span>5s Continuous auto-rotation • Drag / swipe with mouse to navigate</span>
             </p>
           </FadeIn>
 
@@ -163,7 +156,7 @@ export const StageCarouselSection: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Carousel Indicators with 5-Second Animated Progress Fill Bar */}
+        {/* Carousel Indicators with Continuous 5-Second Animated Progress Fill Bar */}
         <div className="flex items-center justify-center gap-2.5 mt-8">
           {STAGE_GALLERY.map((_, i) => {
             const isActive = currentIndex === i;
@@ -177,11 +170,11 @@ export const StageCarouselSection: React.FC = () => {
                   aria-label={`Current slide ${i + 1}`}
                 >
                   <motion.div
-                    key={`${currentIndex}-${isPaused}`}
+                    key={currentIndex}
                     initial={{ width: '0%' }}
-                    animate={{ width: isPaused ? '0%' : '100%' }}
+                    animate={{ width: '100%' }}
                     transition={{
-                      duration: isPaused ? 0 : SLIDE_DURATION_SECONDS,
+                      duration: SLIDE_DURATION_SECONDS,
                       ease: 'linear',
                     }}
                     className="absolute top-0 left-0 bottom-0 bg-volt shadow-[0_0_12px_#D4FF00] rounded-full"
