@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar as CalendarIcon, MapPin, Flame, Eye, ChevronRight, Settings } from 'lucide-react';
+import { MapPin, Flame, Eye, ChevronRight, Settings, ChevronLeft, Clock, Sparkles } from 'lucide-react';
 import { CalendarEvent } from '../types';
 import { FadeIn } from './common/FadeIn';
 
@@ -10,13 +10,38 @@ interface EventCalendarSectionProps {
   onOpenAdmin: () => void;
 }
 
+const MONTH_NAMES = [
+  'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+  'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
+];
+
+const MONTH_SHORT = [
+  'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
+  'JUL', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC'
+];
+
+const DAY_NAMES = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+// Helper to get exact current time in WIB (Western Indonesian Time / GMT+7)
+const getWIBNow = () => {
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  return new Date(utc + 3600000 * 7);
+};
+
 export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
   events,
   onSelectEvent,
   onOpenBooking,
   onOpenAdmin,
 }) => {
+  const wibNow = getWIBNow();
+  const [activeYear, setActiveYear] = useState<number>(wibNow.getFullYear());
+  const [activeMonth, setActiveMonth] = useState<number>(wibNow.getMonth()); // 0-indexed (8 = Sept)
   const [filterMode, setFilterMode] = useState<'ALL' | 'GIGS_ONLY' | 'WEEKENDS' | 'INTERNATIONAL'>('ALL');
+
+  // Days in selected month (e.g. 30 in Sept, 31 in Oct)
+  const daysInMonth = new Date(activeYear, activeMonth + 1, 0).getDate();
 
   // Map events by day number
   const eventsByDay: Record<number, CalendarEvent> = {};
@@ -24,23 +49,26 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
     eventsByDay[ev.day] = ev;
   });
 
-  // Days in September 2026: 30 days. Sept 1, 2026 is Tuesday.
-  const daysOfWeek = ['TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'MON'];
-
-  const calendarDays = Array.from({ length: 30 }, (_, i) => {
+  // Generate dynamic days array for active month
+  const calendarDays = Array.from({ length: daysInMonth }, (_, i) => {
     const dayNumber = i + 1;
-    const dayOfWeekIndex = i % 7;
-    const dayOfWeek = daysOfWeek[dayOfWeekIndex];
+    const dateObj = new Date(activeYear, activeMonth, dayNumber);
+    const dayOfWeek = DAY_NAMES[dateObj.getDay()];
     const event = eventsByDay[dayNumber] || null;
     const isWeekend = dayOfWeek === 'FRI' || dayOfWeek === 'SAT' || dayOfWeek === 'SUN';
     const isInternational = event ? event.country !== 'Indonesia' : false;
+    const isToday =
+      activeYear === wibNow.getFullYear() &&
+      activeMonth === wibNow.getMonth() &&
+      dayNumber === wibNow.getDate();
 
     return {
       day: dayNumber,
       dayOfWeek,
       event,
       isWeekend,
-      isInternational
+      isInternational,
+      isToday,
     };
   });
 
@@ -53,6 +81,30 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
 
   const totalGigsCount = Object.keys(eventsByDay).length;
 
+  const nextMonth = () => {
+    if (activeMonth === 11) {
+      setActiveMonth(0);
+      setActiveYear((prev) => prev + 1);
+    } else {
+      setActiveMonth((prev) => prev + 1);
+    }
+  };
+
+  const prevMonth = () => {
+    if (activeMonth === 0) {
+      setActiveMonth(11);
+      setActiveYear((prev) => prev - 1);
+    } else {
+      setActiveMonth((prev) => prev - 1);
+    }
+  };
+
+  const resetToWIBCurrent = () => {
+    const now = getWIBNow();
+    setActiveYear(now.getFullYear());
+    setActiveMonth(now.getMonth());
+  };
+
   return (
     <section id="calendar" className="relative w-full py-24 sm:py-32 bg-[#0A0A0E] px-4 sm:px-8 md:px-12 border-b border-white/5">
       {/* Background radial atmosphere */}
@@ -62,11 +114,39 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
         {/* Section Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 sm:mb-16 gap-6">
           <FadeIn delay={0}>
-            <div className="flex items-center gap-3 mb-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase">
-                <CalendarIcon className="w-3.5 h-3.5" />
-                <span>30-DAY SCHEDULE // SEPTEMBER 2026</span>
+            {/* Live WIB Badge & Month Navigator */}
+            <div className="flex flex-wrap items-center gap-3 mb-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase shadow-volt-sm">
+                <Clock className="w-3.5 h-3.5 animate-pulse" />
+                <span>WIB LIVE AUTOMATED CALENDAR // {MONTH_NAMES[activeMonth]} {activeYear}</span>
               </div>
+
+              <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full p-1">
+                <button
+                  onClick={prevMonth}
+                  className="p-1 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                  aria-label="Previous Month"
+                  title="Previous Month"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={resetToWIBCurrent}
+                  className="px-2 py-0.5 text-[10px] font-mono text-slate-400 hover:text-volt uppercase font-bold"
+                  title="Reset to current month in WIB"
+                >
+                  NOW (WIB)
+                </button>
+                <button
+                  onClick={nextMonth}
+                  className="p-1 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                  aria-label="Next Month"
+                  title="Next Month"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
               <button
                 onClick={onOpenAdmin}
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-slate-300 hover:text-volt text-[11px] font-mono tracking-wider uppercase transition-colors"
@@ -76,11 +156,12 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
                 <span>MANAGE GIGS</span>
               </button>
             </div>
+
             <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl uppercase tracking-tighter text-white">
-              <span className="chrome-heading">SEPTEMBER TOUR CALENDAR</span>
+              <span className="chrome-heading">{MONTH_NAMES[activeMonth]} TOUR CALENDAR</span>
             </h2>
             <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 max-w-xl">
-              Live schedule of verified headline gigs, club takeovers, and festival dates. Click any date to inspect flyer poster and venue map.
+              Live automated schedule synchronized with Asia/Jakarta (WIB) real-time clock. Automatically transitions when the month flips. Click any date to inspect flyer poster and location map.
             </p>
           </FadeIn>
 
@@ -94,7 +175,7 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
                   : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10'
               }`}
             >
-              FULL 30 DAYS
+              FULL {daysInMonth} DAYS
             </button>
             <button
               onClick={() => setFilterMode('GIGS_ONLY')}
@@ -129,7 +210,7 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
           </FadeIn>
         </div>
 
-        {/* 30-Day Grid Layout */}
+        {/* Dynamic Days Grid Layout */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
           {filteredDays.map((item, index) => {
             const hasEvent = item.event !== null;
@@ -144,26 +225,38 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
                 >
                   <div
                     onClick={() => onSelectEvent(ev)}
-                    className="group relative h-full min-h-[170px] sm:min-h-[190px] rounded-2xl bg-[#111118] hover:bg-[#161622] border border-volt/50 hover:border-volt transition-all duration-300 p-4 flex flex-col justify-between cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-volt-sm hover:-translate-y-1 overflow-hidden"
+                    className={`group relative h-full min-h-[170px] sm:min-h-[190px] rounded-2xl bg-[#111118] hover:bg-[#161622] border transition-all duration-300 p-4 flex flex-col justify-between cursor-pointer overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-volt-sm hover:-translate-y-1 ${
+                      item.isToday
+                        ? 'border-volt shadow-[0_0_20px_rgba(212,255,0,0.25)] ring-1 ring-volt'
+                        : 'border-volt/50 hover:border-volt'
+                    }`}
                   >
                     {/* Top Glow bar */}
                     <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-volt via-cyan-400 to-volt" />
 
-                    {/* Header: Date Number & Day Tag */}
+                    {/* Header: Date Number, Month Tag & Today Indicator */}
                     <div className="flex items-start justify-between">
                       <div className="flex items-baseline gap-1.5">
                         <span className="font-kanit font-black text-2xl sm:text-3xl text-white group-hover:text-volt transition-colors">
                           {item.day < 10 ? `0${item.day}` : item.day}
                         </span>
                         <span className="text-[10px] font-mono text-slate-400 font-bold uppercase">
-                          SEPT
+                          {MONTH_SHORT[activeMonth]}
                         </span>
                       </div>
-                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full uppercase font-bold tracking-wider ${
-                        item.isWeekend ? 'bg-volt/20 text-volt border border-volt/30' : 'bg-white/10 text-slate-300'
-                      }`}>
-                        {item.dayOfWeek}
-                      </span>
+                      <div className="flex items-center gap-1">
+                        {item.isToday && (
+                          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-volt text-black font-black uppercase tracking-wider flex items-center gap-0.5">
+                            <Sparkles className="w-2.5 h-2.5" />
+                            <span>TODAY</span>
+                          </span>
+                        )}
+                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full uppercase font-bold tracking-wider ${
+                          item.isWeekend ? 'bg-volt/20 text-volt border border-volt/30' : 'bg-white/10 text-slate-300'
+                        }`}>
+                          {item.dayOfWeek}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Middle: Club & City */}
@@ -212,21 +305,32 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
               >
                 <div
                   onClick={onOpenBooking}
-                  className="group relative h-full min-h-[170px] sm:min-h-[190px] rounded-2xl bg-[#09090D] hover:bg-[#0E0E14] border border-white/5 hover:border-white/20 transition-all duration-300 p-4 flex flex-col justify-between cursor-pointer"
+                  className={`group relative h-full min-h-[170px] sm:min-h-[190px] rounded-2xl bg-[#09090D] hover:bg-[#0E0E14] border transition-all duration-300 p-4 flex flex-col justify-between cursor-pointer ${
+                    item.isToday
+                      ? 'border-volt/70 ring-1 ring-volt/40 shadow-[0_0_15px_rgba(212,255,0,0.15)]'
+                      : 'border-white/5 hover:border-white/20'
+                  }`}
                 >
-                  {/* Header: Date Number & Day */}
+                  {/* Header: Date Number, Month & Day */}
                   <div className="flex items-start justify-between">
                     <div className="flex items-baseline gap-1.5">
                       <span className="font-kanit font-bold text-xl sm:text-2xl text-slate-600 group-hover:text-slate-300 transition-colors">
                         {item.day < 10 ? `0${item.day}` : item.day}
                       </span>
                       <span className="text-[9px] font-mono text-slate-600 uppercase">
-                        SEPT
+                        {MONTH_SHORT[activeMonth]}
                       </span>
                     </div>
-                    <span className="text-[9px] font-mono text-slate-600 uppercase">
-                      {item.dayOfWeek}
-                    </span>
+                    <div className="flex items-center gap-1">
+                      {item.isToday && (
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-volt font-bold uppercase">
+                          TODAY
+                        </span>
+                      )}
+                      <span className="text-[9px] font-mono text-slate-600 uppercase">
+                        {item.dayOfWeek}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Middle: Open date text */}
@@ -254,7 +358,7 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
         <FadeIn delay={0.2} className="mt-10 p-5 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3 text-xs font-mono text-slate-300">
             <div className="w-2 h-2 rounded-full bg-volt animate-ping" />
-            <span>Dates marked with club titles are confirmed. Open dates are available for club residencies and festival bookings.</span>
+            <span>Automated perpetual calendar synced with WIB (GMT+7). Confirmed gigs are highlighted; open dates are available for festival and club booking inquiries.</span>
           </div>
 
           <button
