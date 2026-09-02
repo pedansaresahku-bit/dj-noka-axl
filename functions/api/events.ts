@@ -201,12 +201,19 @@ export async function onRequestGet() {
     }
   ];
 
-  return new Response(JSON.stringify(events), {
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
+  return new Response(
+    JSON.stringify({
+      success: true,
+      count: events.length,
+      data: events,
+    }),
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    }
+  );
 }
 
 export async function onRequestPost(context: any) {

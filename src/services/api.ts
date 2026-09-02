@@ -29,10 +29,18 @@ class ApiService {
       const stored = localStorage.getItem(LOCAL_STORAGE_EVENTS_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch {}
-    return Object.values(MONTHLY_CALENDAR_EVENTS);
+    const defaults = Object.values(MONTHLY_CALENDAR_EVENTS);
+    this.saveLocalEvents(defaults);
+    return defaults;
+  }
+
+  public restoreDefaultEvents(): CalendarEvent[] {
+    const defaults = Object.values(MONTHLY_CALENDAR_EVENTS);
+    this.saveLocalEvents(defaults);
+    return defaults;
   }
 
   private saveLocalEvents(events: CalendarEvent[]) {

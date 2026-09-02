@@ -322,13 +322,28 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, onEvent
                     </div>
 
                     {activeTab === 'events' && !isFormOpen && (
-                      <button
-                        onClick={openCreateForm}
-                        className="px-4 py-2 rounded-xl bg-volt text-black font-kanit font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 hover:bg-volt-hover shadow-volt-sm transition-all"
-                      >
-                        <Plus className="w-4 h-4" />
-                        <span>ADD NEW EVENT</span>
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            if (window.confirm('Restore all 11 default tour events?')) {
+                              api.restoreDefaultEvents();
+                              loadData();
+                              onEventsUpdated();
+                            }
+                          }}
+                          className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-kanit font-bold text-xs uppercase tracking-wider border border-white/10 transition-all"
+                          title="Restore default tour dates"
+                        >
+                          RESTORE DEFAULTS
+                        </button>
+                        <button
+                          onClick={openCreateForm}
+                          className="px-4 py-2 rounded-xl bg-volt text-black font-kanit font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 hover:bg-volt-hover shadow-volt-sm transition-all"
+                        >
+                          <Plus className="w-4 h-4" />
+                          <span>ADD NEW EVENT</span>
+                        </button>
+                      </div>
                     )}
                   </div>
 
