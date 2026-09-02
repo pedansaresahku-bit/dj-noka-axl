@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUp, Disc, Music2, Instagram, Youtube, Sparkles, Mail, MessageSquare } from 'lucide-react';
+import { ArrowUp, Disc, Music2, Instagram, Youtube, Sparkles, Mail, MessageSquare, ExternalLink, Code2 } from 'lucide-react';
 import { ARTIST_INFO } from '../data/djData';
 import { Magnet } from './common/Magnet';
 
@@ -22,11 +22,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
   };
 
   return (
-    <footer className="relative w-full bg-[#050507] text-white pt-20 pb-12 px-4 sm:px-8 md:px-12 border-t border-white/10 overflow-hidden">
+    <footer className="relative w-full bg-[#050507] text-white pt-20 pb-12 px-6 sm:px-12 md:px-16 lg:px-20 border-t border-white/10 overflow-hidden">
       {/* Background ambient lighting */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-volt/5 blur-[160px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[350px] bg-volt/5 blur-[170px] rounded-full pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto">
+      {/* 100% Full Width Container */}
+      <div className="w-full">
         {/* Top Call to Action Strip */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-white/10 pb-16 mb-16 gap-8">
           <div>
@@ -60,10 +61,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
           </div>
         </div>
 
-        {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-16 border-b border-white/10">
+        {/* Main Footer Grid - 100% Full Width Spacing */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 pb-16 border-b border-white/10">
           {/* Brand Col */}
-          <div className="md:col-span-2">
+          <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full overflow-hidden border border-volt/50 p-0.5 bg-black">
                 <img src="/assets/icon.png" alt="NOKA AXL Logo" className="w-full h-full object-cover rounded-full" />
@@ -72,7 +73,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
                 NOKA AXL
               </span>
             </div>
-            <p className="text-xs font-mono text-slate-400 max-w-sm leading-relaxed mb-6">
+            <p className="text-xs font-mono text-slate-400 max-w-lg leading-relaxed mb-6">
               Indonesian Breakbeat & Jungle Dutch Pioneer. Crafting unyielding bass frequencies, stadium anthems, and peak-time rave euphoria worldwide.
             </p>
             {/* 5 Verified Social Links */}
@@ -128,12 +129,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
           {/* Quick Nav Col */}
           <div>
             <h4 className="text-xs font-mono text-volt uppercase tracking-widest mb-4">NAVIGATION</h4>
-            <ul className="flex flex-col gap-2 text-xs font-kanit font-medium text-slate-400">
-              <li><a href="#about" className="hover:text-white transition-colors uppercase">Sonic Manifesto</a></li>
-              <li><a href="#tracks" className="hover:text-white transition-colors uppercase">Discography Releases</a></li>
-              <li><a href="#tour" className="hover:text-white transition-colors uppercase">World Tour Itinerary</a></li>
-              <li><a href="#calendar" className="hover:text-white transition-colors uppercase">30-Day Club Calendar</a></li>
-              <li><a href="#gallery" className="hover:text-white transition-colors uppercase">Press Kit Gallery</a></li>
+            <ul className="flex flex-col gap-2.5 text-xs font-kanit font-medium text-slate-400">
+              <li><a href="#about" className="hover:text-volt transition-colors uppercase">Sonic Manifesto</a></li>
+              <li><a href="#tracks" className="hover:text-volt transition-colors uppercase">Discography Releases</a></li>
+              <li><a href="#tour" className="hover:text-volt transition-colors uppercase">World Tour Itinerary</a></li>
+              <li><a href="#calendar" className="hover:text-volt transition-colors uppercase">Event Calendar September</a></li>
+              <li><a href="#gallery" className="hover:text-volt transition-colors uppercase">Press Kit Gallery</a></li>
             </ul>
           </div>
 
@@ -164,25 +165,47 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
           </div>
         </div>
 
-        {/* Giant Bottom Headline & Copyright */}
-        <div className="pt-12 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex flex-wrap items-center gap-4 text-[11px] font-mono text-slate-500 uppercase">
-            <span>© 2026 NOKA AXL. ALL RIGHTS RESERVED. RECORDINGS PRODUCED BY AXL SOUND LABS.</span>
+        {/* Bottom Headline, Watermark & Copyright Strip */}
+        <div className="pt-10 flex flex-col lg:flex-row items-center justify-between gap-6">
+          {/* Copyright & CMS Login */}
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[11px] font-mono text-slate-500 uppercase text-center sm:text-left">
+            <span>© 2026 NOKA AXL. ALL RIGHTS RESERVED.</span>
             <span className="hidden sm:inline text-white/20">•</span>
             <button
               onClick={onOpenAdmin}
-              className="text-slate-400 hover:text-volt transition-colors flex items-center gap-1 underline underline-offset-4 decoration-white/20 hover:decoration-volt"
+              className="text-slate-400 hover:text-volt transition-colors underline underline-offset-4 decoration-white/20 hover:decoration-volt"
             >
               MANAGEMENT CMS LOGIN (ALT + A)
             </button>
           </div>
 
+          {/* KAKODETA ID Watermark Agency Badge */}
+          <div className="flex items-center">
+            <a
+              href="https://kakodeta.my.id"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] hover:bg-volt/10 border border-white/10 hover:border-volt/50 transition-all duration-300 group shadow-sm"
+              title="Official Website Developer & Digital Architect: KAKODETA ID"
+            >
+              <Code2 className="w-3.5 h-3.5 text-slate-400 group-hover:text-volt transition-colors" />
+              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">
+                DEVELOPED BY
+              </span>
+              <span className="font-kanit font-black text-xs text-white group-hover:text-volt uppercase tracking-wider transition-colors flex items-center gap-1">
+                KAKODETA ID
+                <ExternalLink className="w-3 h-3 text-volt opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+              </span>
+            </a>
+          </div>
+
+          {/* Back To Top Button */}
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-volt transition-colors group p-2 rounded-full border border-white/5 hover:border-volt/30"
+            className="flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-volt transition-colors group px-3.5 py-1.5 rounded-full border border-white/10 hover:border-volt/40 bg-white/[0.02]"
           >
             <span className="uppercase tracking-widest text-[10px]">BACK TO TOP</span>
-            <ArrowUp className="w-3.5 h-3.5 group-hover:-translate-y-1 transition-transform" />
+            <ArrowUp className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform text-volt" />
           </button>
         </div>
       </div>
