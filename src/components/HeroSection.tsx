@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Play, Pause, Disc3, Radio, Sparkles, Flame, ArrowDown } from 'lucide-react';
+import { Radio, Sparkles, Flame, ArrowDown } from 'lucide-react';
 import { Magnet } from './common/Magnet';
 import { ARTIST_INFO } from '../data/djData';
-import { audioEngine } from '../utils/audioSynth';
 
 interface HeroSectionProps {
   onOpenBooking: () => void;
@@ -11,28 +10,12 @@ interface HeroSectionProps {
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExploreTracks }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroRef = useRef<HTMLElement>(null);
 
   const { scrollY } = useScroll();
   const yParallax = useTransform(scrollY, [0, 600], [0, 150]);
   const opacityFade = useTransform(scrollY, [0, 400], [1, 0.2]);
-
-  useEffect(() => {
-    const unsubscribe = audioEngine.subscribe((playing) => {
-      setIsPlaying(playing);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const handleTogglePlay = () => {
-    if (isPlaying) {
-      audioEngine.stop();
-    } else {
-      audioEngine.playTrackPreview('hero-track', 138);
-    }
-  };
 
   return (
     <section
@@ -62,41 +45,36 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4 text-[11px] font-mono tracking-widest text-slate-400"
+        className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4 text-xs font-mono text-slate-400"
       >
-        <div className="flex items-center gap-3">
-          <span className="flex h-2 w-2 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-volt opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-volt" />
-          </span>
-          <span className="text-white font-bold tracking-wider">LIVE REZONATOR ENGINE</span>
-          <span className="hidden sm:inline text-slate-600">//</span>
-          <span className="hidden sm:inline text-volt">{ARTIST_INFO.bpmRange}</span>
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-volt animate-ping" />
+          <span className="text-white font-bold tracking-widest">{ARTIST_INFO.origin}</span>
         </div>
-
-        <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-2 bg-white/5 px-3 py-1 rounded-full border border-white/10">
-            <Radio className="w-3 h-3 text-volt animate-pulse" />
-            <span className="text-slate-300 uppercase">{ARTIST_INFO.status}</span>
-          </div>
-          <span className="text-slate-500 font-mono">SYS-ONLINE</span>
+        <div className="hidden sm:flex items-center gap-4 text-slate-400">
+          <span className="flex items-center gap-1.5">
+            <Radio className="w-3.5 h-3.5 text-volt" />
+            BPM RANGE: {ARTIST_INFO.bpmRange}
+          </span>
+          <span className="text-white/20">•</span>
+          <span className="text-volt font-bold">{ARTIST_INFO.status}</span>
         </div>
       </motion.div>
 
-      {/* Central Kinetic Headline & Massive Typography */}
+      {/* Center Cinematic Stage Hero */}
       <motion.div
         style={{ y: yParallax, opacity: opacityFade }}
-        className="relative z-10 my-auto flex flex-col items-center justify-center text-center py-6 sm:py-10"
+        className="relative z-10 my-auto flex flex-col items-center text-center max-w-5xl mx-auto py-8 sm:py-12"
       >
-        {/* Eyebrow badge */}
+        {/* Floating Futuristic Badge */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-volt/40 bg-volt/10 text-volt text-xs font-mono tracking-widest uppercase mb-4 sm:mb-6 shadow-volt-sm"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-volt/30 bg-volt/10 text-volt text-xs sm:text-sm font-mono tracking-widest uppercase mb-4 backdrop-blur-md shadow-volt-sm"
         >
-          <Flame className="w-3.5 h-3.5 text-volt" />
-          <span>WORLD TOUR & FESTIVAL HEADLINER</span>
+          <Flame className="w-3.5 h-3.5 text-volt animate-pulse" />
+          <span>INDONESIAN BREAKBEAT PIONEER // WORLD TOUR</span>
           <Sparkles className="w-3.5 h-3.5 text-volt" />
         </motion.div>
 
@@ -124,49 +102,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
           {ARTIST_INFO.tagline}
         </motion.p>
 
-        {/* Hero Interactive Deck & Audio Preview Strip */}
+        {/* Hero Interactive Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.75 }}
           className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6"
         >
-          {/* Audio Preview Trigger Button */}
-          <Magnet padding={50} strength={3}>
-            <button
-              onClick={handleTogglePlay}
-              className={`group flex items-center gap-3 px-6 sm:px-8 py-3.5 rounded-full font-kanit font-bold text-sm tracking-wider uppercase transition-all duration-300 border ${
-                isPlaying
-                  ? 'bg-volt text-black border-volt shadow-volt-md'
-                  : 'bg-white/10 text-white border-white/20 hover:border-volt hover:text-volt backdrop-blur-md'
-              }`}
-            >
-              {isPlaying ? (
-                <>
-                  <Pause className="w-4 h-4 fill-black" />
-                  <span>PAUSE SONIC DROP</span>
-                  <div className="flex items-center gap-1 h-3.5">
-                    <span className="w-1 bg-black rounded animate-eq-1" />
-                    <span className="w-1 bg-black rounded animate-eq-2" />
-                    <span className="w-1 bg-black rounded animate-eq-3" />
-                    <span className="w-1 bg-black rounded animate-eq-4" />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4 fill-white group-hover:fill-volt transition-colors" />
-                  <span>PLAY LIVE REEVAL 138 BPM</span>
-                  <Disc3 className="w-4 h-4 animate-spin-slow group-hover:text-volt" />
-                </>
-              )}
-            </button>
-          </Magnet>
-
           {/* Explore Tracks */}
           <Magnet padding={50} strength={4}>
             <button
               onClick={onExploreTracks}
-              className="px-6 sm:px-8 py-3.5 rounded-full font-kanit font-semibold text-sm tracking-wider uppercase border border-white/20 text-slate-300 hover:text-white hover:border-white/50 backdrop-blur-sm transition-all"
+              className="px-7 sm:px-9 py-3.5 rounded-full font-kanit font-semibold text-sm tracking-wider uppercase border border-white/20 text-slate-200 hover:text-white hover:border-white/50 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all shadow-sm active:scale-95"
             >
               EXPLORE DISCOGRAPHY
             </button>
@@ -176,7 +123,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
           <Magnet padding={50} strength={4}>
             <button
               onClick={onOpenBooking}
-              className="px-6 sm:px-8 py-3.5 rounded-full font-kanit font-bold text-sm tracking-wider uppercase bg-volt text-black hover:bg-volt-hover transition-all shadow-volt-sm"
+              className="px-7 sm:px-9 py-3.5 rounded-full font-kanit font-bold text-sm tracking-wider uppercase bg-volt text-black hover:bg-volt-hover transition-all shadow-volt-sm active:scale-95"
             >
               BOOK FOR FESTIVAL
             </button>
@@ -201,19 +148,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
             <span className="text-[10px] text-slate-500 uppercase">MONTHLY LISTENERS</span>
             <span className="font-bold text-volt tracking-wider">{ARTIST_INFO.monthlyListeners}</span>
           </div>
-          <span className="text-white/20">|</span>
-          <div className="flex flex-col">
-            <span className="text-[10px] text-slate-500 uppercase">SHOWS WORLDWIDE</span>
-            <span className="font-bold text-white tracking-wider">{ARTIST_INFO.festivalAppearances} GIGS</span>
+          <span className="text-white/20 hidden sm:inline">|</span>
+          <div className="hidden sm:flex flex-col">
+            <span className="text-[10px] text-slate-500 uppercase">FESTIVALS</span>
+            <span className="font-bold text-white tracking-wider">{ARTIST_INFO.festivalAppearances} SHOWS</span>
           </div>
         </div>
 
+        {/* Scroll Indicator */}
         <a
           href="#about"
-          className="flex items-center gap-2 text-slate-400 hover:text-volt transition-colors py-1 group"
+          className="flex items-center gap-2 text-slate-400 hover:text-volt transition-colors uppercase tracking-widest text-[11px] group"
         >
-          <span className="text-[11px] font-mono tracking-widest uppercase">DISCOVER THE SONIC WORLD</span>
-          <ArrowDown className="w-3.5 h-3.5 group-hover:translate-y-1 transition-transform" />
+          <span>SCROLL DOWN</span>
+          <ArrowDown className="w-3.5 h-3.5 text-volt group-hover:translate-y-1 transition-transform" />
         </a>
       </motion.div>
     </section>
