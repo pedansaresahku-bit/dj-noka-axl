@@ -4,6 +4,8 @@ import { ChevronLeft, ChevronRight, Camera, MoveHorizontal } from 'lucide-react'
 import { STAGE_GALLERY } from '../data/djData';
 import { FadeIn } from './common/FadeIn';
 
+const SLIDE_DURATION_SECONDS = 5;
+
 export const StageCarouselSection: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -16,13 +18,13 @@ export const StageCarouselSection: React.FC = () => {
     setCurrentIndex((prev) => (prev - 1 + STAGE_GALLERY.length) % STAGE_GALLERY.length);
   };
 
-  // Automatic slide rotation every 6 seconds
+  // Automatic slide rotation every 5 seconds
   useEffect(() => {
     if (isPaused) return;
 
     const interval = setInterval(() => {
       nextSlide();
-    }, 6000);
+    }, SLIDE_DURATION_SECONDS * 1000);
 
     return () => clearInterval(interval);
   }, [isPaused, currentIndex]);
@@ -61,7 +63,7 @@ export const StageCarouselSection: React.FC = () => {
             </h2>
             <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 flex items-center gap-2">
               <MoveHorizontal className="w-4 h-4 text-volt animate-pulse" />
-              <span>Auto-rotates every 6s • Drag / swipe with mouse to navigate</span>
+              <span>5s Auto-rotation • Drag / swipe with mouse to navigate</span>
             </p>
           </FadeIn>
 
@@ -161,18 +163,42 @@ export const StageCarouselSection: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Carousel Indicators / Dots */}
-        <div className="flex items-center justify-center gap-2 mt-8">
-          {STAGE_GALLERY.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentIndex(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                currentIndex === i ? 'w-8 bg-volt shadow-volt-sm' : 'w-2 bg-white/20 hover:bg-white/40'
-              }`}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
+        {/* Carousel Indicators with 5-Second Animated Progress Fill Bar */}
+        <div className="flex items-center justify-center gap-2.5 mt-8">
+          {STAGE_GALLERY.map((_, i) => {
+            const isActive = currentIndex === i;
+
+            if (isActive) {
+              return (
+                <button
+                  key={i}
+                  onClick={() => setCurrentIndex(i)}
+                  className="relative w-12 sm:w-16 h-2 rounded-full bg-white/15 overflow-hidden transition-all duration-300"
+                  aria-label={`Current slide ${i + 1}`}
+                >
+                  <motion.div
+                    key={`${currentIndex}-${isPaused}`}
+                    initial={{ width: '0%' }}
+                    animate={{ width: isPaused ? '0%' : '100%' }}
+                    transition={{
+                      duration: isPaused ? 0 : SLIDE_DURATION_SECONDS,
+                      ease: 'linear',
+                    }}
+                    className="absolute top-0 left-0 bottom-0 bg-volt shadow-[0_0_12px_#D4FF00] rounded-full"
+                  />
+                </button>
+              );
+            }
+
+            return (
+              <button
+                key={i}
+                onClick={() => setCurrentIndex(i)}
+                className="w-2 h-2 rounded-full bg-white/20 hover:bg-white/45 transition-all duration-300"
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            );
+          })}
         </div>
       </div>
     </section>
