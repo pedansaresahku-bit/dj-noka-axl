@@ -10,18 +10,6 @@ class ApiService {
 
   constructor() {
     this.token = localStorage.getItem('noka_admin_token');
-    this.initializeLocalStorage();
-  }
-
-  private initializeLocalStorage() {
-    try {
-      if (!localStorage.getItem(LOCAL_STORAGE_EVENTS_KEY)) {
-        localStorage.setItem(
-          LOCAL_STORAGE_EVENTS_KEY,
-          JSON.stringify(Object.values(MONTHLY_CALENDAR_EVENTS))
-        );
-      }
-    } catch {}
   }
 
   private getLocalEvents(): CalendarEvent[] {
@@ -29,18 +17,21 @@ class ApiService {
       const stored = localStorage.getItem(LOCAL_STORAGE_EVENTS_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch {}
-    const defaults = Object.values(MONTHLY_CALENDAR_EVENTS);
-    this.saveLocalEvents(defaults);
-    return defaults;
+    return Object.values(MONTHLY_CALENDAR_EVENTS);
   }
 
   public restoreDefaultEvents(): CalendarEvent[] {
     const defaults = Object.values(MONTHLY_CALENDAR_EVENTS);
     this.saveLocalEvents(defaults);
     return defaults;
+  }
+
+  public clearAllLocalEvents(): CalendarEvent[] {
+    this.saveLocalEvents([]);
+    return [];
   }
 
   private saveLocalEvents(events: CalendarEvent[]) {
@@ -110,10 +101,10 @@ class ApiService {
       const res = await fetch(`${API_BASE_URL}/api/events`);
       if (res.ok) {
         const json = await this.safeJsonParse(res);
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+        if (json.success && Array.isArray(json.data)) {
           this.saveLocalEvents(json.data);
           return json.data;
-        } else if (Array.isArray(json) && json.length > 0) {
+        } else if (Array.isArray(json)) {
           this.saveLocalEvents(json);
           return json;
         }
@@ -222,7 +213,7 @@ class ApiService {
         ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
       };
 
-      const res = await fetch(`${API_BASE_URL}/api/events/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/events/${encodeURIComponent(id)}`, {
         method: 'PUT',
         headers,
         body: isFormData ? formData : JSON.stringify(formData),
@@ -242,7 +233,7 @@ class ApiService {
     const updated = local.filter((e) => e.id !== id);
     this.saveLocalEvents(updated);
 
-    // 2. Notify remote backend if available
+    // 2. Notify remote backend/D1 database if available
     try {
       const res = await fetch(`${API_BASE_URL}/api/events/${encodeURIComponent(id)}`, {
         method: 'DELETE',
