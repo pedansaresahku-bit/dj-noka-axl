@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, VolumeX, Menu, X, Calendar, Sparkles } from 'lucide-react';
-import { Magnet } from './common/Magnet';
-import { audioEngine } from '../utils/audioSynth';
+import { Menu, X } from 'lucide-react';
 
 interface NavbarProps {
-  onOpenBooking: () => void;
-  onOpenEPK: () => void;
+  onOpenBooking?: () => void;
+  onOpenEPK?: () => void;
   onOpenAdmin?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenEPK, onOpenAdmin }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,21 +19,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenEPK, onOpen
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    const unsubscribe = audioEngine.subscribe((playing) => {
-      setIsPlayingAudio(playing);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const toggleGlobalAudio = () => {
-    if (isPlayingAudio) {
-      audioEngine.stop();
-    } else {
-      audioEngine.playTrackPreview('track-1', 138);
-    }
-  };
 
   const navLinks = [
     { name: 'ABOUT', href: '#about' },
@@ -85,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenEPK, onOpen
           </a>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+          <nav className="hidden lg:flex items-center gap-7 xl:gap-9">
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -96,7 +78,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenEPK, onOpen
                     link.onClick();
                   }
                 }}
-                className="text-xs font-kanit font-semibold uppercase tracking-widest text-slate-300 hover:text-volt transition-all duration-200 relative group py-1"
+                className="text-sm font-kanit font-bold uppercase tracking-wider text-slate-200 hover:text-volt transition-all duration-200 relative group py-1.5"
               >
                 {link.name}
                 <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-volt transition-all duration-300 group-hover:w-full" />
@@ -104,52 +86,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenEPK, onOpen
             ))}
           </nav>
 
-          {/* Right Action Bar */}
-          <div className="flex items-center gap-2.5 sm:gap-4">
-            {/* Live Audio Synth Toggle */}
-            <button
-              onClick={toggleGlobalAudio}
-              className={`relative flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-full border text-xs font-mono transition-all duration-300 ${
-                isPlayingAudio
-                  ? 'border-volt text-volt bg-volt/10 shadow-volt-sm'
-                  : 'border-white/15 text-slate-400 hover:border-white/30 hover:text-white'
-              }`}
-              title={isPlayingAudio ? 'Stop live electronic sound' : 'Play live electronic synth demo'}
-            >
-              {isPlayingAudio ? (
-                <>
-                  <Volume2 className="w-3.5 h-3.5 animate-bounce text-volt" />
-                  <span className="hidden md:inline text-[11px]">LIVE SYNTH</span>
-                  <div className="flex items-center gap-0.5 h-3">
-                    <span className="w-0.5 bg-volt rounded animate-eq-1" />
-                    <span className="w-0.5 bg-volt rounded animate-eq-2" />
-                    <span className="w-0.5 bg-volt rounded animate-eq-3" />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <VolumeX className="w-3.5 h-3.5" />
-                  <span className="hidden md:inline text-[11px]">SOUND TEST</span>
-                </>
-              )}
-            </button>
-
-            {/* Book Artist CTA Button */}
-            <Magnet padding={40} strength={4}>
-              <button
-                onClick={onOpenBooking}
-                className="relative group overflow-hidden px-3.5 sm:px-6 py-2 rounded-full bg-volt text-black font-kanit font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 hover:shadow-volt-md active:scale-95 flex items-center gap-1.5"
-              >
-                <Calendar className="w-3.5 h-3.5" />
-                <span>BOOK ARTIST</span>
-                <Sparkles className="w-3.5 h-3.5 text-black/70 group-hover:rotate-45 transition-transform hidden sm:inline" />
-              </button>
-            </Magnet>
-
-            {/* Mobile Hamburger Toggle */}
+          {/* Mobile Hamburger Toggle */}
+          <div className="lg:hidden flex items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-full border border-white/10 text-white hover:border-volt hover:text-volt transition-colors lg:hidden"
+              className="p-2 rounded-full border border-white/10 text-white hover:border-volt hover:text-volt transition-colors"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -186,19 +127,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenEPK, onOpen
                   <span className="text-xs font-mono text-slate-500">→</span>
                 </a>
               ))}
-              <div className="pt-2 flex flex-col gap-3">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenBooking();
-                  }}
-                  className="w-full py-3 rounded-xl bg-volt text-black font-kanit font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-volt-sm"
-                >
-                  <Calendar className="w-4 h-4" />
-                  <span>BOOK NOKA AXL NOW</span>
-                </button>
-
-                {onOpenAdmin && (
+              {onOpenAdmin && (
+                <div className="pt-2">
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
@@ -208,8 +138,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenEPK, onOpen
                   >
                     <span>MANAGEMENT CMS LOGIN</span>
                   </button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </motion.div>
         )}

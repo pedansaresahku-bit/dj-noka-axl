@@ -1,35 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Play, Pause, Disc, Headphones, Music2, Youtube } from 'lucide-react';
-import { TRACKS_DATA } from '../data/djData';
-import { audioEngine } from '../utils/audioSynth';
+import React from 'react';
+import { Headphones, Music2, ArrowUpRight } from 'lucide-react';
+import { ARTIST_INFO } from '../data/djData';
 import { FadeIn } from './common/FadeIn';
-import { Track } from '../types';
 
 export const DiscographySection: React.FC = () => {
-  const [activeTrackId, setActiveTrackId] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-
-  useEffect(() => {
-    const unsubscribe = audioEngine.subscribe((playing, currentId) => {
-      setIsPlaying(playing);
-      setActiveTrackId(currentId);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const handleTrackPlay = (track: Track) => {
-    if (activeTrackId === track.id && isPlaying) {
-      audioEngine.stop();
-    } else {
-      if (track.audioUrl) {
-        audioEngine.playRealAudio(track.id, track.audioUrl);
-      } else {
-        audioEngine.playTrackPreview(track.id, track.bpm);
-      }
-    }
-  };
-
   return (
     <section id="tracks" className="relative w-full py-24 sm:py-32 bg-[#0A0A0E] px-4 sm:px-8 md:px-12 border-b border-white/5">
       {/* Background radial glow */}
@@ -37,201 +11,98 @@ export const DiscographySection: React.FC = () => {
 
       <div className="max-w-7xl mx-auto">
         {/* Section Heading */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">
           <FadeIn delay={0}>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase mb-3 shadow-volt-sm">
               <Headphones className="w-3.5 h-3.5" />
-              <span>DISCOGRAPHY & RELEASES</span>
+              <span>DISCOGRAPHY & SOUNDCLOUD VAULT</span>
             </div>
             <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl uppercase tracking-tighter text-white">
-              <span className="chrome-heading">SONIC ARSENAL</span>
+              <span className="chrome-heading">SOUNDS OF ME</span>
             </h2>
           </FadeIn>
 
           <FadeIn delay={0.15} className="max-w-md text-slate-400 font-mono text-xs sm:text-sm">
-            High-octane festival anthems and peak-time club weapons produced by NOKA AXL. Click preview to listen to the audio track.
+            High-octane festival anthems, club mixtapes, and live Breakbeat & Jungle Dutch weapons produced by NOKA AXL. Stream the full playlist directly below.
           </FadeIn>
         </div>
 
-        {/* Tracklist Container */}
-        <div className="flex flex-col gap-4">
-          {TRACKS_DATA.map((track, idx) => {
-            const isThisPlaying = isPlaying && activeTrackId === track.id;
+        {/* Featured SoundCloud Official Playlist Player (Full Scrollable Multi-Track List) */}
+        <FadeIn delay={0.1}>
+          <div className="w-full rounded-2xl sm:rounded-3xl bg-[#0E0E15] border border-white/10 p-4 sm:p-7 shadow-2xl relative overflow-hidden group hover:border-[#ff5500]/50 transition-all duration-300">
+            {/* Subtle SoundCloud orange ambient glow */}
+            <div className="absolute top-0 right-1/4 w-96 h-48 bg-[#ff5500]/5 blur-[100px] rounded-full pointer-events-none" />
 
-            return (
-              <FadeIn
-                key={track.id}
-                delay={idx * 0.08}
-                className={`group relative rounded-2xl sm:rounded-3xl border transition-all duration-300 p-4 sm:p-6 ${
-                  isThisPlaying
-                    ? 'bg-[#14141E] border-volt shadow-volt-sm'
-                    : 'bg-[#0E0E14]/80 border-white/10 hover:border-white/30 hover:bg-[#12121A]'
-                }`}
-              >
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                  {/* Left: Track Cover & Details */}
-                  <div className="flex items-center gap-4 sm:gap-6">
-                    {/* Track Number */}
-                    <span className="font-kanit font-black text-2xl sm:text-4xl text-slate-600 group-hover:text-volt transition-colors w-8">
-                      0{idx + 1}
-                    </span>
-
-                    {/* Album Art / Cover Thumbnail with Play Overlay */}
-                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0 border border-white/10 bg-black">
-                      <img
-                        src={track.coverImage}
-                        alt={track.title}
-                        className={`w-full h-full object-cover transition-transform duration-500 ${
-                          isThisPlaying ? 'scale-110' : 'group-hover:scale-105'
-                        }`}
-                      />
-                      <button
-                        onClick={() => handleTrackPlay(track)}
-                        className={`absolute inset-0 flex items-center justify-center transition-all ${
-                          isThisPlaying
-                            ? 'bg-volt/80 text-black opacity-100'
-                            : 'bg-black/60 text-white opacity-0 group-hover:opacity-100'
-                        }`}
-                        title={isThisPlaying ? 'Pause sound' : 'Preview track'}
-                      >
-                        {isThisPlaying ? (
-                          <Pause className="w-6 h-6 fill-black" />
-                        ) : (
-                          <Play className="w-6 h-6 fill-white ml-0.5" />
-                        )}
-                      </button>
-                    </div>
-
-                    {/* Title & Artist */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] font-mono tracking-widest text-volt uppercase bg-volt/10 px-2 py-0.5 rounded border border-volt/20">
-                          {track.genre}
-                        </span>
-                        <span className="text-[10px] font-mono text-slate-400">
-                          {track.releaseYear}
-                        </span>
-                      </div>
-                      <h3 className="font-kanit font-bold text-lg sm:text-2xl text-white tracking-wide uppercase group-hover:text-volt transition-colors">
-                        {track.title}
-                      </h3>
-                      <p className="text-xs font-mono text-slate-400 mt-0.5">
-                        {track.featuredArtist} • {track.streams} streams
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Center: Live Waveform / Audio Visualizer Bars */}
-                  <div className="hidden md:flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/40 border border-white/5 w-[220px] lg:w-[280px] h-12 justify-center">
-                    {isThisPlaying ? (
-                      <div className="flex items-end gap-1 h-7">
-                        {[...Array(24)].map((_, i) => (
-                          <motion.span
-                            key={i}
-                            animate={{
-                              height: ['20%', '100%', '35%', '85%', '15%'],
-                            }}
-                            transition={{
-                              duration: 0.5 + (i % 5) * 0.15,
-                              repeat: Infinity,
-                              repeatType: 'reverse',
-                              ease: 'easeInOut',
-                              delay: (i % 6) * 0.05,
-                            }}
-                            className="w-1 bg-volt rounded-full"
-                          />
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-1 h-3 opacity-30">
-                        {[...Array(24)].map((_, i) => (
-                          <span
-                            key={i}
-                            className="w-1 bg-slate-400 rounded-full"
-                            style={{ height: `${20 + ((i * 7) % 60)}%` }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Right: BPM / Key / Actions */}
-                  <div className="flex items-center justify-between lg:justify-end gap-4 sm:gap-6 border-t lg:border-t-0 border-white/5 pt-3 lg:pt-0">
-                    <div className="flex items-center gap-4 text-xs font-mono text-slate-300">
-                      <div className="flex flex-col">
-                        <span className="text-[9px] text-slate-500 uppercase">TEMPO</span>
-                        <span className="font-bold text-white">{track.bpm} BPM</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[9px] text-slate-500 uppercase">KEY</span>
-                        <span className="font-bold text-volt">{track.key}</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[9px] text-slate-500 uppercase">TIME</span>
-                        <span className="font-bold text-slate-300">{track.duration}</span>
-                      </div>
-                    </div>
-
-                    {/* Preview Button */}
-                    <button
-                      onClick={() => handleTrackPlay(track)}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-kanit font-bold tracking-wider uppercase transition-all ${
-                        isThisPlaying
-                          ? 'bg-volt text-black shadow-volt-sm'
-                          : 'bg-white/10 text-white hover:bg-volt hover:text-black'
-                      }`}
-                    >
-                      {isThisPlaying ? (
-                        <>
-                          <Pause className="w-3.5 h-3.5 fill-current" />
-                          <span>PAUSE</span>
-                        </>
-                      ) : (
-                        <>
-                          <Play className="w-3.5 h-3.5 fill-current" />
-                          <span>PREVIEW</span>
-                        </>
-                      )}
-                    </button>
-
-                    {/* Streaming Official Links */}
-                    <div className="flex items-center gap-2">
-                      <a
-                        href={track.spotifyUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="p-2 rounded-full bg-white/5 hover:bg-volt/20 hover:text-volt text-slate-300 border border-white/10 transition-colors"
-                        title="Listen on Spotify"
-                      >
-                        <Disc className="w-4 h-4" />
-                      </a>
-                      <a
-                        href={track.soundCloudUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="p-2 rounded-full bg-white/5 hover:bg-volt/20 hover:text-volt text-slate-300 border border-white/10 transition-colors"
-                        title="Listen on SoundCloud"
-                      >
-                        <Music2 className="w-4 h-4" />
-                      </a>
-                      {track.youtubeUrl && (
-                        <a
-                          href={track.youtubeUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="p-2 rounded-full bg-white/5 hover:bg-volt/20 hover:text-volt text-slate-300 border border-white/10 transition-colors"
-                          title="Listen on YouTube"
-                        >
-                          <Youtube className="w-4 h-4" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
+            {/* Header Control Bar */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 mb-5 border-b border-white/10">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-[#ff5500]/10 border border-[#ff5500]/30 flex items-center justify-center text-[#ff5500] shrink-0 shadow-sm">
+                  <Music2 className="w-6 h-6" />
                 </div>
-              </FadeIn>
-            );
-          })}
-        </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-kanit font-black text-xl sm:text-2xl text-white uppercase tracking-wide">
+                      SOUNDCLOUD PLAYLIST & AUDIO VAULT
+                    </h3>
+                    <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#ff5500]/20 border border-[#ff5500]/40 text-[#ff5500] font-bold">
+                      @nk-bounce
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                      PLAYLIST / MULTI-TRACK ACTIVE
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm font-mono text-slate-400 mt-0.5">
+                    Daftar lengkap Mixtape, Breakbeat Full Bass & Jungle Dutch Set NOKA AXL (Klik & Scroll daftar lagu di bawah)
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 self-start md:self-auto">
+                <a
+                  href={ARTIST_INFO.socialLinks.soundCloud}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-5 py-2.5 rounded-full bg-[#ff5500] hover:bg-[#ff6611] text-white font-kanit font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-md active:scale-95"
+                >
+                  <span>BUKA SOUNDCLOUD RESMI</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+
+            {/* Multi-Track Playlist Embed (Scrollable Tracklist Mode) */}
+            <div className="w-full rounded-2xl overflow-hidden border border-white/10 bg-black/90 shadow-inner">
+              <iframe
+                width="100%"
+                height="450"
+                scrolling="no"
+                frameBorder="no"
+                allow="autoplay"
+                src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nk-bounce&color=%23d4ff00&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=false"
+                className="w-full block"
+                title="NOKA AXL Official SoundCloud Playlist & Tracklist"
+              />
+            </div>
+
+            {/* Bottom Playlist Instructions & Telemetry */}
+            <div className="mt-4 pt-3 border-t border-white/5 flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-slate-400">
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="flex items-center gap-1.5 text-slate-200">
+                  <span className="w-2 h-2 rounded-full bg-[#ff5500]" />
+                  NOKA AXL OFFICIAL CLOUD VAULT
+                </span>
+                <span className="text-slate-600">•</span>
+                <span className="text-slate-300">💡 Klik judul lagu apa saja di dalam pemutar untuk ganti lagu</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-volt font-bold uppercase tracking-wider">
+                  FULL PLAYLIST / SETS VIEW
+                </span>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );

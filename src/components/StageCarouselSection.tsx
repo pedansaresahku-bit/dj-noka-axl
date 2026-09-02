@@ -36,8 +36,8 @@ export const StageCarouselSection: React.FC = () => {
   };
 
   return (
-    <section 
-      id="gallery" 
+    <section
+      id="gallery"
       className="relative w-full py-24 sm:py-32 bg-[#08080A] px-4 sm:px-8 md:px-12 border-b border-white/5 overflow-hidden select-none"
     >
       {/* Ambient background glow */}
@@ -52,7 +52,7 @@ export const StageCarouselSection: React.FC = () => {
               <span>STAGE VISUAL ARCHIVE</span>
             </div>
             <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl uppercase tracking-tighter text-white">
-              <span className="chrome-heading">PRESS KIT // GALLERY</span>
+              <span className="chrome-heading">PRESS KIT GALLERY</span>
             </h2>
             <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 flex items-center gap-2">
               <MoveHorizontal className="w-4 h-4 text-volt animate-pulse" />

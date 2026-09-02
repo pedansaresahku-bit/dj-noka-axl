@@ -38,7 +38,6 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
   const wibNow = getWIBNow();
   const [activeYear, setActiveYear] = useState<number>(wibNow.getFullYear());
   const [activeMonth, setActiveMonth] = useState<number>(wibNow.getMonth()); // 0-indexed (8 = Sept)
-  const [filterMode, setFilterMode] = useState<'ALL' | 'GIGS_ONLY' | 'WEEKENDS' | 'INTERNATIONAL'>('ALL');
 
   // Days in selected month (e.g. 30 in Sept, 31 in Oct)
   const daysInMonth = new Date(activeYear, activeMonth + 1, 0).getDate();
@@ -72,15 +71,6 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
     };
   });
 
-  const filteredDays = calendarDays.filter((item) => {
-    if (filterMode === 'GIGS_ONLY') return item.event !== null;
-    if (filterMode === 'WEEKENDS') return item.isWeekend;
-    if (filterMode === 'INTERNATIONAL') return item.isInternational && item.event !== null;
-    return true;
-  });
-
-  const totalGigsCount = Object.keys(eventsByDay).length;
-
   const nextMonth = () => {
     if (activeMonth === 11) {
       setActiveMonth(0);
@@ -112,44 +102,17 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
 
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 sm:mb-16 gap-6">
+        <div className="mb-8 sm:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <FadeIn delay={0}>
-            {/* Live WIB Badge & Month Navigator */}
             <div className="flex flex-wrap items-center gap-3 mb-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase shadow-volt-sm">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase shadow-volt-sm">
                 <Clock className="w-3.5 h-3.5 animate-pulse" />
                 <span>WIB LIVE AUTOMATED CALENDAR // {MONTH_NAMES[activeMonth]} {activeYear}</span>
               </div>
 
-              <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full p-1">
-                <button
-                  onClick={prevMonth}
-                  className="p-1 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
-                  aria-label="Previous Month"
-                  title="Previous Month"
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={resetToWIBCurrent}
-                  className="px-2 py-0.5 text-[10px] font-mono text-slate-400 hover:text-volt uppercase font-bold"
-                  title="Reset to current month in WIB"
-                >
-                  NOW (WIB)
-                </button>
-                <button
-                  onClick={nextMonth}
-                  className="p-1 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
-                  aria-label="Next Month"
-                  title="Next Month"
-                >
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
               <button
                 onClick={onOpenAdmin}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-slate-300 hover:text-volt text-[11px] font-mono tracking-wider uppercase transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-slate-300 hover:text-volt text-[11px] font-mono tracking-wider uppercase transition-colors"
                 title="Management Event Editor"
               >
                 <Settings className="w-3 h-3" />
@@ -158,61 +121,80 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
             </div>
 
             <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl uppercase tracking-tighter text-white">
-              <span className="chrome-heading">{MONTH_NAMES[activeMonth]} TOUR CALENDAR</span>
+              <span className="chrome-heading">{MONTH_NAMES[activeMonth]} {activeYear} TOUR</span>
             </h2>
-            <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 max-w-xl">
+            <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 max-w-2xl">
               Live automated schedule synchronized with Asia/Jakarta (WIB) real-time clock. Automatically transitions when the month flips. Click any date to inspect flyer poster and location map.
             </p>
           </FadeIn>
-
-          {/* Filter Pills */}
-          <FadeIn delay={0.1} className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => setFilterMode('ALL')}
-              className={`px-4 py-2 rounded-xl text-xs font-mono tracking-wider uppercase transition-all ${
-                filterMode === 'ALL'
-                  ? 'bg-volt text-black font-bold shadow-volt-sm'
-                  : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10'
-              }`}
-            >
-              FULL {daysInMonth} DAYS
-            </button>
-            <button
-              onClick={() => setFilterMode('GIGS_ONLY')}
-              className={`px-4 py-2 rounded-xl text-xs font-mono tracking-wider uppercase transition-all ${
-                filterMode === 'GIGS_ONLY'
-                  ? 'bg-volt text-black font-bold shadow-volt-sm'
-                  : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10'
-              }`}
-            >
-              CONFIRMED SHOWS ({totalGigsCount})
-            </button>
-            <button
-              onClick={() => setFilterMode('WEEKENDS')}
-              className={`px-4 py-2 rounded-xl text-xs font-mono tracking-wider uppercase transition-all ${
-                filterMode === 'WEEKENDS'
-                  ? 'bg-volt text-black font-bold shadow-volt-sm'
-                  : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10'
-              }`}
-            >
-              WEEKEND PEAKS
-            </button>
-            <button
-              onClick={() => setFilterMode('INTERNATIONAL')}
-              className={`px-4 py-2 rounded-xl text-xs font-mono tracking-wider uppercase transition-all ${
-                filterMode === 'INTERNATIONAL'
-                  ? 'bg-volt text-black font-bold shadow-volt-sm'
-                  : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10'
-              }`}
-            >
-              INTERNATIONAL ASIA
-            </button>
-          </FadeIn>
         </div>
+
+        {/* Dedicated Full-Width Month Switcher Menu (Selebar Grid / Section) */}
+        <FadeIn delay={0.1} className="mb-8">
+          <div className="w-full bg-[#111118]/90 border border-white/10 rounded-2xl p-2.5 sm:p-3.5 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.7)]">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-3">
+              {/* Left Control: Prev / Next & Year Display with Current WIB Button */}
+              <div className="flex items-center justify-between w-full lg:w-auto gap-2">
+                <button
+                  onClick={prevMonth}
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-volt hover:text-black text-slate-200 transition-all font-mono text-xs sm:text-sm uppercase font-bold group border border-white/5 hover:border-volt active:scale-95"
+                  aria-label="Previous Month"
+                  title="Previous Month"
+                >
+                  <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                  <span>PREV</span>
+                </button>
+
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10">
+                  <span className="font-kanit font-black text-base sm:text-lg text-white tracking-wider">
+                    {activeYear}
+                  </span>
+                  <button
+                    onClick={resetToWIBCurrent}
+                    className="text-[10px] sm:text-xs font-mono px-2 py-0.5 rounded bg-volt/10 text-volt hover:bg-volt hover:text-black font-bold uppercase transition-all"
+                    title="Reset to current month in WIB"
+                  >
+                    NOW (WIB)
+                  </button>
+                </div>
+
+                <button
+                  onClick={nextMonth}
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-volt hover:text-black text-slate-200 transition-all font-mono text-xs sm:text-sm uppercase font-bold group border border-white/5 hover:border-volt active:scale-95"
+                  aria-label="Next Month"
+                  title="Next Month"
+                >
+                  <span>NEXT</span>
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              </div>
+
+              {/* 12 Months Interactive Grid/Tabs (Selebar Container) */}
+              <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-12 gap-1.5 w-full lg:flex-1 lg:ml-4">
+                {MONTH_SHORT.map((mName, index) => {
+                  const isSelected = activeMonth === index;
+                  return (
+                    <button
+                      key={mName}
+                      onClick={() => setActiveMonth(index)}
+                      className={`py-2 px-1 text-center rounded-xl font-mono text-xs sm:text-sm transition-all duration-200 uppercase font-bold ${
+                        isSelected
+                          ? 'bg-volt text-black shadow-[0_0_16px_rgba(212,255,0,0.5)] scale-[1.03] z-10'
+                          : 'bg-white/[0.03] hover:bg-white/10 text-slate-300 hover:text-white border border-white/5'
+                      }`}
+                    >
+                      {mName}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </FadeIn>
 
         {/* Dynamic Days Grid Layout */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
-          {filteredDays.map((item, index) => {
+          {calendarDays.map((item, index) => {
             const hasEvent = item.event !== null;
 
             if (hasEvent && item.event) {
