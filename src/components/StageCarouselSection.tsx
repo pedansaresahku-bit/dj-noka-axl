@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Camera, MapPin, Calendar } from 'lucide-react';
+import { motion, PanInfo } from 'framer-motion';
+import { ChevronLeft, ChevronRight, Camera, MoveHorizontal } from 'lucide-react';
 import { STAGE_GALLERY } from '../data/djData';
 import { FadeIn } from './common/FadeIn';
 
@@ -15,14 +15,23 @@ export const StageCarouselSection: React.FC = () => {
     setCurrentIndex((prev) => (prev - 1 + STAGE_GALLERY.length) % STAGE_GALLERY.length);
   };
 
+  const handleDragEnd = (_: any, info: PanInfo) => {
+    const swipeThreshold = 50;
+    if (info.offset.x < -swipeThreshold) {
+      nextSlide();
+    } else if (info.offset.x > swipeThreshold) {
+      prevSlide();
+    }
+  };
+
   return (
-    <section id="gallery" className="relative w-full py-24 sm:py-32 bg-[#08080A] px-4 sm:px-8 md:px-12 border-b border-white/5 overflow-hidden">
+    <section id="gallery" className="relative w-full py-24 sm:py-32 bg-[#08080A] px-4 sm:px-8 md:px-12 border-b border-white/5 overflow-hidden select-none">
       {/* Ambient background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-volt/5 blur-[160px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-14 gap-6">
           <FadeIn delay={0}>
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase mb-3">
               <Camera className="w-3.5 h-3.5" />
@@ -31,8 +40,9 @@ export const StageCarouselSection: React.FC = () => {
             <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl uppercase tracking-tighter text-white">
               <span className="chrome-heading">PRESS KIT // GALLERY</span>
             </h2>
-            <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2">
-              High-resolution vertical stage captures from headline festival appearances and megaclub residencies.
+            <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 flex items-center gap-2">
+              <MoveHorizontal className="w-4 h-4 text-volt animate-pulse" />
+              <span>Drag / swipe with mouse to navigate vertical stage captures</span>
             </p>
           </FadeIn>
 
@@ -58,9 +68,15 @@ export const StageCarouselSection: React.FC = () => {
           </FadeIn>
         </div>
 
-        {/* 3D Perspective Vertical Stage Carousel Container */}
-        <div className="relative w-full h-[520px] sm:h-[620px] md:h-[700px] flex items-center justify-center [perspective:1400px]">
-          <div className="relative w-full max-w-5xl h-full flex items-center justify-center">
+        {/* 3D Perspective Vertical Stage Carousel with Mouse Drag */}
+        <motion.div
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.25}
+          onDragEnd={handleDragEnd}
+          className="relative w-full h-[520px] sm:h-[620px] md:h-[700px] flex items-center justify-center [perspective:1400px] cursor-grab active:cursor-grabbing touch-pan-y"
+        >
+          <div className="relative w-full max-w-5xl h-full flex items-center justify-center pointer-events-none">
             {STAGE_GALLERY.map((item, index) => {
               // Calculate offset relative to currentIndex
               let offset = index - currentIndex;
@@ -103,7 +119,7 @@ export const StageCarouselSection: React.FC = () => {
                     stiffness: 180,
                     damping: 22,
                   }}
-                  className={`absolute w-[280px] sm:w-[350px] md:w-[410px] h-[460px] sm:h-[560px] md:h-[640px] rounded-[32px] overflow-hidden border cursor-pointer select-none ${
+                  className={`pointer-events-auto absolute w-[280px] sm:w-[350px] md:w-[410px] h-[460px] sm:h-[560px] md:h-[640px] rounded-[32px] overflow-hidden border select-none ${
                     isCenter
                       ? 'border-volt/80 shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(212,255,0,0.3)] z-30'
                       : 'border-white/10 hover:border-white/30 z-10'
@@ -113,38 +129,18 @@ export const StageCarouselSection: React.FC = () => {
                   <img
                     src={item.image}
                     alt={item.title}
+                    draggable={false}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105 pointer-events-none select-none"
                   />
-                  {/* Vertical cinematic vignette gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-black/10" />
-
-                  {/* Slide Content Caption */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col justify-end">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="flex items-center gap-1 text-[10px] font-mono text-volt bg-volt/10 border border-volt/30 px-2.5 py-0.5 rounded-full uppercase">
-                        <MapPin className="w-3 h-3" />
-                        {item.location}
-                      </span>
-                      <span className="flex items-center gap-1 text-[10px] font-mono text-slate-300 bg-black/40 px-2 py-0.5 rounded-full">
-                        <Calendar className="w-3 h-3" />
-                        {item.year}
-                      </span>
-                    </div>
-
-                    <h3 className="font-kanit font-black text-xl sm:text-2xl md:text-3xl text-white uppercase tracking-wider leading-tight">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs font-mono text-slate-300 mt-1 line-clamp-2">
-                      {item.caption}
-                    </p>
-                  </div>
+                  {/* Subtle soft edge border lighting */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
                 </motion.div>
               );
             })}
           </div>
-        </div>
+        </motion.div>
 
         {/* Carousel Indicators / Dots */}
         <div className="flex items-center justify-center gap-2 mt-8">
