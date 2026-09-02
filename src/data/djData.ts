@@ -16,12 +16,12 @@ export const ARTIST_INFO = {
   managementEmail: "booking@nokaaxl.com",
   whatsappNumber: "+6281234567890",
   socialLinks: {
-    spotify: "https://spotify.com",
-    soundCloud: "https://soundcloud.com",
-    instagram: "https://instagram.com",
-    youtube: "https://youtube.com/@nokaaxlofficial",
-    tiktok: "https://tiktok.com",
-    beatport: "https://beatport.com"
+    spotify: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    soundCloud: "https://soundcloud.com/nk-bounce",
+    instagram: "https://www.instagram.com/nokaaxlofficial/",
+    tiktok: "https://www.tiktok.com/@nokaaxlofficial",
+    youtube: "https://www.youtube.com/@NokaAxL",
+    beatport: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT"
   }
 };
 
@@ -36,9 +36,10 @@ export const TRACKS_DATA: Track[] = [
     genre: "Breakbeat Full Bass",
     releaseYear: 2026,
     coverImage: "/assets/image-1.jpeg",
-    spotifyUrl: "https://open.spotify.com",
-    soundCloudUrl: "https://soundcloud.com",
-    beatportUrl: "https://beatport.com",
+    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    soundCloudUrl: "https://soundcloud.com/nk-bounce",
+    youtubeUrl: "https://www.youtube.com/@NokaAxL",
+    audioUrl: "/audio/track-1.mp3",
     audioPreviewNote: "techno-drop",
     streams: "12.4M"
   },
@@ -52,9 +53,10 @@ export const TRACKS_DATA: Track[] = [
     genre: "Jungle Dutch / Breakbeat",
     releaseYear: 2025,
     coverImage: "/assets/image-2.jpeg",
-    spotifyUrl: "https://open.spotify.com",
-    soundCloudUrl: "https://soundcloud.com",
-    beatportUrl: "https://beatport.com",
+    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    soundCloudUrl: "https://soundcloud.com/nk-bounce",
+    youtubeUrl: "https://www.youtube.com/@NokaAxL",
+    audioUrl: "/audio/track-2.mp3",
     audioPreviewNote: "future-rave",
     streams: "18.8M"
   },
@@ -68,9 +70,10 @@ export const TRACKS_DATA: Track[] = [
     genre: "Breakbeat Full Bass",
     releaseYear: 2025,
     coverImage: "/assets/image-3.jpeg",
-    spotifyUrl: "https://open.spotify.com",
-    soundCloudUrl: "https://soundcloud.com",
-    beatportUrl: "https://beatport.com",
+    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    soundCloudUrl: "https://soundcloud.com/nk-bounce",
+    youtubeUrl: "https://www.youtube.com/@NokaAxL",
+    audioUrl: "/audio/track-3.mp3",
     audioPreviewNote: "acid-synth",
     streams: "9.5M"
   },
@@ -84,9 +87,10 @@ export const TRACKS_DATA: Track[] = [
     genre: "Disco Breakbeat",
     releaseYear: 2024,
     coverImage: "/assets/image-4.jpeg",
-    spotifyUrl: "https://open.spotify.com",
-    soundCloudUrl: "https://soundcloud.com",
-    beatportUrl: "https://beatport.com",
+    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    soundCloudUrl: "https://soundcloud.com/nk-bounce",
+    youtubeUrl: "https://www.youtube.com/@NokaAxL",
+    audioUrl: "/audio/track-4.mp3",
     audioPreviewNote: "melodic-lead",
     streams: "14.1M"
   },
@@ -100,9 +104,10 @@ export const TRACKS_DATA: Track[] = [
     genre: "Viral Breakbeat Hybrid",
     releaseYear: 2024,
     coverImage: "/assets/image-5.jpeg",
-    spotifyUrl: "https://open.spotify.com",
-    soundCloudUrl: "https://soundcloud.com",
-    beatportUrl: "https://beatport.com",
+    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    soundCloudUrl: "https://soundcloud.com/nk-bounce",
+    youtubeUrl: "https://www.youtube.com/@NokaAxL",
+    audioUrl: "/audio/track-5.mp3",
     audioPreviewNote: "hard-hybrid",
     streams: "24.6M"
   },
@@ -116,9 +121,10 @@ export const TRACKS_DATA: Track[] = [
     genre: "Peak Time Breakbeat",
     releaseYear: 2024,
     coverImage: "/assets/image-6.jpeg",
-    spotifyUrl: "https://open.spotify.com",
-    soundCloudUrl: "https://soundcloud.com",
-    beatportUrl: "https://beatport.com",
+    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    soundCloudUrl: "https://soundcloud.com/nk-bounce",
+    youtubeUrl: "https://www.youtube.com/@NokaAxL",
+    audioUrl: "/audio/track-6.mp3",
     audioPreviewNote: "industrial-bass",
     streams: "11.2M"
   }

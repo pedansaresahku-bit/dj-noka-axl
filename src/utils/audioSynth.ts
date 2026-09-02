@@ -1,11 +1,14 @@
-// Web Audio API Synthesizer for live electronic preview and waveform data
+// High-Performance Audio Engine supporting both Real Audio Files (MP3/WAV) and Web Audio Synthesizer Fallback
 
 class ElectronicAudioEngine {
   private ctx: AudioContext | null = null;
   private isPlaying: boolean = false;
   private currentTrackId: string | null = null;
-  private loopInterval: number | null = null;
+  private audioElement: HTMLAudioElement | null = null;
+  private audioSourceNode: MediaElementAudioSourceNode | null = null;
+  private synthLoopInterval: number | null = null;
   private analyzerNode: AnalyserNode | null = null;
+  private animFrameId: number | null = null;
   private listeners: ((playing: boolean, trackId: string | null, freqData: Uint8Array) => void)[] = [];
 
   private initContext() {
@@ -35,7 +38,72 @@ class ElectronicAudioEngine {
     this.listeners.forEach(cb => cb(this.isPlaying, this.currentTrackId, dataArray));
   }
 
-  // Generate a punchy club kick drum
+  private startVisualizerLoop() {
+    if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
+    const loop = () => {
+      if (this.isPlaying) {
+        this.notify();
+        this.animFrameId = requestAnimationFrame(loop);
+      }
+    };
+    this.animFrameId = requestAnimationFrame(loop);
+  }
+
+  // --- HTML5 Real Audio File Player ---
+  public playRealAudio(trackId: string, audioSrc: string) {
+    this.initContext();
+
+    if (this.isPlaying && this.currentTrackId === trackId) {
+      this.stop();
+      return;
+    }
+
+    this.stop();
+    this.isPlaying = true;
+    this.currentTrackId = trackId;
+
+    if (!this.audioElement) {
+      this.audioElement = new Audio();
+      this.audioElement.crossOrigin = 'anonymous';
+      
+      // Connect to Web Audio Analyser if context is available
+      if (this.ctx && this.analyzerNode) {
+        try {
+          this.audioSourceNode = this.ctx.createMediaElementSource(this.audioElement);
+          this.audioSourceNode.connect(this.analyzerNode);
+          this.analyzerNode.connect(this.ctx.destination);
+        } catch (e) {
+          // If already connected or restricted
+          console.warn('Audio node connection handled', e);
+        }
+      }
+
+      this.audioElement.addEventListener('ended', () => {
+        this.stop();
+      });
+
+      this.audioElement.addEventListener('error', () => {
+        // Fallback to synth if MP3 file is not found or fails
+        console.info(`Audio file not found for ${trackId}, falling back to analog synth preview.`);
+        this.playTrackPreview(trackId, 138);
+      });
+    }
+
+    this.audioElement.src = audioSrc;
+    this.audioElement.load();
+    this.audioElement
+      .play()
+      .then(() => {
+        this.startVisualizerLoop();
+        this.notify();
+      })
+      .catch(() => {
+        // Autoplay restrictions or file not found -> fallback to synth
+        this.playTrackPreview(trackId, 138);
+      });
+  }
+
+  // --- Analog Synthesizer Fallback ---
   private playKick(time: number) {
     if (!this.ctx || !this.analyzerNode) return;
     const osc = this.ctx.createOscillator();
@@ -55,7 +123,6 @@ class ElectronicAudioEngine {
     osc.stop(time + 0.3);
   }
 
-  // Generate an Acid 303 bass synth stab
   private playAcidStab(time: number, freq: number = 110) {
     if (!this.ctx || !this.analyzerNode) return;
     const osc = this.ctx.createOscillator();
@@ -83,7 +150,6 @@ class ElectronicAudioEngine {
     osc.stop(time + 0.26);
   }
 
-  // Generate crisp open hi-hat
   private playHiHat(time: number) {
     if (!this.ctx || !this.analyzerNode) return;
     const bufferSize = this.ctx.sampleRate * 0.08;
@@ -127,24 +193,14 @@ class ElectronicAudioEngine {
 
     const stepDuration = (60 / bpm) / 4; // 16th notes
     let step = 0;
-
-    const acidScale = [110, 130.81, 146.83, 164.81, 196, 220]; // D minor pentatonic
+    const acidScale = [110, 130.81, 146.83, 164.81, 196, 220];
 
     const runBeat = () => {
       if (!this.isPlaying || !this.ctx) return;
       const now = this.ctx.currentTime;
 
-      // 4-on-the-floor kick
-      if (step % 4 === 0) {
-        this.playKick(now);
-      }
-
-      // Offbeat hi-hat
-      if (step % 4 === 2) {
-        this.playHiHat(now);
-      }
-
-      // Syncopated Acid notes
+      if (step % 4 === 0) this.playKick(now);
+      if (step % 4 === 2) this.playHiHat(now);
       if (step % 2 === 0 || step === 7 || step === 15) {
         const note = acidScale[(step * 3) % acidScale.length];
         this.playAcidStab(now, note);
@@ -154,18 +210,29 @@ class ElectronicAudioEngine {
       this.notify();
     };
 
-    // Run rhythm
-    this.loopInterval = window.setInterval(runBeat, stepDuration * 1000);
+    this.synthLoopInterval = window.setInterval(runBeat, stepDuration * 1000);
     this.notify();
   }
 
   public stop() {
     this.isPlaying = false;
     this.currentTrackId = null;
-    if (this.loopInterval) {
-      clearInterval(this.loopInterval);
-      this.loopInterval = null;
+
+    if (this.audioElement) {
+      this.audioElement.pause();
+      this.audioElement.currentTime = 0;
     }
+
+    if (this.synthLoopInterval) {
+      clearInterval(this.synthLoopInterval);
+      this.synthLoopInterval = null;
+    }
+
+    if (this.animFrameId) {
+      cancelAnimationFrame(this.animFrameId);
+      this.animFrameId = null;
+    }
+
     this.notify();
   }
 

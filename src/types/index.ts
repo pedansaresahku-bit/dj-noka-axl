@@ -10,7 +10,9 @@ export interface Track {
   coverImage: string;
   spotifyUrl: string;
   soundCloudUrl: string;
-  beatportUrl: string;
+  beatportUrl?: string;
+  youtubeUrl?: string;
+  audioUrl?: string; // Local MP3 path or direct online audio streaming URL
   audioPreviewNote: string; // Frequency pattern or synth preset
   streams: string;
 }

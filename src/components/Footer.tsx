@@ -9,6 +9,13 @@ interface FooterProps {
   onOpenAdmin?: () => void;
 }
 
+// Custom TikTok SVG Icon
+const TikTokIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298 0 .59.04.87.12V9.4a6.33 6.33 0 0 0-.87-.06A6.34 6.34 0 0 0 3.1 15.68a6.34 6.34 0 0 0 10.82 4.49 6.27 6.27 0 0 0 1.9-4.5V8.65a8.33 8.33 0 0 0 4.77 1.52V6.69h-1z" />
+  </svg>
+);
+
 export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpenAdmin }) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -66,15 +73,16 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
               </span>
             </div>
             <p className="text-xs font-mono text-slate-400 max-w-sm leading-relaxed mb-6">
-              Mainstage electronic dance music artist and audio architect. Crafting unyielding energy, stadium anthems, and peak-time rave euphoria worldwide.
+              Indonesian Breakbeat & Jungle Dutch Pioneer. Crafting unyielding bass frequencies, stadium anthems, and peak-time rave euphoria worldwide.
             </p>
+            {/* 5 Verified Social Links */}
             <div className="flex items-center gap-3">
               <a
                 href={ARTIST_INFO.socialLinks.spotify}
                 target="_blank"
                 rel="noreferrer"
                 className="p-2.5 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-slate-300 transition-colors"
-                title="Spotify"
+                title="Spotify: NOKA AXL"
               >
                 <Disc className="w-4 h-4" />
               </a>
@@ -83,7 +91,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
                 target="_blank"
                 rel="noreferrer"
                 className="p-2.5 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-slate-300 transition-colors"
-                title="SoundCloud"
+                title="SoundCloud: NK BOUNCE"
               >
                 <Music2 className="w-4 h-4" />
               </a>
@@ -92,16 +100,25 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
                 target="_blank"
                 rel="noreferrer"
                 className="p-2.5 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-slate-300 transition-colors"
-                title="Instagram"
+                title="Instagram: @nokaaxlofficial"
               >
                 <Instagram className="w-4 h-4" />
+              </a>
+              <a
+                href={ARTIST_INFO.socialLinks.tiktok}
+                target="_blank"
+                rel="noreferrer"
+                className="p-2.5 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-slate-300 transition-colors"
+                title="TikTok: @nokaaxlofficial"
+              >
+                <TikTokIcon className="w-4 h-4" />
               </a>
               <a
                 href={ARTIST_INFO.socialLinks.youtube}
                 target="_blank"
                 rel="noreferrer"
                 className="p-2.5 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-slate-300 transition-colors"
-                title="YouTube"
+                title="YouTube: @NokaAxL"
               >
                 <Youtube className="w-4 h-4" />
               </a>
@@ -116,7 +133,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
               <li><a href="#tracks" className="hover:text-white transition-colors uppercase">Discography Releases</a></li>
               <li><a href="#tour" className="hover:text-white transition-colors uppercase">World Tour Itinerary</a></li>
               <li><a href="#calendar" className="hover:text-white transition-colors uppercase">30-Day Club Calendar</a></li>
-              <li><a href="#gallery" className="hover:text-white transition-colors uppercase">Stage Visual Archive</a></li>
+              <li><a href="#gallery" className="hover:text-white transition-colors uppercase">Press Kit Gallery</a></li>
             </ul>
           </div>
 

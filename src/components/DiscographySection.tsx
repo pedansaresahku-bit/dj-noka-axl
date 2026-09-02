@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Pause, Disc, Headphones, Music2 } from 'lucide-react';
+import { Play, Pause, Disc, Headphones, Music2, Youtube } from 'lucide-react';
 import { TRACKS_DATA } from '../data/djData';
 import { audioEngine } from '../utils/audioSynth';
 import { FadeIn } from './common/FadeIn';
+import { Track } from '../types';
 
 export const DiscographySection: React.FC = () => {
   const [activeTrackId, setActiveTrackId] = useState<string | null>(null);
@@ -17,11 +18,15 @@ export const DiscographySection: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleTrackPlay = (trackId: string, bpm: number) => {
-    if (activeTrackId === trackId && isPlaying) {
+  const handleTrackPlay = (track: Track) => {
+    if (activeTrackId === track.id && isPlaying) {
       audioEngine.stop();
     } else {
-      audioEngine.playTrackPreview(trackId, bpm);
+      if (track.audioUrl) {
+        audioEngine.playRealAudio(track.id, track.audioUrl);
+      } else {
+        audioEngine.playTrackPreview(track.id, track.bpm);
+      }
     }
   };
 
@@ -44,7 +49,7 @@ export const DiscographySection: React.FC = () => {
           </FadeIn>
 
           <FadeIn delay={0.15} className="max-w-md text-slate-400 font-mono text-xs sm:text-sm">
-            High-octane festival anthems and peak-time club weapons produced by NOKA AXL. Click preview to trigger live analog synthesizers.
+            High-octane festival anthems and peak-time club weapons produced by NOKA AXL. Click preview to listen to the audio track.
           </FadeIn>
         </div>
 
@@ -81,7 +86,7 @@ export const DiscographySection: React.FC = () => {
                         }`}
                       />
                       <button
-                        onClick={() => handleTrackPlay(track.id, track.bpm)}
+                        onClick={() => handleTrackPlay(track)}
                         className={`absolute inset-0 flex items-center justify-center transition-all ${
                           isThisPlaying
                             ? 'bg-volt/80 text-black opacity-100'
@@ -169,7 +174,7 @@ export const DiscographySection: React.FC = () => {
 
                     {/* Preview Button */}
                     <button
-                      onClick={() => handleTrackPlay(track.id, track.bpm)}
+                      onClick={() => handleTrackPlay(track)}
                       className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-kanit font-bold tracking-wider uppercase transition-all ${
                         isThisPlaying
                           ? 'bg-volt text-black shadow-volt-sm'
@@ -189,7 +194,7 @@ export const DiscographySection: React.FC = () => {
                       )}
                     </button>
 
-                    {/* Streaming Links */}
+                    {/* Streaming Official Links */}
                     <div className="flex items-center gap-2">
                       <a
                         href={track.spotifyUrl}
@@ -209,6 +214,17 @@ export const DiscographySection: React.FC = () => {
                       >
                         <Music2 className="w-4 h-4" />
                       </a>
+                      {track.youtubeUrl && (
+                        <a
+                          href={track.youtubeUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="p-2 rounded-full bg-white/5 hover:bg-volt/20 hover:text-volt text-slate-300 border border-white/10 transition-colors"
+                          title="Listen on YouTube"
+                        >
+                          <Youtube className="w-4 h-4" />
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>
