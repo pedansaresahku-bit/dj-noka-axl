@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Camera, MoveHorizontal } from 'lucide-react';
 import { STAGE_GALLERY } from '../data/djData';
@@ -6,6 +6,7 @@ import { FadeIn } from './common/FadeIn';
 
 export const StageCarouselSection: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % STAGE_GALLERY.length);
@@ -14,6 +15,17 @@ export const StageCarouselSection: React.FC = () => {
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev - 1 + STAGE_GALLERY.length) % STAGE_GALLERY.length);
   };
+
+  // Automatic slide rotation every 6 seconds
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, [isPaused, currentIndex]);
 
   const handleDragEnd = (_: any, info: PanInfo) => {
     const swipeThreshold = 50;
@@ -25,7 +37,14 @@ export const StageCarouselSection: React.FC = () => {
   };
 
   return (
-    <section id="gallery" className="relative w-full py-24 sm:py-32 bg-[#08080A] px-4 sm:px-8 md:px-12 border-b border-white/5 overflow-hidden select-none">
+    <section 
+      id="gallery" 
+      className="relative w-full py-24 sm:py-32 bg-[#08080A] px-4 sm:px-8 md:px-12 border-b border-white/5 overflow-hidden select-none"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setIsPaused(false)}
+    >
       {/* Ambient background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-volt/5 blur-[160px] rounded-full pointer-events-none" />
 
@@ -42,7 +61,7 @@ export const StageCarouselSection: React.FC = () => {
             </h2>
             <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 flex items-center gap-2">
               <MoveHorizontal className="w-4 h-4 text-volt animate-pulse" />
-              <span>Drag / swipe with mouse to navigate vertical stage captures</span>
+              <span>Auto-rotates every 6s • Drag / swipe with mouse to navigate</span>
             </p>
           </FadeIn>
 
