@@ -69,7 +69,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
       className="relative min-h-screen w-full bg-[#08080A] py-24 sm:py-32 px-4 sm:px-8 md:px-12 flex flex-col justify-center items-center overflow-hidden border-b border-white/5"
     >
       {/* Lightweight GPU-accelerated background lighting */}
-      <div 
+      <div
         className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[500px] pointer-events-none opacity-25"
         style={{
           background: 'radial-gradient(ellipse at center, rgba(212, 255, 0, 0.15) 0%, rgba(8, 8, 10, 0) 70%)',
@@ -180,7 +180,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
             <Sparkles className="w-3.5 h-3.5 text-volt" />
           </div>
           <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl uppercase tracking-tighter leading-none mb-8 sm:mb-12">
-            <span className="chrome-heading">SONIC IDENTITY</span>
+            <span className="chrome-heading">ABOUT NOKA AXL</span>
           </h2>
         </FadeIn>
 

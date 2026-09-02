@@ -7,30 +7,33 @@ import { FadeIn } from './common/FadeIn';
 export const StageCarouselSection: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? STAGE_GALLERY.length - 1 : prev - 1));
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % STAGE_GALLERY.length);
   };
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === STAGE_GALLERY.length - 1 ? 0 : prev + 1));
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + STAGE_GALLERY.length) % STAGE_GALLERY.length);
   };
 
   return (
-    <section id="gallery" className="relative w-full py-24 sm:py-32 bg-[#08080A] px-4 sm:px-8 md:px-12 overflow-hidden border-b border-white/5">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-volt/5 blur-[180px] rounded-full pointer-events-none" />
+    <section id="gallery" className="relative w-full py-24 sm:py-32 bg-[#08080A] px-4 sm:px-8 md:px-12 border-b border-white/5 overflow-hidden">
+      {/* Ambient background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-volt/5 blur-[160px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">
           <FadeIn delay={0}>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase mb-3">
               <Camera className="w-3.5 h-3.5" />
               <span>STAGE VISUAL ARCHIVE</span>
             </div>
             <h2 className="font-kanit font-black text-4xl sm:text-6xl md:text-7xl uppercase tracking-tighter text-white">
-              <span className="chrome-heading">LIVE MOMENTS</span>
+              <span className="chrome-heading">PRESS KIT // GALLERY</span>
             </h2>
+            <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2">
+              High-resolution vertical stage captures from headline festival appearances and megaclub residencies.
+            </p>
           </FadeIn>
 
           {/* Navigation Controls */}
@@ -55,9 +58,9 @@ export const StageCarouselSection: React.FC = () => {
           </FadeIn>
         </div>
 
-        {/* 3D Perspective Stage Carousel Container */}
-        <div className="relative w-full h-[480px] sm:h-[560px] md:h-[620px] flex items-center justify-center [perspective:1200px]">
-          <div className="relative w-full max-w-4xl h-full flex items-center justify-center">
+        {/* 3D Perspective Vertical Stage Carousel Container */}
+        <div className="relative w-full h-[520px] sm:h-[620px] md:h-[700px] flex items-center justify-center [perspective:1400px]">
+          <div className="relative w-full max-w-5xl h-full flex items-center justify-center">
             {STAGE_GALLERY.map((item, index) => {
               // Calculate offset relative to currentIndex
               let offset = index - currentIndex;
@@ -74,12 +77,12 @@ export const StageCarouselSection: React.FC = () => {
 
               if (!isVisible) return null;
 
-              // Compute transform values
-              const xTranslate = offset * 260;
-              const zTranslate = -Math.abs(offset) * 180;
-              const rotateYAngle = offset * -25;
-              const scaleValue = isCenter ? 1 : Math.max(0.75, 1 - Math.abs(offset) * 0.15);
-              const opacityValue = isCenter ? 1 : Math.max(0.2, 0.6 - Math.abs(offset) * 0.2);
+              // Compute transform values for vertical portrait cards
+              const xTranslate = offset * 280;
+              const zTranslate = -Math.abs(offset) * 160;
+              const rotateYAngle = offset * -20;
+              const scaleValue = isCenter ? 1 : Math.max(0.78, 1 - Math.abs(offset) * 0.14);
+              const opacityValue = isCenter ? 1 : Math.max(0.25, 0.65 - Math.abs(offset) * 0.2);
 
               return (
                 <motion.div
@@ -98,40 +101,42 @@ export const StageCarouselSection: React.FC = () => {
                   transition={{
                     type: 'spring',
                     stiffness: 180,
-                    damping: 20,
+                    damping: 22,
                   }}
-                  className={`absolute w-[300px] sm:w-[480px] md:w-[640px] h-[380px] sm:h-[480px] md:h-[540px] rounded-3xl overflow-hidden border cursor-pointer select-none ${
+                  className={`absolute w-[280px] sm:w-[350px] md:w-[410px] h-[460px] sm:h-[560px] md:h-[640px] rounded-[32px] overflow-hidden border cursor-pointer select-none ${
                     isCenter
-                      ? 'border-volt/80 shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_30px_rgba(212,255,0,0.25)] z-30'
+                      ? 'border-volt/80 shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(212,255,0,0.3)] z-30'
                       : 'border-white/10 hover:border-white/30 z-10'
                   }`}
-                  style={{ transformStyle: 'preserve-3d' }}
+                  style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
                 >
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                   />
-                  {/* Dark vignette gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent" />
+                  {/* Vertical cinematic vignette gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-black/10" />
 
                   {/* Slide Content Caption */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 flex flex-col justify-end">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="flex items-center gap-1 text-[11px] font-mono text-volt bg-volt/10 border border-volt/30 px-2.5 py-0.5 rounded-full uppercase">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="flex items-center gap-1 text-[10px] font-mono text-volt bg-volt/10 border border-volt/30 px-2.5 py-0.5 rounded-full uppercase">
                         <MapPin className="w-3 h-3" />
                         {item.location}
                       </span>
-                      <span className="flex items-center gap-1 text-[11px] font-mono text-slate-300">
+                      <span className="flex items-center gap-1 text-[10px] font-mono text-slate-300 bg-black/40 px-2 py-0.5 rounded-full">
                         <Calendar className="w-3 h-3" />
                         {item.year}
                       </span>
                     </div>
 
-                    <h3 className="font-kanit font-black text-2xl sm:text-3xl text-white uppercase tracking-wider">
+                    <h3 className="font-kanit font-black text-xl sm:text-2xl md:text-3xl text-white uppercase tracking-wider leading-tight">
                       {item.title}
                     </h3>
-                    <p className="text-xs sm:text-sm font-mono text-slate-300 mt-1 line-clamp-2">
+                    <p className="text-xs font-mono text-slate-300 mt-1 line-clamp-2">
                       {item.caption}
                     </p>
                   </div>
