@@ -133,51 +133,51 @@ export const TRACKS_DATA: Track[] = [
 export const TOUR_DATES: TourDate[] = [
   {
     id: "tour-1",
-    date: "SEPT 24, 2026",
-    city: "JAKARTA",
+    date: "SEPT 04, 2026",
+    city: "BALI",
     country: "INDONESIA",
-    venue: "JIEXPO STAGE ONE",
-    event: "DWP // HEADLINE ARENA",
+    venue: "W BALI SEMINYAK",
+    event: "WOOBAR SUNSET SONIC REZONANCE",
     status: "FEW TICKETS",
     ticketUrl: "#book",
-    badge: "FESTIVAL HEADLINER",
-    image: "/assets/image-1.jpeg"
+    badge: "SUNSET RESIDENCY",
+    image: "/assets/image-4.jpeg"
   },
   {
     id: "tour-2",
-    date: "OCT 12, 2026",
-    city: "BALI",
+    date: "SEPT 10, 2026",
+    city: "JAKARTA",
     country: "INDONESIA",
-    venue: "SAVAYA CLIFFTOP",
-    event: "NEO HORIZON SUNSET RESIDENCY",
-    status: "AVAILABLE",
+    venue: "COLOSSEUM JAKARTA",
+    event: "MEGACLUB ARENA: NEO ECLIPSE",
+    status: "FEW TICKETS",
     ticketUrl: "#book",
-    badge: "CLUB RESIDENCY",
+    badge: "MEGACLUB HEADLINE",
     image: "/assets/image-3.jpeg"
   },
   {
     id: "tour-3",
-    date: "NOV 05, 2026",
-    city: "TOKYO",
-    country: "JAPAN",
-    venue: "AGEHA // STUDIO COAST",
-    event: "TOKYO BASS SENSATION",
-    status: "VIP EXCLUSIVE",
+    date: "SEPT 18, 2026",
+    city: "BALI",
+    country: "INDONESIA",
+    venue: "ATLAS BEACH CLUB",
+    event: "ATLAS FEST: MEGA DAYCLUB SHOWCASE",
+    status: "AVAILABLE",
     ticketUrl: "#book",
-    badge: "ASIA TOUR",
-    image: "/assets/image-5.jpeg"
+    badge: "BEACH FESTIVAL",
+    image: "/assets/image-7.jpeg"
   },
   {
     id: "tour-4",
-    date: "DEC 31, 2026",
-    city: "SINGAPORE",
-    country: "SINGAPORE",
-    venue: "MARQUEE NIGHTCLUB",
-    event: "NYE 2027 OVERDRIVE CELEBRATION",
-    status: "AVAILABLE",
+    date: "SEPT 24, 2026",
+    city: "JAKARTA",
+    country: "INDONESIA",
+    venue: "JIEXPO STAGE ONE",
+    event: "DJAKARTA WAREHOUSE PROJECT 2026",
+    status: "FEW TICKETS",
     ticketUrl: "#book",
-    badge: "SPECIAL COUNTDOWN",
-    image: "/assets/image-6.jpeg"
+    badge: "FESTIVAL HEADLINER",
+    image: "/assets/image-1.jpeg"
   }
 ];
 
