@@ -1,27 +1,5 @@
 [
   {
-    "id": "cal-2",
-    "day": 2,
-    "dateStr": "Wednesday, 02 September 2026",
-    "clubName": "VALHALLA JAKARTA",
-    "eventTitle": "UNDERGROUND TECHNO PROTOCOL",
-    "city": "Senopati, South Jakarta",
-    "country": "Indonesia",
-    "venueAddress": "Jl. Senopati No. 74, Kebayoran Baru, Jakarta Selatan",
-    "time": "22:00 - 04:00 (Set: 01:00)",
-    "genre": "Peak Time Hard Techno / Industrial",
-    "ticketStatus": "AVAILABLE",
-    "ticketPrice": "IDR 250,000 (Incl. 1 Drink)",
-    "flyerImage": "/assets/image-5.jpeg",
-    "supportingDJs": [
-      "Cyber Echo",
-      "Dexter Raw",
-      "Luna V"
-    ],
-    "description": "Intense raw underground bass resonance. 4 hours of relentless 142 BPM driving techno beats in Jakarta's darkest warehouse setting.",
-    "googleMapsUrl": "https://maps.google.com/?q=Valhalla+Jakarta"
-  },
-  {
     "id": "cal-4",
     "day": 4,
     "dateStr": "Friday, 04 September 2026",

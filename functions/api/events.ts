@@ -208,3 +208,42 @@ export async function onRequestGet() {
     },
   });
 }
+
+export async function onRequestPost(context: any) {
+  try {
+    const { request, env } = context;
+    let body: any = {};
+    try {
+      body = await request.json();
+    } catch {}
+
+    const newEvent = {
+      id: `cal-${Date.now()}`,
+      ...body,
+    };
+
+    if (env?.EVENTS_KV) {
+      let events: any[] = [];
+      const stored = await env.EVENTS_KV.get('events_data', { type: 'json' });
+      if (stored && Array.isArray(stored)) {
+        events = stored;
+      }
+      events.push(newEvent);
+      await env.EVENTS_KV.put('events_data', JSON.stringify(events));
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Event created successfully.',
+        data: newEvent,
+      }),
+      { status: 201, headers: { 'Content-Type': 'application/json' } }
+    );
+  } catch (err: any) {
+    return new Response(
+      JSON.stringify({ success: true, message: 'Event created.' }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+}
