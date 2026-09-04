@@ -70,7 +70,10 @@ export const StageCarouselSection: React.FC = () => {
               <ChevronLeft className="w-5 h-5" />
             </button>
             <span className="font-mono text-xs text-slate-400">
-              <span className="text-volt font-bold text-sm">0{currentIndex + 1}</span> / 0{STAGE_GALLERY.length}
+              <span className="text-volt font-bold text-sm">
+                {String(currentIndex + 1).padStart(2, '0')}
+              </span>{' '}
+              / {String(STAGE_GALLERY.length).padStart(2, '0')}
             </span>
             <button
               onClick={nextSlide}

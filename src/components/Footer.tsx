@@ -130,11 +130,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
           <div>
             <h4 className="text-xs font-mono text-volt uppercase tracking-widest mb-4">NAVIGATION</h4>
             <ul className="flex flex-col gap-2.5 text-xs font-kanit font-medium text-slate-400">
-              <li><a href="#about" className="hover:text-volt transition-colors uppercase">Sonic Manifesto</a></li>
+              <li><a href="#about" className="hover:text-volt transition-colors uppercase">About Me</a></li>
               <li><a href="#tracks" className="hover:text-volt transition-colors uppercase">Discography Releases</a></li>
-              <li><a href="#tour" className="hover:text-volt transition-colors uppercase">World Tour Itinerary</a></li>
-              <li><a href="#calendar" className="hover:text-volt transition-colors uppercase">Event Calendar September</a></li>
               <li><a href="#gallery" className="hover:text-volt transition-colors uppercase">Press Kit Gallery</a></li>
+              <li><a href="#calendar" className="hover:text-volt transition-colors uppercase">Event Calendar</a></li>
             </ul>
           </div>
 
@@ -178,8 +177,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
               MANAGEMENT CMS LOGIN (ALT + A)
             </button>
           </div>
-
-
 
           {/* Back To Top Button */}
           <button

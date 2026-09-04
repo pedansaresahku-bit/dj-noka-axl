@@ -92,7 +92,7 @@ class ApiService {
       this.setToken(token);
       return { success: true, token, message: 'Authentication successful. Welcome NOKA AXL Management.' };
     }
-    return { success: false, message: 'Incorrect Admin PIN. Please enter NOKA2026.' };
+    return { success: false, message: 'Password salah. Silakan coba lagi.' };
   }
 
   // Get all events

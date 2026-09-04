@@ -5,7 +5,6 @@ import { MarqueeSection } from './components/MarqueeSection';
 import { AboutSection } from './components/AboutSection';
 import { DiscographySection } from './components/DiscographySection';
 import { StageCarouselSection } from './components/StageCarouselSection';
-import { TourDatesSection } from './components/TourDatesSection';
 import { EventCalendarSection } from './components/EventCalendarSection';
 import { Footer } from './components/Footer';
 import { BookingModal } from './components/BookingModal';
@@ -99,14 +98,7 @@ export const App: React.FC = () => {
         {/* 5. 3D Perspective Stage Carousel */}
         <StageCarouselSection />
 
-        {/* 6. Sticky Stacking Tour Cards (Dynamically Synced with D1 SQL Database) */}
-        <TourDatesSection
-          events={eventsList}
-          onOpenBooking={handleOpenBooking}
-          onSelectEvent={handleSelectEvent}
-        />
-
-        {/* 7. Interactive 30-Day Club & Festival Calendar */}
+        {/* 6. Interactive 30-Day Club & Festival Calendar */}
         <EventCalendarSection
           events={eventsList}
           onSelectEvent={handleSelectEvent}

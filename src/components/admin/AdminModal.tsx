@@ -304,7 +304,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                     MANAGEMENT ACCESS ONLY
                   </h3>
                   <p className="text-xs sm:text-sm font-mono text-slate-400 mb-8">
-                    Enter your management security PIN to create, edit, or remove live tour dates from the Cloudflare D1 database.
+                    Masukan password manajemen untuk mengakses panel kelola event & jadwal DJ Noka AxL.
                   </p>
 
                   <form onSubmit={handleLogin} className="flex flex-col gap-4">
@@ -312,8 +312,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       type="password"
                       value={pinInput}
                       onChange={(e) => setPinInput(e.target.value)}
-                      placeholder="ENTER PIN (DEFAULT: NOKA2026)"
-                      className="w-full text-center px-6 py-4 rounded-2xl bg-black/60 border border-white/20 text-white font-mono text-lg tracking-widest focus:outline-none focus:border-volt focus:ring-1 focus:ring-volt transition-all placeholder:text-slate-600 placeholder:text-sm"
+                      placeholder="masukan password anda disini"
+                      className="w-full text-center px-6 py-4 rounded-2xl bg-black/60 border border-white/20 text-white font-mono text-base sm:text-lg tracking-widest focus:outline-none focus:border-volt focus:ring-1 focus:ring-volt transition-all placeholder:text-slate-500 placeholder:text-sm placeholder:tracking-normal"
                       autoFocus
                     />
                     {authError && (
@@ -323,7 +323,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       type="submit"
                       className="w-full py-4 rounded-2xl bg-volt text-black font-kanit font-bold text-sm tracking-wider uppercase hover:bg-volt-hover transition-all shadow-volt-sm active:scale-98"
                     >
-                      AUTHENTICATE CMS
+                      LOGIN CMS
                     </button>
                   </form>
                 </div>

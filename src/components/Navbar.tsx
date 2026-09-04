@@ -24,7 +24,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
     { name: 'ABOUT', href: '#about' },
     { name: 'DISCOGRAPHY', href: '#tracks' },
     { name: 'STAGE GALLERY', href: '#gallery' },
-    { name: 'TOUR DATES', href: '#tour' },
     { name: 'CALENDAR', href: '#calendar' },
     { name: 'EPK & RIDER', href: '#epk', onClick: onOpenEPK },
   ];

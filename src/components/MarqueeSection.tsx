@@ -7,21 +7,21 @@ export const MarqueeSection: React.FC = () => {
   const row1Items = [
     { type: 'image', src: '/assets/image-1.jpeg', label: 'MAIN STAGE ARENA', loc: 'JAKARTA DWP' },
     { type: 'badge', title: FESTIVAL_BADGES[0], sub: 'HEADLINE STAGE' },
-    { type: 'image', src: '/assets/image-2.jpeg', label: 'CDJ-3000 QUAD SET', loc: 'SAVAYA BALI' },
+    { type: 'image', src: '/assets/image-8.jpeg', label: 'HYBRID DROP WAVE', loc: 'COLOSSEUM' },
     { type: 'badge', title: FESTIVAL_BADGES[1], sub: 'WORLDWIDE TOUR' },
     { type: 'image', src: '/assets/image-3.jpeg', label: 'LASER MATRIX 400', loc: 'AGEHA TOKYO' },
     { type: 'badge', title: FESTIVAL_BADGES[2], sub: 'SPECIAL GUEST' },
-    { type: 'image', src: '/assets/image-4.jpeg', label: 'ANALOG MASTERING', loc: 'STUDIO LABS' },
+    { type: 'image', src: '/assets/image-10.jpeg', label: 'SYNCHRONIZED RAVE', loc: 'MEGA ARENA' },
   ];
 
   const row2Items = [
     { type: 'image', src: '/assets/image-5.jpeg', label: '145 BPM PEAK HOUR', loc: 'UNDERGROUND' },
     { type: 'badge', title: FESTIVAL_BADGES[3], sub: 'CLIFFTOP SUNSET' },
-    { type: 'image', src: '/assets/image-6.jpeg', label: 'PYRO SYNC SYSTEM', loc: 'ULTRA STAGE' },
+    { type: 'image', src: '/assets/image-11.jpeg', label: 'MIDNIGHT PROTOCOL', loc: 'WAREHOUSE STAGE' },
     { type: 'badge', title: FESTIVAL_BADGES[4], sub: 'MIDNIGHT RAVE' },
     { type: 'image', src: '/assets/image-7.jpeg', label: 'TOUR FINALE ENCORE', loc: 'SOLD OUT ARENA' },
     { type: 'badge', title: FESTIVAL_BADGES[5], sub: 'CLUB RESIDENCY' },
-    { type: 'image', src: '/assets/image-1.jpeg', label: 'HYBRID SYNTH DROP', loc: 'FESTIVAL 2026' },
+    { type: 'image', src: '/assets/image-12.jpeg', label: 'CROWD SYNERGY', loc: 'ASIA SHOWCASE' },
   ];
 
   // Duplicated once for infinite seamless loop with minimum DOM nodes
