@@ -5,9 +5,9 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: microphone=(), geolocation=(), camera=()
 
-# Aggressive Caching for Media Assets (Images, Video, Audio)
+# Caching for Media Assets (Always fresh on update)
 /assets/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=3600, must-revalidate
 
 # Caching for Fonts
 https://fonts.googleapis.com/*

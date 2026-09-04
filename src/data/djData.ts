@@ -206,7 +206,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-1",
     title: "MAIN ARENA EXPLOSION",
     location: "Jakarta International Expo",
-    image: "/assets/image-1.jpeg",
+    image: "/assets/image-1.jpeg?v=2",
     caption: "35,000 ravers synchronized under 400 laser beams during the drop of 'Neo Eclipse'.",
     year: "2026"
   },
@@ -214,7 +214,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-2",
     title: "THE DECK PERSPECTIVE",
     location: "Savaya Clifftop Bali",
-    image: "/assets/image-2.jpeg",
+    image: "/assets/image-2.jpeg?v=2",
     caption: "Pioneer CDJ-3000 quad-deck live remixing with real-time hardware drum machine trigger.",
     year: "2026"
   },
@@ -222,7 +222,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-3",
     title: "LASER CATHEDRAL",
     location: "Mega Club Headline",
-    image: "/assets/image-3.jpeg",
+    image: "/assets/image-3.jpeg?v=2",
     caption: "Immense visual mapping and CO2 cannons elevating crowd euphoria to peak state.",
     year: "2026"
   },
@@ -230,7 +230,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-4",
     title: "STUDIO PROTOCOL",
     location: "Axl Sound Labs HQ",
-    image: "/assets/image-4.jpeg",
+    image: "/assets/image-4.jpeg?v=2",
     caption: "Dialing in analog Moog filters and sub-harmonic synthesizers for the upcoming LP.",
     year: "2026"
   },
@@ -238,7 +238,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-5",
     title: "AFTER-HOURS ENERGY",
     location: "Tokyo Underground",
-    image: "/assets/image-5.jpeg",
+    image: "/assets/image-5.jpeg?v=2",
     caption: "Unfiltered 145 BPM industrial hard techno session running until sunrise.",
     year: "2025"
   },
@@ -246,7 +246,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-6",
     title: "FESTIVAL PYROTECHNICS",
     location: "Ultra Stage Live",
-    image: "/assets/image-6.jpeg",
+    image: "/assets/image-6.jpeg?v=2",
     caption: "Pyro cues locked precisely to the master BPM clock on the drop.",
     year: "2025"
   },
@@ -254,7 +254,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-7",
     title: "STAGE ENCORE MOMENT",
     location: "World Tour Finale",
-    image: "/assets/image-7.jpeg",
+    image: "/assets/image-7.jpeg?v=2",
     caption: "The crowd demanding one last ID track as the house lights faded up.",
     year: "2025"
   },
@@ -262,7 +262,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-8",
     title: "HYBRID DROP WAVE",
     location: "Colosseum Jakarta",
-    image: "/assets/image-8.jpeg",
+    image: "/assets/image-8.jpeg?v=2",
     caption: "Deep resonant sub frequencies driving the peak-time breakbeat energy.",
     year: "2025"
   },
@@ -270,7 +270,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-9",
     title: "ACOUSTIC BASS VORTEX",
     location: "Bali Beach Stage",
-    image: "/assets/image-9.jpeg",
+    image: "/assets/image-9.jpeg?v=2",
     caption: "Sunset session transitioning into high-voltage jungle dutch rhythms.",
     year: "2025"
   },
@@ -278,7 +278,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-10",
     title: "SYNCHRONIZED RAVE",
     location: "National Arena Headline",
-    image: "/assets/image-10.jpeg",
+    image: "/assets/image-10.jpeg?v=2",
     caption: "Thousands of hands in the air locked to the syncopated breakbeat groove.",
     year: "2024"
   },
@@ -286,7 +286,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-11",
     title: "MIDNIGHT PROTOCOL",
     location: "Warehouse Stage",
-    image: "/assets/image-11.jpeg",
+    image: "/assets/image-11.jpeg?v=2",
     caption: "Raw sonic power and modular live elements igniting the midnight crowd.",
     year: "2024"
   },
@@ -294,7 +294,7 @@ export const STAGE_GALLERY: StagePhoto[] = [
     id: "gallery-12",
     title: "CROWD SYNERGY",
     location: "Asia Tour Showcase",
-    image: "/assets/image-12.jpeg",
+    image: "/assets/image-12.jpeg?v=2",
     caption: "Uniting festival grounds across Asia with iconic Indonesian breakbeat anthems.",
     year: "2024"
   }
