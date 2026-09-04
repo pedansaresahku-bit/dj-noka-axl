@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, MapPin, Clock, Ticket, Navigation, MessageSquare, Sparkles, Disc3, Share2 } from 'lucide-react';
+import { X, Calendar, MapPin, Clock, MessageSquare, Navigation, Instagram, Sparkles, Disc3, Share2 } from 'lucide-react';
 import { CalendarEvent } from '../types';
 import { ARTIST_INFO } from '../data/djData';
 
@@ -19,11 +19,8 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
 }) => {
   if (!event) return null;
 
-  const handleWhatsAppBooking = () => {
-    const message = encodeURIComponent(
-      `Hi NOKA AXL Management, I would like to reserve VIP tickets / inquiry about: ${event.eventTitle} at ${event.clubName} on ${event.dateStr}.`
-    );
-    window.open(`https://wa.me/${ARTIST_INFO.whatsappNumber.replace('+', '')}?text=${message}`, '_blank');
+  const handleInstagramBooking = () => {
+    window.open(ARTIST_INFO.socialLinks.instagram, '_blank');
   };
 
   const handleShare = () => {
@@ -209,11 +206,11 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                   {/* Actions Footer */}
                   <div className="flex flex-col sm:flex-row items-center gap-3 pt-4 border-t border-white/10">
                     <button
-                      onClick={handleWhatsAppBooking}
-                      className="w-full sm:w-auto flex-1 px-6 py-3.5 rounded-full bg-volt text-black font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:bg-volt-hover shadow-volt-sm transition-all"
+                      onClick={handleInstagramBooking}
+                      className="w-full sm:w-auto flex-1 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-90 text-white font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-md transition-all active:scale-95"
                     >
-                      <Ticket className="w-4 h-4" />
-                      <span>RESERVE VIP TABLE / WHATSAPP</span>
+                      <Instagram className="w-4 h-4" />
+                      <span>BOOK VIA DM IG</span>
                     </button>
 
                     <button

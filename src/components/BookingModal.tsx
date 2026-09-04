@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, CheckCircle2, MessageSquare, Sparkles } from 'lucide-react';
+import { X, Send, Instagram, CheckCircle2, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { ARTIST_INFO } from '../data/djData';
 import { BookingFormData } from '../types';
@@ -17,8 +17,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
     email: '',
     phone: '',
     eventType: 'Festival Mainstage',
-    eventDate: '',
     venueLocation: '',
+    eventDate: '',
     estimatedAttendance: '5,000 - 15,000',
     budgetTier: '$10k - $25k',
     message: '',
@@ -42,11 +42,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
     await api.submitBooking(formData);
   };
 
-  const handleWhatsAppDirect = () => {
-    const text = encodeURIComponent(
-      `Hi NOKA AXL Management, I would like to inquire about booking DJ Noka AxL for an upcoming event:\n\nType: ${formData.eventType}\nDate: ${formData.eventDate || 'TBD'}\nLocation: ${formData.venueLocation || 'TBD'}`
-    );
-    window.open(`https://wa.me/${ARTIST_INFO.whatsappNumber.replace('+', '')}?text=${text}`, '_blank');
+  const handleInstagramDirect = () => {
+    window.open(ARTIST_INFO.socialLinks.instagram, '_blank');
   };
 
   return (
@@ -91,11 +88,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
                 </p>
                 <div className="mt-8 flex gap-4">
                   <button
-                    onClick={handleWhatsAppDirect}
-                    className="px-6 py-3 rounded-full bg-volt text-black font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center gap-2 hover:bg-volt-hover transition-all"
+                    onClick={handleInstagramDirect}
+                    className="px-6 py-3 rounded-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-90 text-white font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center gap-2 transition-all shadow-md active:scale-95"
                   >
-                    <MessageSquare className="w-4 h-4" />
-                    <span>CONNECT VIA WHATSAPP</span>
+                    <Instagram className="w-4 h-4" />
+                    <span>BOOK VIA DM IG</span>
                   </button>
                   <button
                     onClick={() => {
@@ -228,11 +225,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
                     <button
                       type="button"
-                      onClick={handleWhatsAppDirect}
-                      className="w-full sm:w-auto px-5 py-3 rounded-full border border-white/15 hover:border-volt text-slate-300 hover:text-white font-kanit font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors"
+                      onClick={handleInstagramDirect}
+                      className="w-full sm:w-auto px-5 py-3 rounded-full border border-white/15 hover:border-pink-500 text-slate-300 hover:text-white font-kanit font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors"
                     >
-                      <MessageSquare className="w-4 h-4 text-emerald-400" />
-                      <span>FAST WHATSAPP CHAT</span>
+                      <Instagram className="w-4 h-4 text-pink-400" />
+                      <span>BOOK VIA DM IG</span>
                     </button>
 
                     <button

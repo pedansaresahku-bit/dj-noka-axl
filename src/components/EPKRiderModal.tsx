@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Download, FileText, CheckCircle2, AlertCircle, MessageSquare, Sparkles } from 'lucide-react';
+import { X, Download, FileText, CheckCircle2, AlertCircle, Instagram, Sparkles } from 'lucide-react';
 import { ARTIST_INFO, RATECARD_INFO, RIDERS_INFO } from '../data/djData';
 
 interface EPKRiderModalProps {
@@ -14,7 +14,8 @@ export const EPKRiderModal: React.FC<EPKRiderModalProps> = ({ isOpen, onClose })
 NOKA AXL — OFFICIAL RATECARD & RIDERS 2026
 Artist: ${ARTIST_INFO.name}
 Title: ${ARTIST_INFO.title}
-Management Desk: ${ARTIST_INFO.managementEmail} | WA: ${ARTIST_INFO.whatsappNumber}
+Instagram DM: ${ARTIST_INFO.socialLinks.instagram}
+Management Desk: ${ARTIST_INFO.managementEmail}
 =====================================================
 
 [ RATECARD ]
@@ -42,8 +43,8 @@ Management Desk: ${ARTIST_INFO.managementEmail} | WA: ${ARTIST_INFO.whatsappNumb
 - 2x Heavy-Duty Stereo Booth Monitors (L-Acoustics / d&b)
 
 For booking confirmation & official contract:
-WhatsApp: ${ARTIST_INFO.whatsappNumber}
-Email   : ${ARTIST_INFO.managementEmail}
+Instagram DM: ${ARTIST_INFO.socialLinks.instagram}
+Email       : ${ARTIST_INFO.managementEmail}
 =====================================================`;
 
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
@@ -54,10 +55,6 @@ Email   : ${ARTIST_INFO.managementEmail}
     a.click();
     URL.revokeObjectURL(url);
   };
-
-  const whatsappInquiryUrl = `https://wa.me/${ARTIST_INFO.whatsappNumber.replace('+', '')}?text=${encodeURIComponent(
-    'Halo Management DJ Noka AxL, saya ingin menanyakan booking jadwal event & konfirmasi riders.'
-  )}`;
 
   return (
     <AnimatePresence>
@@ -194,13 +191,13 @@ Email   : ${ARTIST_INFO.managementEmail}
 
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <a
-                  href={whatsappInquiryUrl}
+                  href={ARTIST_INFO.socialLinks.instagram}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-kanit font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-90 text-white font-kanit font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
                 >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>BOOK VIA WHATSAPP</span>
+                  <Instagram className="w-4 h-4" />
+                  <span>BOOK VIA DM IG</span>
                 </a>
 
                 <button

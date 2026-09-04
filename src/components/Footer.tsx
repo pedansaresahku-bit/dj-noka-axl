@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUp, Disc, Music2, Instagram, Youtube, Sparkles, Mail, MessageSquare, ExternalLink, Code2 } from 'lucide-react';
+import { ArrowUp, Disc, Music2, Instagram, Youtube, Sparkles, Mail, ExternalLink, Code2 } from 'lucide-react';
 import { ARTIST_INFO } from '../data/djData';
 import { Magnet } from './common/Magnet';
 
@@ -149,13 +149,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
                 <span>{ARTIST_INFO.managementEmail}</span>
               </a>
               <a
-                href={`https://wa.me/${ARTIST_INFO.whatsappNumber.replace('+', '')}`}
+                href={ARTIST_INFO.socialLinks.instagram}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 hover:text-volt transition-colors"
               >
-                <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
-                <span>WhatsApp Management Desk</span>
+                <Instagram className="w-3.5 h-3.5 text-pink-400" />
+                <span>Book Via DM IG (@nokaaxlofficial)</span>
               </a>
               <span className="text-[10px] text-slate-500 mt-2">
                 Timezone: GMT+7 (Jakarta / Bali)
