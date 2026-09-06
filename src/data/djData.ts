@@ -204,98 +204,98 @@ export const TOUR_DATES: TourDate[] = [
 export const STAGE_GALLERY: StagePhoto[] = [
   {
     id: "gallery-1",
-    title: "MAIN ARENA EXPLOSION",
-    location: "Jakarta International Expo",
+    title: "DJ NOKA AXL - PRESS PHOTO 01",
+    location: "Jakarta",
     image: "/assets/image-1.jpeg?v=2",
-    caption: "35,000 ravers synchronized under 400 laser beams during the drop of 'Neo Eclipse'.",
+    caption: "Official DJ Noka AxL press portrait shoot.",
     year: "2026"
   },
   {
     id: "gallery-2",
-    title: "THE DECK PERSPECTIVE",
-    location: "Savaya Clifftop Bali",
+    title: "DJ NOKA AXL - PRESS PHOTO 02",
+    location: "Jakarta",
     image: "/assets/image-2.jpeg?v=2",
-    caption: "Pioneer CDJ-3000 quad-deck live remixing with real-time hardware drum machine trigger.",
+    caption: "Official DJ Noka AxL press portrait shoot.",
     year: "2026"
   },
   {
     id: "gallery-3",
-    title: "LASER CATHEDRAL",
-    location: "Mega Club Headline",
+    title: "DJ NOKA AXL - PRESS PHOTO 03",
+    location: "Jakarta",
     image: "/assets/image-3.jpeg?v=2",
-    caption: "Immense visual mapping and CO2 cannons elevating crowd euphoria to peak state.",
+    caption: "Official DJ Noka AxL press portrait shoot.",
     year: "2026"
   },
   {
     id: "gallery-4",
-    title: "STUDIO PROTOCOL",
-    location: "Axl Sound Labs HQ",
+    title: "DJ NOKA AXL - PRESS PHOTO 04",
+    location: "Jakarta",
     image: "/assets/image-4.jpeg?v=2",
-    caption: "Dialing in analog Moog filters and sub-harmonic synthesizers for the upcoming LP.",
+    caption: "Official DJ Noka AxL press portrait shoot.",
     year: "2026"
   },
   {
     id: "gallery-5",
-    title: "AFTER-HOURS ENERGY",
-    location: "Tokyo Underground",
+    title: "DJ NOKA AXL - PRESS PHOTO 05",
+    location: "Jakarta",
     image: "/assets/image-5.jpeg?v=2",
-    caption: "Unfiltered 145 BPM industrial hard techno session running until sunrise.",
-    year: "2025"
+    caption: "Official DJ Noka AxL press portrait shoot.",
+    year: "2026"
   },
   {
     id: "gallery-6",
-    title: "FESTIVAL PYROTECHNICS",
-    location: "Ultra Stage Live",
+    title: "DJ NOKA AXL - PRESS PHOTO 06",
+    location: "Jakarta",
     image: "/assets/image-6.jpeg?v=2",
-    caption: "Pyro cues locked precisely to the master BPM clock on the drop.",
-    year: "2025"
+    caption: "Official DJ Noka AxL press portrait shoot.",
+    year: "2026"
   },
   {
     id: "gallery-7",
-    title: "STAGE ENCORE MOMENT",
-    location: "World Tour Finale",
+    title: "DJ NOKA AXL - PRESS PHOTO 07",
+    location: "Jakarta",
     image: "/assets/image-7.jpeg?v=2",
-    caption: "The crowd demanding one last ID track as the house lights faded up.",
+    caption: "Official DJ Noka AxL press portrait shoot.",
     year: "2025"
   },
   {
     id: "gallery-8",
-    title: "HYBRID DROP WAVE",
-    location: "Colosseum Jakarta",
+    title: "DJ NOKA AXL - PRESS PHOTO 08",
+    location: "Jakarta",
     image: "/assets/image-8.jpeg?v=2",
-    caption: "Deep resonant sub frequencies driving the peak-time breakbeat energy.",
+    caption: "Official DJ Noka AxL press portrait shoot.",
     year: "2025"
   },
   {
     id: "gallery-9",
-    title: "ACOUSTIC BASS VORTEX",
-    location: "Bali Beach Stage",
+    title: "DJ NOKA AXL - PRESS PHOTO 09",
+    location: "Jakarta",
     image: "/assets/image-9.jpeg?v=2",
-    caption: "Sunset session transitioning into high-voltage jungle dutch rhythms.",
+    caption: "Official DJ Noka AxL press portrait shoot.",
     year: "2025"
   },
   {
     id: "gallery-10",
-    title: "SYNCHRONIZED RAVE",
-    location: "National Arena Headline",
+    title: "DJ NOKA AXL - PRESS PHOTO 10",
+    location: "Jakarta",
     image: "/assets/image-10.jpeg?v=2",
-    caption: "Thousands of hands in the air locked to the syncopated breakbeat groove.",
+    caption: "Official DJ Noka AxL press portrait shoot.",
     year: "2024"
   },
   {
     id: "gallery-11",
-    title: "MIDNIGHT PROTOCOL",
-    location: "Warehouse Stage",
+    title: "DJ NOKA AXL - PRESS PHOTO 11",
+    location: "Jakarta",
     image: "/assets/image-11.jpeg?v=2",
-    caption: "Raw sonic power and modular live elements igniting the midnight crowd.",
+    caption: "Official DJ Noka AxL press portrait shoot.",
     year: "2024"
   },
   {
     id: "gallery-12",
-    title: "CROWD SYNERGY",
-    location: "Asia Tour Showcase",
+    title: "DJ NOKA AXL - PRESS PHOTO 12",
+    location: "Jakarta",
     image: "/assets/image-12.jpeg?v=2",
-    caption: "Uniting festival grounds across Asia with iconic Indonesian breakbeat anthems.",
+    caption: "Official DJ Noka AxL press portrait shoot.",
     year: "2024"
   }
 ];

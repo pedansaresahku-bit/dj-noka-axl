@@ -56,18 +56,6 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
   // Days in selected month (e.g. 30 in Sept, 31 in Oct)
   const daysInMonth = new Date(activeYear, activeMonth + 1, 0).getDate();
 
-  // Helper to count events in a specific month
-  const getEventCountForMonth = (monthIdx: number) => {
-    const currentMonthName = MONTH_NAMES[monthIdx].toLowerCase();
-    const currentMonthShort = MONTH_SHORT[monthIdx].toLowerCase();
-    return events.filter((ev) => {
-      const dateLower = (ev.dateStr || '').toLowerCase();
-      const hasAnyMonth =
-        MONTH_NAMES.some((m) => dateLower.includes(m.toLowerCase())) ||
-        MONTH_SHORT.some((m) => dateLower.includes(m.toLowerCase()));
-      return !hasAnyMonth || dateLower.includes(currentMonthName) || dateLower.includes(currentMonthShort);
-    }).length;
-  };
 
   // Map events by day number specifically for the active month
   const eventsByDay: Record<number, CalendarEvent> = {};
@@ -139,12 +127,12 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
 
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="mb-8 sm:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="mb-8 sm:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <FadeIn delay={0}>
             <div className="flex flex-wrap items-center gap-3 mb-3">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-volt/10 border border-volt/30 text-volt text-xs font-mono tracking-widest uppercase shadow-volt-sm">
                 <Clock className="w-3.5 h-3.5 animate-pulse" />
-                <span>WIB LIVE AUTOMATED CALENDAR // {MONTH_NAMES[activeMonth]} {activeYear}</span>
+                <span>EVENT TOUR</span>
               </div>
 
               <button
@@ -164,80 +152,41 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
               Live automated schedule synchronized with Asia/Jakarta (WIB) real-time clock. Automatically transitions when the month flips. Click any date to inspect flyer poster and location map.
             </p>
           </FadeIn>
-        </div>
 
-        {/* Dedicated Full-Width Month Switcher Menu (Selebar Grid / Section) */}
-        <FadeIn delay={0.1} className="mb-8">
-          <div className="w-full bg-[#111118]/90 border border-white/10 rounded-2xl p-2.5 sm:p-3.5 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.7)]">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-3">
-              {/* Left Control: Prev / Next & Year Display with Current WIB Button */}
-              <div className="flex items-center justify-between w-full lg:w-auto gap-2">
-                <button
-                  onClick={prevMonth}
-                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-volt hover:text-black text-slate-200 transition-all font-mono text-xs sm:text-sm uppercase font-bold group border border-white/5 hover:border-volt active:scale-95"
-                  aria-label="Previous Month"
-                  title="Previous Month"
-                >
-                  <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-                  <span>PREV</span>
-                </button>
+          {/* Month Navigation Prev / Next Controls */}
+          <FadeIn delay={0.1} className="flex items-center gap-2 self-start md:self-end">
+            <button
+              onClick={prevMonth}
+              className="p-2.5 sm:p-3 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-white transition-all active:scale-90"
+              aria-label="Previous Month"
+              title="Previous Month"
+            >
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
 
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10">
-                  <span className="font-kanit font-black text-base sm:text-lg text-white tracking-wider">
-                    {activeYear}
-                  </span>
-                  <button
-                    onClick={resetToWIBCurrent}
-                    className="text-[10px] sm:text-xs font-mono px-2 py-0.5 rounded bg-volt/10 text-volt hover:bg-volt hover:text-black font-bold uppercase transition-all"
-                    title="Reset to current month in WIB"
-                  >
-                    NOW (WIB)
-                  </button>
-                </div>
-
-                <button
-                  onClick={nextMonth}
-                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-volt hover:text-black text-slate-200 transition-all font-mono text-xs sm:text-sm uppercase font-bold group border border-white/5 hover:border-volt active:scale-95"
-                  aria-label="Next Month"
-                  title="Next Month"
-                >
-                  <span>NEXT</span>
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                </button>
-              </div>
-
-              {/* 12 Months Interactive Grid/Tabs (Selebar Container) */}
-              <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-12 gap-1.5 w-full lg:flex-1 lg:ml-4">
-                {MONTH_SHORT.map((mName, index) => {
-                  const isSelected = activeMonth === index;
-                  const count = getEventCountForMonth(index);
-                  return (
-                    <button
-                      key={mName}
-                      onClick={() => setActiveMonth(index)}
-                      className={`py-2 px-1 text-center rounded-xl font-mono text-xs sm:text-sm transition-all duration-200 uppercase font-bold flex items-center justify-center gap-1 ${
-                        isSelected
-                          ? 'bg-volt text-black shadow-[0_0_16px_rgba(212,255,0,0.5)] scale-[1.03] z-10'
-                          : 'bg-white/[0.03] hover:bg-white/10 text-slate-300 hover:text-white border border-white/5'
-                      }`}
-                    >
-                      <span>{mName}</span>
-                      {count > 0 && (
-                        <span
-                          className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
-                            isSelected ? 'bg-black text-volt' : 'bg-volt/20 text-volt border border-volt/40'
-                          }`}
-                        >
-                          {count}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+              <span className="font-kanit font-black text-sm sm:text-base text-white tracking-wider">
+                {MONTH_NAMES[activeMonth]} {activeYear}
+              </span>
+              <button
+                onClick={resetToWIBCurrent}
+                className="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-volt/15 text-volt hover:bg-volt hover:text-black font-bold uppercase transition-all"
+                title="Reset to current month in WIB"
+              >
+                NOW
+              </button>
             </div>
-          </div>
-        </FadeIn>
+
+            <button
+              onClick={nextMonth}
+              className="p-2.5 sm:p-3 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-white transition-all active:scale-90"
+              aria-label="Next Month"
+              title="Next Month"
+            >
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          </FadeIn>
+        </div>
 
         {/* Dynamic Days Grid Layout */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">

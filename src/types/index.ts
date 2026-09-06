@@ -37,6 +37,8 @@ export interface StagePhoto {
   image: string;
   caption: string;
   year: string;
+  category?: string;
+  role?: string;
 }
 
 export interface CalendarEvent {
