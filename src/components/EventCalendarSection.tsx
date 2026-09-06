@@ -154,23 +154,23 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
           </FadeIn>
 
           {/* Month Navigation Prev / Next Controls */}
-          <FadeIn delay={0.1} className="flex items-center gap-2 self-start md:self-end">
+          <FadeIn delay={0.1} className="w-full md:w-auto flex items-center justify-center md:justify-end gap-2 sm:gap-3 self-center md:self-end mt-2 md:mt-0">
             <button
               onClick={prevMonth}
-              className="p-2.5 sm:p-3 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-white transition-all active:scale-90"
+              className="shrink-0 p-2.5 sm:p-3 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-white transition-all active:scale-90"
               aria-label="Previous Month"
               title="Previous Month"
             >
               <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-              <span className="font-kanit font-black text-sm sm:text-base text-white tracking-wider">
+            <div className="flex-1 sm:flex-initial flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white/5 border border-white/10 max-w-[280px] sm:max-w-none text-center">
+              <span className="font-kanit font-black text-xs sm:text-sm md:text-base text-white tracking-wider whitespace-nowrap">
                 {MONTH_NAMES[activeMonth]} {activeYear}
               </span>
               <button
                 onClick={resetToWIBCurrent}
-                className="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-volt/15 text-volt hover:bg-volt hover:text-black font-bold uppercase transition-all"
+                className="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-volt/15 text-volt hover:bg-volt hover:text-black font-bold uppercase transition-all shrink-0"
                 title="Reset to current month in WIB"
               >
                 NOW
@@ -179,7 +179,7 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
 
             <button
               onClick={nextMonth}
-              className="p-2.5 sm:p-3 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-white transition-all active:scale-90"
+              className="shrink-0 p-2.5 sm:p-3 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-white transition-all active:scale-90"
               aria-label="Next Month"
               title="Next Month"
             >
