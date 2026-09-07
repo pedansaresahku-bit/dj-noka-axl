@@ -44,7 +44,7 @@ export async function onRequestDelete(context: any) {
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Event ${eventId} successfully deleted from D1 database.`,
+        message: `Event ${eventId} successfully deleted.`,
       }),
       { status: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
     );
@@ -125,7 +125,7 @@ export async function onRequestPut(context: any) {
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Event ${eventId} updated successfully in D1 database.`,
+        message: `Event ${eventId} updated successfully.`,
         data: {
           id: eventId,
           day,

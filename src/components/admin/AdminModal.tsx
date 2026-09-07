@@ -11,11 +11,10 @@ import {
   CheckCircle2,
   LogOut,
   Mail,
-  Clock,
   Sparkles,
   Building,
-  Radio,
   FileText,
+  MapPin,
   Image as ImageIcon
 } from 'lucide-react';
 import { CalendarEvent } from '../../types';
@@ -56,12 +55,22 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   const [formDateStr, setFormDateStr] = useState<string>('Wednesday, 02 September 2026');
   const [formRawDate, setFormRawDate] = useState<string>('2026-09-02');
   const [formClubName, setFormClubName] = useState<string>('');
-  const [formEventTitle, setFormEventTitle] = useState<string>('');
+  const [formCity, setFormCity] = useState<string>('');
   const [formDescription, setFormDescription] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
 
   const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
+
+  // Helper to format YYYY-MM-DD into DD/MM/YYYY for the Date Picker badge
+  const formatToDDMMYYYY = (rawDate: string) => {
+    if (!rawDate) return '';
+    const parts = rawDate.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return '';
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -102,7 +111,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     onClose();
   };
 
-  // Helper to handle date picker changes and auto-calculate day & date string
+  // Helper to handle date picker changes: updates day, rawDate, and section calendar format
   const handleDateChange = (dateVal: string) => {
     setFormRawDate(dateVal);
     if (!dateVal) return;
@@ -117,8 +126,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
         const dayName = DAY_NAMES[dateObj.getDay()] || 'Day';
         const monthName = MONTH_NAMES[month] || 'September';
         const formattedDay = day < 10 ? `0${day}` : `${day}`;
-        
+
         setFormDay(day);
+        // Calendar section keeps full format (e.g. Wednesday, 02 September 2026)
         setFormDateStr(`${dayName}, ${formattedDay} ${monthName} ${year}`);
       }
     } catch {}
@@ -136,11 +146,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     setEditingEventId(null);
     setSelectedFile(null);
     setFilePreview('/assets/image-1.jpeg');
-    setFormDay(2);
-    setFormRawDate('2026-09-02');
-    setFormDateStr('Wednesday, 02 September 2026');
+    const defaultDate = '2026-09-02';
+    handleDateChange(defaultDate);
     setFormClubName('');
-    setFormEventTitle('');
+    setFormCity('');
     setFormDescription('');
     setIsFormOpen(true);
   };
@@ -149,15 +158,35 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     setEditingEventId(ev.id);
     setSelectedFile(null);
     setFilePreview(ev.flyerImage || '/assets/image-1.jpeg');
-    setFormDay(ev.day || 1);
-    setFormDateStr(ev.dateStr || `Day ${ev.day} September 2026`);
     setFormClubName(ev.clubName || '');
-    setFormEventTitle(ev.eventTitle || '');
+    setFormCity(ev.city || ev.eventTitle || '');
     setFormDescription(ev.description || '');
 
-    // Try to infer raw date from dateStr or default to September 2026
-    const dayStr = (ev.day || 1) < 10 ? `0${ev.day || 1}` : `${ev.day || 1}`;
-    setFormRawDate(`2026-09-${dayStr}`);
+    let day = ev.day || 1;
+    let month = 9;
+    let year = 2026;
+
+    if (ev.dateStr) {
+      const ddmmyyyyMatch = ev.dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (ddmmyyyyMatch) {
+        day = parseInt(ddmmyyyyMatch[1], 10);
+        month = parseInt(ddmmyyyyMatch[2], 10);
+        year = parseInt(ddmmyyyyMatch[3], 10);
+      } else {
+        const yearMatch = ev.dateStr.match(/\b(20\d\d)\b/);
+        if (yearMatch) year = parseInt(yearMatch[1], 10);
+        MONTH_NAMES.forEach((mName, idx) => {
+          if (ev.dateStr.toLowerCase().includes(mName.toLowerCase())) {
+            month = idx + 1;
+          }
+        });
+      }
+    }
+
+    const dayStr = day < 10 ? `0${day}` : `${day}`;
+    const monthStr = month < 10 ? `0${month}` : `${month}`;
+    const rawDateVal = `${year}-${monthStr}-${dayStr}`;
+    handleDateChange(rawDateVal);
     setIsFormOpen(true);
   };
 
@@ -180,8 +209,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       day: formDay || 1,
       dateStr: formDateStr || `Day ${formDay || 1} September 2026`,
       clubName: formClubName.trim() || 'CLUB VENUE',
-      eventTitle: formEventTitle.trim() || 'NOKA AXL LIVE',
-      city: 'Indonesia',
+      eventTitle: formCity.trim() || 'NOKA AXL TOUR',
+      city: formCity.trim() || 'Indonesia',
       country: 'Indonesia',
       venueAddress: formClubName.trim(),
       time: '22:00 - Late',
@@ -189,7 +218,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       ticketStatus: 'AVAILABLE' as const,
       ticketPrice: 'IDR 250,000',
       description: formDescription.trim(),
-      googleMapsUrl: `https://maps.google.com/?q=${encodeURIComponent(formClubName || '')}`,
+      googleMapsUrl: `https://maps.google.com/?q=${encodeURIComponent(`${formClubName} ${formCity}`)}`,
       flyerImage: flyerImageUrl,
       supportingDJs: [],
     };
@@ -260,9 +289,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   <div className="flex items-center gap-2">
                     <span className="font-kanit font-black text-lg sm:text-xl text-white uppercase tracking-wider">
                       NOKA AXL // MANAGEMENT CMS
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-volt/10 text-volt text-[10px] font-mono border border-volt/30">
-                      FULL STACK
                     </span>
                   </div>
                   <p className="text-[11px] font-mono text-slate-400">
@@ -375,7 +401,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   {saveSuccess && (
                     <div className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>Changes successfully synchronized with Cloudflare D1 SQL database!</span>
+                      <span>Changes successfully synchronized!</span>
                     </div>
                   )}
 
@@ -399,65 +425,34 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                             </button>
                           </div>
 
-                          {/* Row 1: Day of Month & Date Picker Combobox */}
-                          <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
-                            <div className="sm:col-span-4">
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1 flex items-center gap-1">
-                                <Calendar className="w-3.5 h-3.5 text-volt" />
-                                <span>DAY OF MONTH (1 - 31) *</span>
-                              </label>
-                              <input
-                                type="number"
-                                min="1"
-                                max="31"
-                                required
-                                value={formDay}
-                                onChange={(e) => {
-                                  const val = parseInt(e.target.value, 10) || 1;
-                                  setFormDay(val);
-                                  const dStr = val < 10 ? `0${val}` : `${val}`;
-                                  setFormRawDate(`2026-09-${dStr}`);
-                                  setFormDateStr(`Day ${val} September 2026`);
-                                }}
-                                className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
-                              />
-                            </div>
-
-                            <div className="sm:col-span-8">
-                              <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1 flex items-center justify-between">
-                                <span className="flex items-center gap-1">
-                                  <Clock className="w-3.5 h-3.5 text-volt" />
-                                  <span>DATE PICKER / COMBOBOX *</span>
-                                </span>
-                                <span className="text-[10px] text-volt">Auto-Calculates Day</span>
-                              </label>
-                              <div className="relative flex items-center">
-                                <input
-                                  type="date"
-                                  value={formRawDate}
-                                  onChange={(e) => handleDateChange(e.target.value)}
-                                  className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt [color-scheme:dark]"
-                                />
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Row 2: Formatted Date String Preview */}
+                          {/* Row 1: Single Date Picker (covers Day, Date, and Formatted String) */}
                           <div>
-                            <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1">
-                              DISPLAY DATE STRING (FORMATTED)
+                            <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1.5 flex items-center justify-between">
+                              <span className="flex items-center gap-1.5">
+                                <Calendar className="w-3.5 h-3.5 text-volt" />
+                                <span>TANGGAL ACARA (DD/MM/YYYY) *</span>
+                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-mono text-volt font-bold px-2.5 py-0.5 rounded bg-volt/10 border border-volt/30 tracking-wider">
+                                  {formatToDDMMYYYY(formRawDate)}
+                                </span>
+                                {formDateStr && (
+                                  <span className="text-[11px] font-mono text-slate-400 hidden sm:inline">
+                                    ({formDateStr})
+                                  </span>
+                                )}
+                              </div>
                             </label>
                             <input
-                              type="text"
+                              type="date"
                               required
-                              value={formDateStr}
-                              onChange={(e) => setFormDateStr(e.target.value)}
-                              placeholder="e.g. Wednesday, 02 September 2026"
-                              className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
+                              value={formRawDate}
+                              onChange={(e) => handleDateChange(e.target.value)}
+                              className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt [color-scheme:dark] cursor-pointer"
                             />
                           </div>
 
-                          {/* Row 3: Club Name & Event Head Title */}
+                          {/* Row 2: Club Name & Kota */}
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                               <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1 flex items-center gap-1">
@@ -476,21 +471,21 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                             <div>
                               <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1 flex items-center gap-1">
-                                <Radio className="w-3.5 h-3.5 text-volt" />
-                                <span>EVENT HEADLINE TITLE *</span>
+                                <MapPin className="w-3.5 h-3.5 text-volt" />
+                                <span>KOTA *</span>
                               </label>
                               <input
                                 type="text"
                                 required
-                                value={formEventTitle}
-                                onChange={(e) => setFormEventTitle(e.target.value)}
-                                placeholder="e.g. Breaks Dealer"
+                                value={formCity}
+                                onChange={(e) => setFormCity(e.target.value)}
+                                placeholder="e.g. SAMARINDA"
                                 className="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white font-mono text-sm focus:outline-none focus:border-volt"
                               />
                             </div>
                           </div>
 
-                          {/* Row 4: Flyer Poster Upload & Preview */}
+                          {/* Row 3: Flyer Poster Upload & Preview */}
                           <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row items-center gap-5">
                             <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-black border border-white/15 shrink-0 flex items-center justify-center relative group">
                               {filePreview ? (
@@ -526,7 +521,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                             </div>
                           </div>
 
-                          {/* Row 5: Description (Optional) */}
+                          {/* Row 4: Description (Optional) */}
                           <div>
                             <label className="block text-[11px] font-mono text-slate-400 uppercase mb-1 flex items-center gap-1">
                               <FileText className="w-3.5 h-3.5 text-slate-500" />
@@ -555,7 +550,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                               disabled={loading}
                               className="px-6 py-2.5 rounded-xl bg-volt text-black font-kanit font-bold text-xs uppercase tracking-wider hover:bg-volt-hover shadow-volt-sm transition-all disabled:opacity-50"
                             >
-                              {loading ? 'SAVING TO D1 SQL...' : editingEventId ? 'UPDATE EVENT' : 'PUBLISH EVENT'}
+                              {loading ? 'SAVING EVENT...' : editingEventId ? 'UPDATE EVENT' : 'PUBLISH EVENT'}
                             </button>
                           </div>
                         </form>
@@ -593,7 +588,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                       </span>
                                     </div>
                                     <h5 className="font-kanit font-black text-sm sm:text-base text-white uppercase">
-                                      {ev.clubName} — <span className="text-volt">{ev.eventTitle}</span>
+                                      {ev.clubName} — <span className="text-volt">{ev.city || ev.eventTitle}</span>
                                     </h5>
                                     {ev.description && (
                                       <p className="text-[11px] font-mono text-slate-400 line-clamp-1 mt-0.5">

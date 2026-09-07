@@ -19,9 +19,9 @@ Management Desk: ${ARTIST_INFO.managementEmail}
 =====================================================
 
 [ RATECARD ]
-- JAKARTA     : 8 JT (Rp 8.000.000)
-- BANDUNG     : 10 JT (Rp 10.000.000)
-- LUAR KOTA   : 15 JT (Rp 15.000.000)
+- JAKARTA     : 9 JT (Rp 9.000.000)
+- BANDUNG     : 11 JT (Rp 11.000.000)
+- LUAR KOTA   : 17 JT (Rp 17.000.000)
 
 * NOTE: UNTUK RATE LUAR KOTA MENYESUAIKAN JARAK TEMPUH
 

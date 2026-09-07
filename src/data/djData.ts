@@ -26,9 +26,9 @@ export const ARTIST_INFO = {
 };
 
 export const RATECARD_INFO = [
-  { city: "JAKARTA", price: "8 JT", detail: "Metropolitan Area Headline" },
-  { city: "BANDUNG", price: "10 JT", detail: "West Java Regional Event" },
-  { city: "LUAR KOTA", price: "15 JT", detail: "National / Outer City Tour" },
+  { city: "JAKARTA", price: "9 JT", detail: "Metropolitan Area Headline" },
+  { city: "BANDUNG", price: "11 JT", detail: "West Java Regional Event" },
+  { city: "LUAR KOTA", price: "17 JT", detail: "National / Outer City Tour" },
 ];
 
 export const RIDERS_INFO = {

@@ -63,6 +63,18 @@ export const EventCalendarSection: React.FC<EventCalendarSectionProps> = ({
   const currentMonthShort = MONTH_SHORT[activeMonth].toLowerCase();
 
   events.forEach((ev) => {
+    // Check if format is DD/MM/YYYY
+    const ddmmyyyyMatch = ev.dateStr ? ev.dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/) : null;
+    if (ddmmyyyyMatch) {
+      const evDay = parseInt(ddmmyyyyMatch[1], 10);
+      const evMonth = parseInt(ddmmyyyyMatch[2], 10) - 1; // 0-indexed month
+      const evYear = parseInt(ddmmyyyyMatch[3], 10);
+      if (evMonth === activeMonth && evYear === activeYear) {
+        eventsByDay[evDay || ev.day] = ev;
+      }
+      return;
+    }
+
     const dateLower = (ev.dateStr || '').toLowerCase();
     const hasAnyMonth =
       MONTH_NAMES.some((m) => dateLower.includes(m.toLowerCase())) ||

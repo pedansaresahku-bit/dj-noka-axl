@@ -133,7 +133,7 @@ export async function onRequestPost(context: any) {
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Event created and saved to D1 SQL database.',
+        message: 'Event created successfully.',
         data: newEvent,
       }),
       { status: 201, headers: { 'Content-Type': 'application/json' } }
