@@ -192,6 +192,8 @@ export const StageCarouselSection: React.FC = () => {
                         <img
                           src={item.image}
                           alt={item.title}
+                          width="410"
+                          height="620"
                           draggable={false}
                           loading="lazy"
                           decoding="async"

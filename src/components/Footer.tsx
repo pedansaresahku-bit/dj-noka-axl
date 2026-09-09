@@ -82,45 +82,50 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
               <a
                 href={ARTIST_INFO.socialLinks.spotify}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="p-2.5 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-slate-300 transition-colors"
                 title="Spotify: NOKA AXL"
+                aria-label="Dengarkan NOKA AXL di Spotify"
               >
                 <Disc className="w-4 h-4" />
               </a>
               <a
                 href={ARTIST_INFO.socialLinks.soundCloud}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="p-2.5 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-slate-300 transition-colors"
                 title="SoundCloud: NK BOUNCE"
+                aria-label="Dengarkan musik NOKA AXL di SoundCloud"
               >
                 <Music2 className="w-4 h-4" />
               </a>
               <a
                 href={ARTIST_INFO.socialLinks.instagram}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="p-2.5 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-slate-300 transition-colors"
                 title="Instagram: @nokaaxlofficial"
+                aria-label="Ikuti Instagram resmi NOKA AXL"
               >
                 <Instagram className="w-4 h-4" />
               </a>
               <a
                 href={ARTIST_INFO.socialLinks.tiktok}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="p-2.5 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-slate-300 transition-colors"
                 title="TikTok: @nokaaxlofficial"
+                aria-label="Ikuti TikTok resmi NOKA AXL"
               >
                 <TikTokIcon className="w-4 h-4" />
               </a>
               <a
                 href={ARTIST_INFO.socialLinks.youtube}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="p-2.5 rounded-full bg-white/5 hover:bg-volt hover:text-black border border-white/10 text-slate-300 transition-colors"
                 title="YouTube: @NokaAxL"
+                aria-label="Tonton video NOKA AXL di YouTube"
               >
                 <Youtube className="w-4 h-4" />
               </a>
@@ -152,13 +157,14 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
               <a
                 href={ARTIST_INFO.socialLinks.instagram}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
+                aria-label="Hubungi Manajemen NOKA AXL via DM Instagram"
                 className="flex items-center gap-2 hover:text-volt transition-colors"
               >
                 <Instagram className="w-3.5 h-3.5 text-pink-400" />
                 <span>Book Via DM IG (@nokaaxlofficial)</span>
               </a>
-              <span className="text-[10px] text-slate-500 mt-2">
+              <span className="text-[10px] text-slate-400 mt-2">
                 Timezone: GMT+7 (Jakarta / Bali)
               </span>
             </div>
@@ -168,7 +174,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
         {/* Bottom Headline, Watermark & Copyright Strip */}
         <div className="pt-10 flex flex-col lg:flex-row items-center justify-between gap-6">
           {/* Copyright & CMS Login */}
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[11px] font-mono text-slate-500 uppercase text-center sm:text-left">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[11px] font-mono text-slate-400 uppercase text-center sm:text-left">
             <span>© 2026 NOKA AXL. ALL RIGHTS RESERVED.</span>
             <span className="hidden sm:inline text-white/20">•</span>
             <button
@@ -182,6 +188,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
           {/* Back To Top Button */}
           <button
             onClick={scrollToTop}
+            aria-label="Kembali ke atas halaman"
             className="flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-volt transition-colors group px-3.5 py-1.5 rounded-full border border-white/10 hover:border-volt/40 bg-white/[0.02]"
           >
             <span className="uppercase tracking-widest text-[10px]">BACK TO TOP</span>
@@ -194,6 +201,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
               href="https://kakodeta.my.id"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Kunjungi situs web pengembang resmi KAKODETA ID"
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] hover:bg-volt/10 border border-white/10 hover:border-volt/50 transition-all duration-300 group shadow-sm"
               title="Official Website Developer & Digital Architect: KAKODETA ID"
             >

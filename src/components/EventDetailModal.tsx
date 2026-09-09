@@ -174,7 +174,7 @@ export const EventDetailModal: React.FC<EventDetailModalProps> = ({
                       <a
                         href={event.googleMapsUrl}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         className="px-4 py-2 rounded-xl bg-white/5 hover:bg-volt hover:text-black border border-white/15 text-slate-200 text-xs font-mono uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shrink-0"
                       >
                         <Navigation className="w-3.5 h-3.5" />

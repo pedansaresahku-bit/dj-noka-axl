@@ -62,7 +62,7 @@ export const DiscographySection: React.FC = () => {
                 <a
                   href={ARTIST_INFO.socialLinks.soundCloud}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="px-5 py-2.5 rounded-full bg-[#ff5500] hover:bg-[#ff6611] text-white font-kanit font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-md active:scale-95"
                 >
                   <span>BUKA SOUNDCLOUD RESMI</span>
@@ -79,6 +79,7 @@ export const DiscographySection: React.FC = () => {
                 scrolling="no"
                 frameBorder="no"
                 allow="autoplay"
+                loading="lazy"
                 src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nk-bounce&color=%23d4ff00&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=false"
                 className="w-full block"
                 title="NOKA AXL Official SoundCloud Playlist & Tracklist"

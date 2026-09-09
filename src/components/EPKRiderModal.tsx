@@ -193,7 +193,7 @@ Email       : ${ARTIST_INFO.managementEmail}
                 <a
                   href={ARTIST_INFO.socialLinks.instagram}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-90 text-white font-kanit font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
                 >
                   <Instagram className="w-4 h-4" />

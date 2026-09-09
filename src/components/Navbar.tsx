@@ -66,6 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
           {/* Brand Logo & Name */}
           <a
             href="#"
+            aria-label="NOKA AXL Homepage"
             onClick={(e) => {
               e.preventDefault();
               scrollToTarget('body', 0);
@@ -76,6 +77,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
               <img
                 src="/assets/icon.png"
                 alt="NOKA AXL Logo"
+                width="36"
+                height="36"
+                loading="eager"
                 className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-300"
               />
             </div>

@@ -12,6 +12,21 @@ interface HeroSectionProps {
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExploreTracks }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroRef = useRef<HTMLElement>(null);
+  const [shouldLoadVideo, setShouldLoadVideo] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isMobile = window.innerWidth < 768;
+      if (!isMobile) {
+        setShouldLoadVideo(true);
+      } else {
+        const timer = setTimeout(() => {
+          setShouldLoadVideo(true);
+        }, 3000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, []);
 
   const { scrollY } = useScroll();
   const yParallax = useTransform(scrollY, [0, 600], [0, 150]);
@@ -24,15 +39,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
     >
       {/* Background Video Reel */}
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <video
-          ref={videoRef}
-          src="/assets/hero.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover opacity-35 scale-105 transform-gpu"
-        />
+        {shouldLoadVideo && (
+          <video
+            ref={videoRef}
+            src="/assets/hero.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            className="w-full h-full object-cover opacity-35 scale-105 transform-gpu"
+          />
+        )}
         {/* Radial Dark Vignette & Scanline Texture */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#08080A] via-[#08080A]/60 to-[#08080A]/80" />
         <div className="absolute inset-0 bg-radial-vignette opacity-80" />
@@ -140,17 +158,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
       >
         <div className="flex items-center gap-4">
           <div className="flex flex-col">
-            <span className="text-[10px] text-slate-500 uppercase">STREAM TRACTION</span>
+            <span className="text-[10px] text-slate-400 uppercase">STREAM TRACTION</span>
             <span className="font-bold text-white tracking-wider">{ARTIST_INFO.totalStreams} PLAYS</span>
           </div>
           <span className="text-white/20">|</span>
           <div className="flex flex-col">
-            <span className="text-[10px] text-slate-500 uppercase">MONTHLY LISTENERS</span>
+            <span className="text-[10px] text-slate-400 uppercase">MONTHLY LISTENERS</span>
             <span className="font-bold text-volt tracking-wider">{ARTIST_INFO.monthlyListeners}</span>
           </div>
           <span className="text-white/20 hidden sm:inline">|</span>
           <div className="hidden sm:flex flex-col">
-            <span className="text-[10px] text-slate-500 uppercase">FESTIVALS</span>
+            <span className="text-[10px] text-slate-400 uppercase">FESTIVALS</span>
             <span className="font-bold text-white tracking-wider">{ARTIST_INFO.festivalAppearances} SHOWS</span>
           </div>
         </div>
@@ -158,6 +176,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
         {/* Scroll Indicator */}
         <a
           href="#about"
+          aria-label="Scroll down to About section"
           className="flex items-center gap-2 text-slate-400 hover:text-volt transition-colors uppercase tracking-widest text-[11px] group"
         >
           <span>SCROLL DOWN</span>
