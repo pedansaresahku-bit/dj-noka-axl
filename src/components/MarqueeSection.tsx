@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { Flame, Sparkles, Radio } from 'lucide-react';
 import { FESTIVAL_BADGES } from '../data/djData';
 
@@ -29,7 +28,7 @@ export const MarqueeSection: React.FC = () => {
   const marqueeRow2 = [...row2Items, ...row2Items];
 
   return (
-    <section className="relative w-full py-16 sm:py-24 bg-[#08080A] overflow-hidden border-y border-white/5">
+    <section className="relative w-full py-16 sm:py-24 bg-[#08080A] overflow-hidden border-y border-white/5 content-visibility-auto">
       {/* Background radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-volt/5 blur-[120px] rounded-full pointer-events-none" />
 
@@ -53,14 +52,9 @@ export const MarqueeSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Marquee Row 1 (Left to Right Movement) */}
-      <div className="relative w-full overflow-hidden flex gap-4 py-2 group">
-        <motion.div
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 32, ease: 'linear', repeat: Infinity }}
-          style={{ willChange: 'transform' }}
-          className="flex gap-4 items-center shrink-0 group-hover:[animation-play-state:paused]"
-        >
+      {/* Marquee Row 1 (Left to Right Movement - GPU Compositor Thread) */}
+      <div className="relative w-full overflow-hidden flex gap-4 py-2">
+        <div className="css-marquee-row-1 flex gap-4 items-center shrink-0">
           {marqueeRow1.map((item, idx) => (
             <div key={`r1-${idx}`} className="shrink-0">
               {item.type === 'image' ? (
@@ -92,7 +86,7 @@ export const MarqueeSection: React.FC = () => {
                     <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">
                       OFFICIAL STAGE
                     </span>
-                    <span className="w-2 h-2 rounded-full bg-volt animate-ping" />
+                    <span className="w-2 h-2 rounded-full bg-volt shadow-[0_0_8px_#FFD000]" />
                   </div>
                   <div>
                     <h4 className="font-kanit font-black text-2xl sm:text-3xl text-white tracking-wider uppercase leading-none">
@@ -109,17 +103,12 @@ export const MarqueeSection: React.FC = () => {
               )}
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
 
-      {/* Marquee Row 2 (Right to Left Movement) */}
-      <div className="relative w-full overflow-hidden flex gap-4 py-2 mt-2 group">
-        <motion.div
-          animate={{ x: ['-50%', '0%'] }}
-          transition={{ duration: 36, ease: 'linear', repeat: Infinity }}
-          style={{ willChange: 'transform' }}
-          className="flex gap-4 items-center shrink-0 group-hover:[animation-play-state:paused]"
-        >
+      {/* Marquee Row 2 (Right to Left Movement - GPU Compositor Thread) */}
+      <div className="relative w-full overflow-hidden flex gap-4 py-2 mt-2">
+        <div className="css-marquee-row-2 flex gap-4 items-center shrink-0">
           {marqueeRow2.map((item, idx) => (
             <div key={`r2-${idx}`} className="shrink-0">
               {item.type === 'image' ? (
@@ -168,7 +157,7 @@ export const MarqueeSection: React.FC = () => {
               )}
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

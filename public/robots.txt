@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nokaaxl.com/sitemap.xml
+Sitemap: https://www.nokaaxl.com/sitemap.xml

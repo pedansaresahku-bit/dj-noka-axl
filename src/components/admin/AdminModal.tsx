@@ -259,7 +259,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div data-lenis-prevent className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
           {/* Modal Backdrop (Locked focus - does not close on accidental outside click when logged in) */}
           <motion.div
             initial={{ opacity: 0 }}

@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { STAGE_GALLERY } from '../data/djData';
 import { StagePhoto } from '../types';
+import { scrollToTarget } from '../utils/smoothScroll';
 
 const SLIDE_DURATION_SECONDS = 5;
 
@@ -60,24 +61,18 @@ export const StageCarouselSection: React.FC = () => {
 
   const handleOpenGallery = () => {
     setViewMode('gallery');
-    const el = document.getElementById('gallery');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToTarget('#gallery', -30);
   };
 
   const handleBackToCarousel = () => {
     setViewMode('carousel');
-    const el = document.getElementById('gallery');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToTarget('#gallery', -30);
   };
 
   return (
     <section
       id="gallery"
-      className="relative w-full py-20 sm:py-28 bg-[#08080A] px-4 sm:px-8 md:px-12 border-b border-white/5 overflow-hidden select-none"
+      className="relative w-full py-20 sm:py-28 bg-[#08080A] px-4 sm:px-8 md:px-12 border-b border-white/5 overflow-hidden select-none content-visibility-auto"
     >
       {/* Ambient background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#E5A83B]/5 blur-[170px] rounded-full pointer-events-none" />

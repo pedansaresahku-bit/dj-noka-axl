@@ -105,3 +105,67 @@
 .animate-eq-5 {
   animation: eqBar 0.9s ease-in-out infinite 0.2s;
 }
+
+/* =========================================================
+   HIGH-PERFORMANCE SCROLL & GPU ACCELERATION UTILITIES
+   ========================================================= */
+
+/* Ensure smooth hardware compositing across browsers */
+html,
+body {
+  overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Content visibility: drastically cuts down offscreen paint and layout calculation */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 700px;
+}
+
+/* GPU hardware layer promotion */
+.gpu-layer {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+/* Pure CSS Marquee loops running 100% on GPU Compositor thread */
+@keyframes marqueeRow1 {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marqueeRow2 {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.css-marquee-row-1 {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marqueeRow1 34s linear infinite;
+}
+
+.css-marquee-row-2 {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marqueeRow2 38s linear infinite;
+}
+
+.css-marquee-row-1:hover,
+.css-marquee-row-2:hover {
+  animation-play-state: paused;
+}

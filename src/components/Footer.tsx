@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowUp, Disc, Music2, Instagram, Youtube, Sparkles, Mail, ExternalLink, Code2 } from 'lucide-react';
 import { ARTIST_INFO } from '../data/djData';
 import { Magnet } from './common/Magnet';
+import { scrollToTarget } from '../utils/smoothScroll';
 
 interface FooterProps {
   onOpenBooking: () => void;
@@ -18,11 +19,11 @@ const TikTokIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" })
 
 export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpenAdmin }) => {
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTarget('body', 0);
   };
 
   return (
-    <footer className="relative w-full bg-[#050507] text-white pt-20 pb-12 px-6 sm:px-12 md:px-16 lg:px-20 border-t border-white/10 overflow-hidden">
+    <footer className="relative w-full bg-[#050507] text-white pt-20 pb-12 px-6 sm:px-12 md:px-16 lg:px-20 border-t border-white/10 overflow-hidden content-visibility-auto">
       {/* Background ambient lighting */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[350px] bg-volt/5 blur-[170px] rounded-full pointer-events-none" />
 

@@ -13,6 +13,7 @@ import { EventDetailModal } from './components/EventDetailModal';
 import { AdminModal } from './components/admin/AdminModal';
 import { CalendarEvent } from './types';
 import { api } from './services/api';
+import { scrollToTarget, pauseScroll, resumeScroll } from './utils/smoothScroll';
 
 export const App: React.FC = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
@@ -20,6 +21,16 @@ export const App: React.FC = () => {
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [eventsList, setEventsList] = useState<CalendarEvent[]>([]);
+
+  const isAnyModalOpen = bookingModalOpen || epkModalOpen || adminModalOpen || selectedEvent !== null;
+
+  useEffect(() => {
+    if (isAnyModalOpen) {
+      pauseScroll();
+    } else {
+      resumeScroll();
+    }
+  }, [isAnyModalOpen]);
 
   const fetchEventsData = async () => {
     const data = await api.fetchEvents();
@@ -60,10 +71,7 @@ export const App: React.FC = () => {
   };
 
   const handleScrollToTracks = () => {
-    const el = document.getElementById('tracks');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToTarget('#tracks', -40);
   };
 
   return (

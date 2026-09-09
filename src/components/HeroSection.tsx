@@ -31,7 +31,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
           loop
           muted
           playsInline
-          className="w-full h-full object-cover opacity-35 scale-105 filter contrast-125"
+          className="w-full h-full object-cover opacity-35 scale-105 transform-gpu"
         />
         {/* Radial Dark Vignette & Scanline Texture */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#08080A] via-[#08080A]/60 to-[#08080A]/80" />
@@ -48,7 +48,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
         className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4 text-xs font-mono text-slate-400"
       >
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-volt animate-ping" />
+          <span className="w-2 h-2 rounded-full bg-volt shadow-[0_0_8px_#FFD000]" />
           <span className="text-white font-bold tracking-widest">{ARTIST_INFO.origin}</span>
         </div>
         <div className="hidden sm:flex items-center gap-4 text-slate-400">
@@ -63,8 +63,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenBooking, onExplo
 
       {/* Center Cinematic Stage Hero */}
       <motion.div
-        style={{ y: yParallax, opacity: opacityFade }}
-        className="relative z-10 my-auto flex flex-col items-center text-center max-w-6xl w-full mx-auto py-6 sm:py-10 px-2"
+        style={{ y: yParallax, opacity: opacityFade, willChange: 'transform, opacity' }}
+        className="relative z-10 my-auto flex flex-col items-center text-center max-w-6xl w-full mx-auto py-6 sm:py-10 px-2 gpu-layer"
       >
         {/* Floating Futuristic Badge */}
         <motion.div

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { scrollToTarget } from '../utils/smoothScroll';
 
 interface NavbarProps {
   onOpenBooking?: () => void;
@@ -13,10 +14,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 40);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -28,23 +36,42 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
     { name: 'EPK & RIDER', href: '#epk', onClick: onOpenEPK },
   ];
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) => {
+    if (link.onClick) {
+      e.preventDefault();
+      link.onClick();
+      return;
+    }
+    if (link.href.startsWith('#')) {
+      e.preventDefault();
+      scrollToTarget(link.href, -50);
+    }
+  };
+
   return (
     <>
       <motion.header
         initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 flex justify-center py-3 sm:py-4 ${scrolled ? 'sm:py-3' : 'sm:py-5'
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 flex justify-center py-3 sm:py-4 gpu-layer ${scrolled ? 'sm:py-3' : 'sm:py-5'
           }`}
       >
         <div
           className={`w-[95%] rounded-full border border-white/10 transition-all duration-300 px-4 sm:px-8 py-2.5 sm:py-3 flex items-center justify-between ${scrolled
-              ? 'bg-[#0E0E14]/90 backdrop-blur-md shadow-[0_10px_35px_rgba(0,0,0,0.85)] border-volt/20'
-              : 'bg-[#08080A]/70 backdrop-blur-md'
+              ? 'bg-[#0E0E14]/95 backdrop-blur-md shadow-[0_10px_35px_rgba(0,0,0,0.85)] border-volt/20'
+              : 'bg-[#08080A]/85 backdrop-blur-sm'
             }`}
         >
           {/* Brand Logo & Name */}
-          <a href="#" className="flex items-center gap-3 group">
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToTarget('body', 0);
+            }}
+            className="flex items-center gap-3 group"
+          >
             <div className="relative w-8 sm:w-9 h-8 sm:h-9 rounded-full overflow-hidden border border-volt/50 p-0.5 bg-black">
               <img
                 src="/assets/icon.png"
@@ -55,7 +82,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
             <div className="flex flex-col">
               <span className="font-kanit font-black text-base sm:text-xl tracking-wider text-white group-hover:text-volt transition-colors flex items-center gap-1.5">
                 NOKA AXL
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-volt animate-ping" />
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-volt shadow-[0_0_8px_#FFD000]" />
               </span>
               <span className="text-[8px] sm:text-[9px] font-mono tracking-widest text-slate-400 uppercase -mt-1 hidden sm:block">
                 DJ // PRODUCER
@@ -69,12 +96,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
               <a
                 key={link.name}
                 href={link.href}
-                onClick={(e) => {
-                  if (link.onClick) {
-                    e.preventDefault();
-                    link.onClick();
-                  }
-                }}
+                onClick={(e) => handleNavClick(e, link)}
                 className="text-sm font-kanit font-bold uppercase tracking-wider text-slate-200 hover:text-volt transition-all duration-200 relative group py-1.5"
               >
                 {link.name}
@@ -113,10 +135,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
                   href={link.href}
                   onClick={(e) => {
                     setMobileMenuOpen(false);
-                    if (link.onClick) {
-                      e.preventDefault();
-                      link.onClick();
-                    }
+                    handleNavClick(e, link);
                   }}
                   className="text-base font-kanit font-bold tracking-wider text-slate-200 hover:text-volt py-2 border-b border-white/5 flex items-center justify-between"
                 >

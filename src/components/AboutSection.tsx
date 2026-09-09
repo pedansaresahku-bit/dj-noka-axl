@@ -10,63 +10,65 @@ interface AboutSectionProps {
   onOpenEPK: () => void;
 }
 
-// Optimized Word/Character Scroll Reveal Component
-const ScrollRevealText: React.FC<{ text: string }> = ({ text }) => {
-  const containerRef = useRef<HTMLParagraphElement>(null);
+// Ultra-smooth, hardware-accelerated scroll reveal
+const MANIFESTO_PHRASES = [
+  "Pelopor sejati skena Breakbeat dan Jungle Dutch tanah air.",
+  "NOKA AXL merevolusi panggung elektronik Indonesia lewat bassline berfrekuensi rendah yang tebal,",
+  "ritme syncopated 138 BPM berenergi murni,",
+  "dan performa panggung legendaris yang mempersatukan ratusan ribu ravers di panggung festival dan clubbing Asia."
+];
+
+const ScrollRevealText: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start 0.88', 'end 0.35'],
+    offset: ['start 0.85', 'end 0.4'],
   });
 
-  const words = text.split(' ');
-
   return (
-    <p
+    <div
       ref={containerRef}
-      className="flex flex-wrap justify-center text-center max-w-4xl font-kanit text-lg sm:text-2xl md:text-3xl lg:text-4xl font-medium leading-relaxed tracking-tight text-slate-100 select-none"
+      className="flex flex-col items-center justify-center text-center max-w-4xl gap-3 sm:gap-4 font-kanit text-lg sm:text-2xl md:text-3xl lg:text-4xl font-medium leading-relaxed tracking-tight select-none px-2"
     >
-      {words.map((word, wordIdx) => {
-        const start = wordIdx / words.length;
-        const end = (wordIdx + 1) / words.length;
+      {MANIFESTO_PHRASES.map((phrase, idx) => {
+        const start = idx / MANIFESTO_PHRASES.length;
+        const end = (idx + 1) / MANIFESTO_PHRASES.length;
         return (
-          <WordSpan
-            key={wordIdx}
-            word={word}
+          <PhraseSpan
+            key={idx}
+            text={phrase}
             progress={scrollYProgress}
             range={[start, end]}
           />
         );
       })}
-    </p>
+    </div>
   );
 };
 
-const WordSpan: React.FC<{
-  word: string;
+const PhraseSpan: React.FC<{
+  text: string;
   progress: any;
   range: [number, number];
-}> = ({ word, progress, range }) => {
-  const opacity = useTransform(progress, range, [0.2, 1]);
-  const color = useTransform(progress, range, ['#475569', '#FFFFFF']);
+}> = ({ text, progress, range }) => {
+  const opacity = useTransform(progress, range, [0.25, 1]);
+  const y = useTransform(progress, range, [10, 0]);
 
   return (
-    <motion.span
-      style={{ opacity, color }}
-      className="inline-block mx-1 sm:mx-1.5 transition-colors duration-75"
+    <motion.p
+      style={{ opacity, y }}
+      className="text-slate-100 will-change-transform"
     >
-      {word}
-    </motion.span>
+      {text}
+    </motion.p>
   );
 };
 
 export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpenEPK }) => {
-  const updatedManifestoText =
-    "Pelopor sejati skena Breakbeat dan Jungle Dutch tanah air. NOKA AXL merevolusi panggung elektronik Indonesia lewat bassline berfrekuensi rendah yang tebal, ritme syncopated 138 BPM berenergi murni, dan performa panggung legendaris yang mempersatukan ratusan ribu ravers di panggung festival dan clubbing Asia.";
-
   return (
     <section
       id="about"
-      className="relative min-h-screen w-full bg-[#08080A] py-24 sm:py-32 px-4 sm:px-8 md:px-12 flex flex-col justify-center items-center overflow-hidden border-b border-white/5"
+      className="relative min-h-screen w-full bg-[#08080A] py-24 sm:py-32 px-4 sm:px-8 md:px-12 flex flex-col justify-center items-center overflow-hidden border-b border-white/5 content-visibility-auto"
     >
       {/* Lightweight GPU-accelerated background lighting */}
       <div
@@ -84,7 +86,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
         x={-40}
         y={0}
         duration={0.8}
-        className="hidden lg:block absolute top-12 left-10 p-5 rounded-2xl bg-[#0E0E14]/85 border border-white/10 backdrop-blur-md max-w-[250px] shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+        className="hidden lg:block absolute top-12 left-10 p-5 rounded-2xl bg-[#0E0E14]/95 border border-white/10 max-w-[250px] shadow-[0_10px_30px_rgba(0,0,0,0.5)] gpu-layer"
       >
         <div className="flex items-center gap-2 text-volt mb-2">
           <Disc3 className="w-4 h-4 animate-spin-slow" />
@@ -104,7 +106,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
         x={40}
         y={0}
         duration={0.8}
-        className="hidden lg:block absolute top-12 right-10 p-5 rounded-2xl bg-[#0E0E14]/85 border border-white/10 backdrop-blur-md max-w-[250px] shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+        className="hidden lg:block absolute top-12 right-10 p-5 rounded-2xl bg-[#0E0E14]/95 border border-white/10 max-w-[250px] shadow-[0_10px_30px_rgba(0,0,0,0.5)] gpu-layer"
       >
         <div className="flex items-center gap-2 text-volt mb-2">
           <Cpu className="w-4 h-4" />
@@ -124,7 +126,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
         x={-40}
         y={0}
         duration={0.8}
-        className="hidden lg:block absolute bottom-12 left-10 p-5 rounded-2xl bg-[#0E0E14]/85 border border-white/10 backdrop-blur-md max-w-[250px] shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+        className="hidden lg:block absolute bottom-12 left-10 p-5 rounded-2xl bg-[#0E0E14]/95 border border-white/10 max-w-[250px] shadow-[0_10px_30px_rgba(0,0,0,0.5)] gpu-layer"
       >
         <div className="flex items-center gap-2 text-cyan-400 mb-2">
           <Activity className="w-4 h-4" />
@@ -144,7 +146,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
         x={40}
         y={0}
         duration={0.8}
-        className="hidden lg:block absolute bottom-12 right-10 p-5 rounded-2xl bg-[#0E0E14]/85 border border-white/10 backdrop-blur-md max-w-[250px] shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+        className="hidden lg:block absolute bottom-12 right-10 p-5 rounded-2xl bg-[#0E0E14]/95 border border-white/10 max-w-[250px] shadow-[0_10px_30px_rgba(0,0,0,0.5)] gpu-layer"
       >
         <div className="flex items-center gap-2 text-volt mb-2">
           <Zap className="w-4 h-4" />
@@ -185,8 +187,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
         </FadeIn>
 
         {/* Character/Word Scroll-Driven Paragraph */}
-        <div className="my-6 sm:my-10 px-2">
-          <ScrollRevealText text={updatedManifestoText} />
+        <div className="my-6 sm:my-10 px-2 w-full">
+          <ScrollRevealText />
         </div>
 
         {/* Action CTAs */}

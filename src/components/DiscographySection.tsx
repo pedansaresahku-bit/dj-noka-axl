@@ -5,7 +5,7 @@ import { FadeIn } from './common/FadeIn';
 
 export const DiscographySection: React.FC = () => {
   return (
-    <section id="tracks" className="relative w-full py-24 sm:py-32 bg-[#0A0A0E] px-4 sm:px-8 md:px-12 border-b border-white/5">
+    <section id="tracks" className="relative w-full py-24 sm:py-32 bg-[#0A0A0E] px-4 sm:px-8 md:px-12 border-b border-white/5 content-visibility-auto">
       {/* Background radial glow */}
       <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-volt/5 blur-[150px] rounded-full pointer-events-none" />
 
