@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Download, FileText, CheckCircle2, AlertCircle, Instagram, Sparkles } from 'lucide-react';
+import { X, Download, FileText, CheckCircle2, AlertCircle, Instagram, Sparkles, MessageCircle } from 'lucide-react';
 import { ARTIST_INFO, RATECARD_INFO, RIDERS_INFO } from '../data/djData';
 
 interface EPKRiderModalProps {
@@ -14,25 +14,28 @@ export const EPKRiderModal: React.FC<EPKRiderModalProps> = ({ isOpen, onClose })
 NOKA AXL — OFFICIAL RATECARD & RIDERS 2026
 Artist: ${ARTIST_INFO.name}
 Title: ${ARTIST_INFO.title}
+Manager: ${ARTIST_INFO.managerName} (${ARTIST_INFO.managerPhone})
+WhatsApp: ${ARTIST_INFO.whatsappFormatted}
 Instagram DM: ${ARTIST_INFO.socialLinks.instagram}
 Management Desk: ${ARTIST_INFO.managementEmail}
 =====================================================
 
-[ RATECARD ]
-- JAKARTA     : 9 JT (Rp 9.000.000)
-- BANDUNG     : 11 JT (Rp 11.000.000)
-- LUAR KOTA   : 17 JT (Rp 17.000.000)
+[ BOOKING & PERFORMANCE SCOPE ]
+- JAKARTA & METROPOLITAN AREA
+- BANDUNG & REGIONAL EVENT
+- LUAR KOTA / NATIONAL & ASIA FESTIVAL TOUR
 
-* NOTE: UNTUK RATE LUAR KOTA MENYESUAIKAN JARAK TEMPUH
+* Rate resmi disesuaikan dengan skala acara, lokasi, dan tanggal penampilan.
+* Hubungi Manager DJ Noka AxL (+62 819-0777-9998 - Dina) untuk penawaran resmi.
 
 -----------------------------------------------------
 [ OFFICIAL RIDERS ]
-- 2 TICKET ( GARUDA / CITYLINK )
+- 2 TICKET ( GARUDA / CITILINK )
 - HOTEL 4 / 5 STARS 1 ROOMS NON SMOKING
 - 1 Bottle Martel / Cordigo
 - 5 Mineral Water
 - Snack & Fruits
-- MEAL ALLOWANCE 2 PACK ( 500 RB )
+- MEAL ALLOWANCE 2 PACK
 - DOWN PAYMENT 20 %
 - FULL PAYMENT H - 1
 
@@ -43,15 +46,17 @@ Management Desk: ${ARTIST_INFO.managementEmail}
 - 2x Heavy-Duty Stereo Booth Monitors (L-Acoustics / d&b)
 
 For booking confirmation & official contract:
-Instagram DM: ${ARTIST_INFO.socialLinks.instagram}
-Email       : ${ARTIST_INFO.managementEmail}
+Manager Contact: +62 819-0777-9998 (Dina)
+WhatsApp Link  : ${ARTIST_INFO.whatsappUrl}
+Instagram DM   : ${ARTIST_INFO.socialLinks.instagram}
+Email          : ${ARTIST_INFO.managementEmail}
 =====================================================`;
 
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'NOKA_AXL_Ratecard_Riders_2026.txt';
+    a.download = 'NOKA_AXL_Riders_2026.txt';
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -102,12 +107,52 @@ Email       : ${ARTIST_INFO.managementEmail}
               </div>
             </div>
 
-            {/* Section 1: RATECARD */}
+            {/* Direct DJ Manager Official Contact Card */}
+            <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#09090D] via-[#101018] to-[#09090D] border border-emerald-500/40 relative overflow-hidden shadow-[0_0_20px_rgba(16,185,129,0.12)]">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                    <MessageCircle className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-widest font-bold">
+                        OFFICIAL DJ MANAGER CONTACT
+                      </span>
+                    </div>
+                    <h4 className="font-kanit font-black text-xl text-white uppercase">
+                      {ARTIST_INFO.managerName} <span className="text-xs font-mono text-slate-400 font-normal">(Manager DJ Noka AxL)</span>
+                    </h4>
+                    <p className="text-xs font-mono text-slate-300">
+                      WhatsApp: <a href={ARTIST_INFO.whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-emerald-400 font-bold hover:underline">{ARTIST_INFO.managerPhone}</a>
+                    </p>
+                  </div>
+                </div>
+
+                <a
+                  href={ARTIST_INFO.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-kanit font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 shrink-0"
+                >
+                  <MessageCircle className="w-4 h-4 text-black" />
+                  <span>HUBUNGI VIA WA</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Section 1: PERFORMANCE SCOPE */}
             <div className="mb-7">
-              <div className="inline-block bg-black border-2 border-white px-3 py-1 mb-3.5 shadow-[3px_3px_0px_rgba(255,255,255,1)]">
-                <h4 className="font-kanit font-black text-base sm:text-lg text-white uppercase tracking-wider">
-                  RATECARD
-                </h4>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3.5">
+                <div className="inline-block bg-black border-2 border-white px-3 py-1 shadow-[3px_3px_0px_rgba(255,255,255,1)]">
+                  <h4 className="font-kanit font-black text-base sm:text-lg text-white uppercase tracking-wider">
+                    JANGKAUAN EVENT & PENAMPILAN
+                  </h4>
+                </div>
+                <span className="text-[11px] font-mono text-volt uppercase font-bold tracking-wider">
+                  RATE : HUBUNGI MANAGEMENT
+                </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -116,15 +161,17 @@ Email       : ${ARTIST_INFO.managementEmail}
                     key={idx}
                     className="relative bg-black/70 border-2 border-white/80 rounded-xl p-4 flex flex-col justify-between hover:border-volt transition-all group shadow-[4px_4px_0px_rgba(255,255,255,0.15)] hover:shadow-[4px_4px_0px_#D4FF00]"
                   >
-                    <span className="font-mono text-xs text-slate-400 font-bold uppercase tracking-widest">
-                      {item.city}
-                    </span>
-                    <div className="mt-2 flex items-baseline gap-1">
-                      <span className="font-kanit font-black text-2xl sm:text-3xl text-volt tracking-tight group-hover:scale-105 transition-transform">
-                        {item.price}
+                    <div>
+                      <span className="font-mono text-xs text-slate-400 font-bold uppercase tracking-widest">
+                        {item.city}
                       </span>
+                      <div className="mt-2 flex items-baseline gap-1">
+                        <span className="font-kanit font-bold text-base sm:text-lg text-volt tracking-tight group-hover:scale-105 transition-transform">
+                          {item.status}
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-[10px] font-mono text-slate-500 mt-1 uppercase">
+                    <span className="text-[10px] font-mono text-slate-400 mt-2 uppercase">
                       {item.detail}
                     </span>
                   </div>
@@ -189,20 +236,30 @@ Email       : ${ARTIST_INFO.managementEmail}
                 Official Document • DJ Noka AxL Management 2026
               </div>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+                <a
+                  href={ARTIST_INFO.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-kanit font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95"
+                >
+                  <MessageCircle className="w-4 h-4 text-black" />
+                  <span>WA DINA</span>
+                </a>
+
                 <a
                   href={ARTIST_INFO.socialLinks.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-90 text-white font-kanit font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-90 text-white font-kanit font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95"
                 >
                   <Instagram className="w-4 h-4" />
-                  <span>BOOK VIA DM IG</span>
+                  <span>DM IG</span>
                 </a>
 
                 <button
                   onClick={handleDownloadPDF}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-volt text-black font-kanit font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-volt-hover transition-all active:scale-95"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-full bg-volt text-black font-kanit font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 hover:bg-volt-hover transition-all active:scale-95"
                 >
                   <Download className="w-4 h-4" />
                   <span>DOWNLOAD TXT</span>

@@ -10,57 +10,68 @@ interface AboutSectionProps {
   onOpenEPK: () => void;
 }
 
-// Ultra-smooth, hardware-accelerated scroll reveal
-const MANIFESTO_PHRASES = [
-  "Pelopor sejati skena Breakbeat dan Jungle Dutch tanah air.",
-  "NOKA AXL merevolusi panggung elektronik Indonesia lewat bassline berfrekuensi rendah yang tebal,",
-  "ritme syncopated 138 BPM berenergi murni,",
-  "dan performa panggung legendaris yang mempersatukan ratusan ribu ravers di panggung festival dan clubbing Asia."
-];
+// Character-by-character scroll illumination animation
+const MANIFESTO_TEXT =
+  "Pelopor sejati skena Breakbeat dan Jungle Dutch tanah air. NOKA AXL merevolusi panggung elektronik Indonesia lewat bassline berfrekuensi rendah yang tebal, ritme syncopated 138 BPM berenergi murni, dan performa panggung legendaris yang mempersatukan ratusan ribu ravers di panggung festival dan clubbing Asia.";
 
-const ScrollRevealText: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+const CharacterScrollReveal: React.FC<{ text: string }> = ({ text }) => {
+  const containerRef = useRef<HTMLParagraphElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start 0.85', 'end 0.4'],
+    offset: ['start 0.85', 'end 0.35'],
   });
 
+  const words = text.split(' ');
+  const totalChars = text.length;
+  let charCounter = 0;
+
   return (
-    <div
+    <p
       ref={containerRef}
-      className="flex flex-col items-center justify-center text-center max-w-4xl gap-3 sm:gap-4 font-kanit text-lg sm:text-2xl md:text-3xl lg:text-4xl font-medium leading-relaxed tracking-tight select-none px-2"
+      className="flex flex-wrap justify-center text-center max-w-4xl font-kanit text-lg sm:text-2xl md:text-3xl lg:text-4xl font-medium leading-relaxed tracking-tight text-slate-100 select-none mx-auto"
     >
-      {MANIFESTO_PHRASES.map((phrase, idx) => {
-        const start = idx / MANIFESTO_PHRASES.length;
-        const end = (idx + 1) / MANIFESTO_PHRASES.length;
+      {words.map((word, wordIndex) => {
+        const wordChars = word.split('');
+        const wordStartIndex = charCounter;
+        charCounter += word.length + 1; // account for space
+
         return (
-          <PhraseSpan
-            key={idx}
-            text={phrase}
-            progress={scrollYProgress}
-            range={[start, end]}
-          />
+          <span key={wordIndex} className="inline-block whitespace-nowrap mr-2 sm:mr-3.5 my-0.5">
+            {wordChars.map((char, charIndex) => {
+              const globalIndex = wordStartIndex + charIndex;
+              const start = globalIndex / totalChars;
+              const end = Math.min(1, start + 1 / totalChars);
+              return (
+                <CharacterSpan
+                  key={charIndex}
+                  char={char}
+                  progress={scrollYProgress}
+                  range={[start, end]}
+                />
+              );
+            })}
+          </span>
         );
       })}
-    </div>
+    </p>
   );
 };
 
-const PhraseSpan: React.FC<{
-  text: string;
+const CharacterSpan: React.FC<{
+  char: string;
   progress: any;
   range: [number, number];
-}> = ({ text, progress, range }) => {
-  const opacity = useTransform(progress, range, [0.25, 1]);
-  const y = useTransform(progress, range, [10, 0]);
+}> = ({ char, progress, range }) => {
+  const opacity = useTransform(progress, range, [0.15, 1]);
+  const color = useTransform(progress, range, ['#475569', '#FFFFFF']);
 
   return (
-    <motion.p
-      style={{ opacity, y }}
-      className="text-slate-100 will-change-transform"
+    <motion.span
+      style={{ opacity, color }}
+      className="inline-block will-change-transform transition-colors duration-75"
     >
-      {text}
-    </motion.p>
+      {char}
+    </motion.span>
   );
 };
 
@@ -188,7 +199,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking, onOpe
 
         {/* Character/Word Scroll-Driven Paragraph */}
         <div className="my-6 sm:my-10 px-2 w-full">
-          <ScrollRevealText />
+          <CharacterScrollReveal text={MANIFESTO_TEXT} />
         </div>
 
         {/* Action CTAs */}

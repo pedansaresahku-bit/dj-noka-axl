@@ -14,6 +14,8 @@ import { AdminModal } from './components/admin/AdminModal';
 import { CalendarEvent } from './types';
 import { api } from './services/api';
 import { scrollToTarget, pauseScroll, resumeScroll } from './utils/smoothScroll';
+import { MessageCircle } from 'lucide-react';
+import { ARTIST_INFO } from './data/djData';
 
 export const App: React.FC = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
@@ -148,6 +150,22 @@ export const App: React.FC = () => {
         onClose={handleCloseAdmin}
         onEventsUpdated={fetchEventsData}
       />
+
+      {/* Floating Quick WhatsApp Contact Button */}
+      <a
+        href={ARTIST_INFO.whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Hubungi Manager DJ Dina via WhatsApp"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-kanit font-bold text-xs uppercase tracking-wider shadow-[0_4px_25px_rgba(16,185,129,0.5)] hover:scale-105 active:scale-95 transition-all group"
+      >
+        <div className="relative">
+          <MessageCircle className="w-5 h-5 text-black" />
+          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-volt rounded-full animate-ping" />
+          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-volt rounded-full" />
+        </div>
+        <span className="hidden sm:inline">HUBUNGI KAMI</span>
+      </a>
     </div>
   );
 };

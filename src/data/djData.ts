@@ -14,7 +14,11 @@ export const ARTIST_INFO = {
   yearsActive: "10+ YEARS",
   bioSummary: "Pelopor utama ('Suhu') skena Breakbeat dan Jungle Dutch di Indonesia. Dikenal dengan bassline tebal berkarakter, groove syncopated berkecepatan 135-142 BPM, dan performa panggung legendaris dari Studio 2 MataLelaki hingga festival megaclub Asia.",
   managementEmail: "booking@nokaaxl.com",
-  whatsappNumber: "+6281234567890",
+  managerName: "Dina",
+  managerPhone: "+62 819-0777-9998",
+  whatsappNumber: "+6281907779998",
+  whatsappFormatted: "+62 819-0777-9998",
+  whatsappUrl: "https://wa.me/6281907779998?text=Halo%20Kak%20Dina,%20saya%20tertarik%20untuk%20booking%20DJ%20NOKA%20AXL.%20Mohon%20info%20ketersediaan%20jadwal%20dan%20rate.",
   socialLinks: {
     spotify: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
     soundCloud: "https://soundcloud.com/nk-bounce",
@@ -26,23 +30,23 @@ export const ARTIST_INFO = {
 };
 
 export const RATECARD_INFO = [
-  { city: "JAKARTA", price: "9 JT", detail: "Metropolitan Area Headline" },
-  { city: "BANDUNG", price: "11 JT", detail: "West Java Regional Event" },
-  { city: "LUAR KOTA", price: "17 JT", detail: "National / Outer City Tour" },
+  { city: "JAKARTA", status: "TERSEDIA", detail: "Metropolitan Area Headline • Hubungi Management" },
+  { city: "BANDUNG", status: "TERSEDIA", detail: "West Java Regional Event • Hubungi Management" },
+  { city: "LUAR KOTA", status: "TERSEDIA", detail: "National & Asia Tour • Hubungi Management" },
 ];
 
 export const RIDERS_INFO = {
   items: [
-    { label: "FLIGHT & TRANSPORT", desc: "2 TICKET ( GARUDA / CITYLINK )", highlight: true },
+    { label: "FLIGHT & TRANSPORT", desc: "2 TICKET ( GARUDA / CITILINK )", highlight: true },
     { label: "ACCOMMODATION", desc: "HOTEL 4 / 5 STARS 1 ROOMS NON SMOKING", highlight: true },
     { label: "BEVERAGES", desc: "1 Bottle Martel / Cordigo", highlight: false },
     { label: "REFRESHMENTS", desc: "5 Mineral Water", highlight: false },
     { label: "SNACKS", desc: "Snack & Fruits", highlight: false },
-    { label: "MEAL ALLOWANCE", desc: "MEAL ALLOWANCE 2 PACK ( 500 RB )", highlight: false },
+    { label: "MEAL ALLOWANCE", desc: "MEAL ALLOWANCE 2 PACK", highlight: false },
     { label: "DOWN PAYMENT", desc: "DOWN PAYMENT 20 %", highlight: true },
     { label: "FINAL PAYMENT", desc: "FULL PAYMENT H - 1", highlight: true },
   ],
-  note: "UNTUK RATE LUAR KOTA MENYESUAIKAN JARAK TEMPUH"
+  note: "UNTUK INFORMASI RATE MENYESUAIKAN DENGAN SKALA ACARA & LOKASI"
 };
 
 export const TRACKS_DATA: Track[] = [

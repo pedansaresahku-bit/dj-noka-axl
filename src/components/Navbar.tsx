@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, MessageCircle } from 'lucide-react';
 import { scrollToTarget } from '../utils/smoothScroll';
+import { ARTIST_INFO } from '../data/djData';
 
 interface NavbarProps {
   onOpenBooking?: () => void;
@@ -94,20 +95,33 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
             </div>
           </a>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-7 xl:gap-9">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link)}
-                className="text-sm font-kanit font-bold uppercase tracking-wider text-slate-200 hover:text-volt transition-all duration-200 relative group py-1.5"
-              >
-                {link.name}
-                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-volt transition-all duration-300 group-hover:w-full" />
-              </a>
-            ))}
-          </nav>
+          {/* Desktop Navigation Links & Contact CTA */}
+          <div className="hidden lg:flex items-center gap-5 xl:gap-7">
+            <nav className="flex items-center gap-6 xl:gap-8">
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link)}
+                  className="text-sm font-kanit font-bold uppercase tracking-wider text-slate-200 hover:text-volt transition-all duration-200 relative group py-1.5"
+                >
+                  {link.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-volt transition-all duration-300 group-hover:w-full" />
+                </a>
+              ))}
+            </nav>
+
+            {/* Direct Contact Button */}
+            <a
+              href={ARTIST_INFO.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-kanit font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(16,185,129,0.35)] hover:scale-105 active:scale-95 shrink-0"
+            >
+              <MessageCircle className="w-3.5 h-3.5 text-black" />
+              <span>HUBUNGI KAMI</span>
+            </a>
+          </div>
 
           {/* Mobile Hamburger Toggle */}
           <div className="lg:hidden flex items-center">
@@ -147,8 +161,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
                   <span className="text-xs font-mono text-slate-500">→</span>
                 </a>
               ))}
+
+              {/* Mobile Direct WhatsApp Button */}
+              <div className="pt-2">
+                <a
+                  href={ARTIST_INFO.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
+                >
+                  <MessageCircle className="w-4 h-4 text-black" />
+                  <span>HUBUNGI KAMI (WA: +62 819-0777-9998)</span>
+                </a>
+              </div>
+
               {onOpenAdmin && (
-                <div className="pt-2">
+                <div className="pt-1">
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);

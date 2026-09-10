@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Instagram, CheckCircle2, Sparkles } from 'lucide-react';
+import { X, Send, Instagram, CheckCircle2, Sparkles, MessageCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { ARTIST_INFO } from '../data/djData';
 import { BookingFormData } from '../types';
@@ -86,13 +86,22 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
                 <p className="text-slate-300 font-mono text-xs sm:text-sm mt-2 max-w-md">
                   Thank you! NOKA AXL Management has received your inquiry. We will review availability and respond within 24 hours.
                 </p>
-                <div className="mt-8 flex gap-4">
+                <div className="mt-8 flex flex-wrap justify-center gap-3">
+                  <a
+                    href={ARTIST_INFO.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center gap-2 transition-all shadow-md active:scale-95"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>CHAT WA DINA</span>
+                  </a>
                   <button
                     onClick={handleInstagramDirect}
                     className="px-6 py-3 rounded-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-90 text-white font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center gap-2 transition-all shadow-md active:scale-95"
                   >
                     <Instagram className="w-4 h-4" />
-                    <span>BOOK VIA DM IG</span>
+                    <span>DM IG</span>
                   </button>
                   <button
                     onClick={() => {
@@ -107,7 +116,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
               </div>
             ) : (
               <div>
-                <div className="mb-6">
+                <div className="mb-4">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-volt/10 border border-volt/30 text-volt text-[10px] font-mono tracking-widest uppercase mb-2">
                     <Sparkles className="w-3 h-3" />
                     <span>OFFICIAL ARTIST BOOKING 2026</span>
@@ -118,6 +127,31 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
                   <p className="text-xs font-mono text-slate-400 mt-1">
                     Direct festival bookings, club headlines, private VIP sets, and international tours.
                   </p>
+                </div>
+
+                {/* Direct Manager Dina WhatsApp Fast-Track Banner */}
+                <div className="mb-5 p-3.5 rounded-2xl bg-gradient-to-r from-[#0E0E14] via-[#121E18] to-[#0E0E14] border border-emerald-500/30 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                      <MessageCircle className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-mono text-emerald-400 uppercase font-bold block">
+                        FAST RESPONSE • DJ MANAGER
+                      </span>
+                      <span className="text-xs font-kanit font-bold text-white">
+                        {ARTIST_INFO.managerName} : <span className="text-emerald-400 font-mono">{ARTIST_INFO.managerPhone}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <a
+                    href={ARTIST_INFO.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-1.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-kanit font-bold text-[11px] uppercase tracking-wider transition-all shrink-0 flex items-center gap-1 shadow-sm active:scale-95"
+                  >
+                    <span>CHAT WA</span>
+                  </a>
                 </div>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -222,19 +256,31 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
                     />
                   </div>
 
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-                    <button
-                      type="button"
-                      onClick={handleInstagramDirect}
-                      className="w-full sm:w-auto px-5 py-3 rounded-full border border-white/15 hover:border-pink-500 text-slate-300 hover:text-white font-kanit font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors"
-                    >
-                      <Instagram className="w-4 h-4 text-pink-400" />
-                      <span>BOOK VIA DM IG</span>
-                    </button>
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <a
+                        href={ARTIST_INFO.whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 sm:flex-initial px-4 py-2.5 rounded-full bg-emerald-500/15 hover:bg-emerald-500 text-emerald-400 hover:text-black border border-emerald-500/30 font-kanit font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-95"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        <span>WA DINA</span>
+                      </a>
+
+                      <button
+                        type="button"
+                        onClick={handleInstagramDirect}
+                        className="flex-1 sm:flex-initial px-4 py-2.5 rounded-full border border-white/15 hover:border-pink-500 text-slate-300 hover:text-white font-kanit font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-1.5 transition-colors"
+                      >
+                        <Instagram className="w-4 h-4 text-pink-400" />
+                        <span>DM IG</span>
+                      </button>
+                    </div>
 
                     <button
                       type="submit"
-                      className="w-full sm:w-auto px-8 py-3 rounded-full bg-volt text-black font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:bg-volt-hover shadow-volt-md active:scale-95 transition-all"
+                      className="w-full sm:w-auto px-7 py-2.5 rounded-full bg-volt text-black font-kanit font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:bg-volt-hover shadow-volt-md active:scale-95 transition-all"
                     >
                       <Send className="w-4 h-4" />
                       <span>SUBMIT INQUIRY</span>

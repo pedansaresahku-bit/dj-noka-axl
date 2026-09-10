@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUp, Disc, Music2, Instagram, Youtube, Sparkles, Mail, ExternalLink, Code2 } from 'lucide-react';
+import { ArrowUp, Disc, Music2, Instagram, Youtube, Sparkles, Mail, ExternalLink, Code2, MessageCircle } from 'lucide-react';
 import { ARTIST_INFO } from '../data/djData';
 import { Magnet } from './common/Magnet';
 import { scrollToTarget } from '../utils/smoothScroll';
@@ -147,11 +147,24 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
           <div>
             <h4 className="text-xs font-mono text-volt uppercase tracking-widest mb-4">DIRECT MANAGEMENT</h4>
             <div className="flex flex-col gap-3 text-xs font-mono text-slate-300">
+              <div>
+                <span className="text-[10px] text-slate-400 uppercase block">DJ MANAGER</span>
+                <span className="font-kanit font-bold text-sm text-white">{ARTIST_INFO.managerName}</span>
+              </div>
+              <a
+                href={ARTIST_INFO.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors font-bold"
+              >
+                <MessageCircle className="w-3.5 h-3.5 shrink-0" />
+                <span>{ARTIST_INFO.managerPhone}</span>
+              </a>
               <a
                 href={`mailto:${ARTIST_INFO.managementEmail}`}
                 className="flex items-center gap-2 hover:text-volt transition-colors"
               >
-                <Mail className="w-3.5 h-3.5 text-volt" />
+                <Mail className="w-3.5 h-3.5 text-volt shrink-0" />
                 <span>{ARTIST_INFO.managementEmail}</span>
               </a>
               <a
@@ -161,12 +174,18 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
                 aria-label="Hubungi Manajemen NOKA AXL via DM Instagram"
                 className="flex items-center gap-2 hover:text-volt transition-colors"
               >
-                <Instagram className="w-3.5 h-3.5 text-pink-400" />
-                <span>Book Via DM IG (@nokaaxlofficial)</span>
+                <Instagram className="w-3.5 h-3.5 text-pink-400 shrink-0" />
+                <span>DM IG: @nokaaxlofficial</span>
               </a>
-              <span className="text-[10px] text-slate-400 mt-2">
-                Timezone: GMT+7 (Jakarta / Bali)
-              </span>
+              <a
+                href={ARTIST_INFO.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-kanit font-bold text-xs uppercase tracking-wider transition-all shadow-md active:scale-95 w-fit"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-black" />
+                <span>HUBUNGI KAMI (WA)</span>
+              </a>
             </div>
           </div>
         </div>
