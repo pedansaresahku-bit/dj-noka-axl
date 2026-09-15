@@ -15,7 +15,11 @@ import { scrollToTarget } from '../utils/smoothScroll';
 
 const SLIDE_DURATION_SECONDS = 5;
 
-export const StageCarouselSection: React.FC = () => {
+interface StageCarouselSectionProps {
+  onOpenFullGallery?: () => void;
+}
+
+export const StageCarouselSection: React.FC<StageCarouselSectionProps> = ({ onOpenFullGallery }) => {
   const [viewMode, setViewMode] = useState<'carousel' | 'gallery'>('carousel');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedPhoto, setSelectedPhoto] = useState<StagePhoto | null>(null);
@@ -60,8 +64,11 @@ export const StageCarouselSection: React.FC = () => {
   };
 
   const handleOpenGallery = () => {
-    setViewMode('gallery');
-    scrollToTarget('#gallery', -30);
+    if (onOpenFullGallery) {
+      onOpenFullGallery();
+    } else {
+      window.location.hash = '#/gallery';
+    }
   };
 
   const handleBackToCarousel = () => {

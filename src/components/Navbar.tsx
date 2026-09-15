@@ -5,12 +5,19 @@ import { scrollToTarget } from '../utils/smoothScroll';
 import { ARTIST_INFO } from '../data/djData';
 
 interface NavbarProps {
+  currentRoute?: 'home' | 'gallery' | 'sounds';
+  onNavigate?: (route: 'home' | 'gallery' | 'sounds') => void;
   onOpenBooking?: () => void;
   onOpenEPK?: () => void;
   onOpenAdmin?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  currentRoute = 'home',
+  onNavigate,
+  onOpenEPK,
+  onOpenAdmin,
+}) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -30,9 +37,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
   }, []);
 
   const navLinks = [
-    { name: 'ABOUT', href: '#about' },
+    { name: 'HOME', href: '#', route: 'home' as const },
+    { name: 'SOUNDS OF ME', href: '#/sounds', route: 'sounds' as const },
+    { name: 'STAGE GALLERY', href: '#/gallery', route: 'gallery' as const },
     { name: 'DISCOGRAPHY', href: '#tracks' },
-    { name: 'STAGE GALLERY', href: '#gallery' },
     { name: 'CALENDAR', href: '#calendar' },
     { name: 'EPK & RIDER', href: '#epk', onClick: onOpenEPK },
   ];
@@ -43,9 +51,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
       link.onClick();
       return;
     }
+    if (link.route) {
+      e.preventDefault();
+      if (onNavigate) {
+        onNavigate(link.route);
+        if (link.route === 'home') {
+          scrollToTarget('body', 0);
+        }
+      }
+      return;
+    }
     if (link.href.startsWith('#')) {
       e.preventDefault();
-      scrollToTarget(link.href, -50);
+      if (currentRoute !== 'home' && onNavigate) {
+        onNavigate('home');
+        setTimeout(() => {
+          scrollToTarget(link.href, -50);
+        }, 120);
+      } else {
+        scrollToTarget(link.href, -50);
+      }
     }
   };
 
@@ -70,6 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
             aria-label="NOKA AXL Homepage"
             onClick={(e) => {
               e.preventDefault();
+              if (onNavigate) onNavigate('home');
               scrollToTarget('body', 0);
             }}
             className="flex items-center gap-3 group"
@@ -98,17 +124,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEPK, onOpenAdmin }) => {
           {/* Desktop Navigation Links & Contact CTA */}
           <div className="hidden lg:flex items-center gap-5 xl:gap-7">
             <nav className="flex items-center gap-6 xl:gap-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link)}
-                  className="text-sm font-kanit font-bold uppercase tracking-wider text-slate-200 hover:text-volt transition-all duration-200 relative group py-1.5"
-                >
-                  {link.name}
-                  <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-volt transition-all duration-300 group-hover:w-full" />
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = link.route && currentRoute === link.route;
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={(e) => handleNavClick(e, link)}
+                    className={`text-sm font-kanit font-bold uppercase tracking-wider transition-all duration-200 relative group py-1.5 ${
+                      isActive ? 'text-volt font-black' : 'text-slate-200 hover:text-volt'
+                    }`}
+                  >
+                    {link.name}
+                    <span
+                      className={`absolute bottom-0 left-0 h-[2px] bg-volt transition-all duration-300 ${
+                        isActive ? 'w-full shadow-[0_0_8px_#FFD000]' : 'w-0 group-hover:w-full'
+                      }`}
+                    />
+                  </a>
+                );
+              })}
             </nav>
 
             {/* Direct Contact Button */}

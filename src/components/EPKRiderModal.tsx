@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, FileText, CheckCircle2, AlertCircle, Instagram, Sparkles, MessageCircle } from 'lucide-react';
-import { ARTIST_INFO, RATECARD_INFO, RIDERS_INFO } from '../data/djData';
+import { ARTIST_INFO, RIDERS_INFO } from '../data/djData';
 
 interface EPKRiderModalProps {
   isOpen: boolean;
@@ -102,7 +102,7 @@ Email          : ${ARTIST_INFO.managementEmail}
                   CONFIDENTIAL PROMOTER DOSSIER 2026
                 </span>
                 <h3 className="font-kanit font-black text-2xl sm:text-3xl text-white uppercase tracking-tight">
-                  RATECARD & RIDERS
+                  EPK & TECHNICAL RIDERS
                 </h3>
               </div>
             </div>
@@ -139,43 +139,6 @@ Email          : ${ARTIST_INFO.managementEmail}
                   <MessageCircle className="w-4 h-4 text-black" />
                   <span>HUBUNGI VIA WA</span>
                 </a>
-              </div>
-            </div>
-
-            {/* Section 1: PERFORMANCE SCOPE */}
-            <div className="mb-7">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3.5">
-                <div className="inline-block bg-black border-2 border-white px-3 py-1 shadow-[3px_3px_0px_rgba(255,255,255,1)]">
-                  <h4 className="font-kanit font-black text-base sm:text-lg text-white uppercase tracking-wider">
-                    JANGKAUAN EVENT & PENAMPILAN
-                  </h4>
-                </div>
-                <span className="text-[11px] font-mono text-volt uppercase font-bold tracking-wider">
-                  RATE : HUBUNGI MANAGEMENT
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {RATECARD_INFO.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="relative bg-black/70 border-2 border-white/80 rounded-xl p-4 flex flex-col justify-between hover:border-volt transition-all group shadow-[4px_4px_0px_rgba(255,255,255,0.15)] hover:shadow-[4px_4px_0px_#D4FF00]"
-                  >
-                    <div>
-                      <span className="font-mono text-xs text-slate-400 font-bold uppercase tracking-widest">
-                        {item.city}
-                      </span>
-                      <div className="mt-2 flex items-baseline gap-1">
-                        <span className="font-kanit font-bold text-base sm:text-lg text-volt tracking-tight group-hover:scale-105 transition-transform">
-                          {item.status}
-                        </span>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-mono text-slate-400 mt-2 uppercase">
-                      {item.detail}
-                    </span>
-                  </div>
-                ))}
               </div>
             </div>
 

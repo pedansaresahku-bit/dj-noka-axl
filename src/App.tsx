@@ -11,6 +11,8 @@ import { BookingModal } from './components/BookingModal';
 import { EPKRiderModal } from './components/EPKRiderModal';
 import { EventDetailModal } from './components/EventDetailModal';
 import { AdminModal } from './components/admin/AdminModal';
+import { GalleryPage } from './gallery/GalleryPage';
+import { SoundsPage } from './sounds/SoundsPage';
 import { CalendarEvent } from './types';
 import { api } from './services/api';
 import { scrollToTarget, pauseScroll, resumeScroll } from './utils/smoothScroll';
@@ -23,6 +25,48 @@ export const App: React.FC = () => {
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [eventsList, setEventsList] = useState<CalendarEvent[]>([]);
+
+  // Routing state ('home' | 'gallery' | 'sounds')
+  const [currentRoute, setCurrentRoute] = useState<'home' | 'gallery' | 'sounds'>(() => {
+    const hash = window.location.hash.toLowerCase();
+    if (hash.includes('gallery')) return 'gallery';
+    if (hash.includes('sounds')) return 'sounds';
+    const path = window.location.pathname.toLowerCase();
+    if (path.includes('gallery')) return 'gallery';
+    if (path.includes('sounds')) return 'sounds';
+    return 'home';
+  });
+
+  // Sync route on hashchange / popstate
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.toLowerCase();
+      if (hash.includes('gallery')) {
+        setCurrentRoute('gallery');
+      } else if (hash.includes('sounds')) {
+        setCurrentRoute('sounds');
+      } else {
+        setCurrentRoute('home');
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handleHashChange);
+    };
+  }, []);
+
+  const navigateTo = (route: 'home' | 'gallery' | 'sounds') => {
+    setCurrentRoute(route);
+    if (route === 'home') {
+      window.history.pushState(null, '', window.location.pathname);
+    } else {
+      window.location.hash = `#/${route}`;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const isAnyModalOpen = bookingModalOpen || epkModalOpen || adminModalOpen || selectedEvent !== null;
 
@@ -80,41 +124,61 @@ export const App: React.FC = () => {
     <div className="relative min-h-screen bg-[#08080A] text-white selection:bg-volt selection:text-black font-kanit overflow-x-clip">
       {/* HUD Floating Navbar */}
       <Navbar
+        currentRoute={currentRoute}
+        onNavigate={navigateTo}
         onOpenBooking={handleOpenBooking}
         onOpenEPK={handleOpenEPK}
         onOpenAdmin={handleOpenAdmin}
       />
 
-      {/* Main Content Sections */}
+      {/* Main Content View Switcher */}
       <main>
-        {/* 1. Kinetic Hero with Video Background */}
-        <HeroSection
-          onOpenBooking={handleOpenBooking}
-          onExploreTracks={handleScrollToTracks}
-        />
+        {currentRoute === 'gallery' ? (
+          <GalleryPage
+            onBackToHome={() => navigateTo('home')}
+            onOpenBooking={handleOpenBooking}
+          />
+        ) : currentRoute === 'sounds' ? (
+          <SoundsPage
+            onBackToHome={() => navigateTo('home')}
+            onNavigateToGallery={() => navigateTo('gallery')}
+            onOpenBooking={handleOpenBooking}
+            onOpenEPK={handleOpenEPK}
+          />
+        ) : (
+          <>
+            {/* 1. Kinetic Hero with Video Background */}
+            <HeroSection
+              onOpenBooking={handleOpenBooking}
+              onExploreTracks={handleScrollToTracks}
+            />
 
-        {/* 2. Dual Stage & Sound Marquee */}
-        <MarqueeSection />
+            {/* 2. Dual Stage & Sound Marquee */}
+            <MarqueeSection />
 
-        {/* 3. Sonic Manifesto & Artist About */}
-        <AboutSection
-          onOpenBooking={handleOpenBooking}
-          onOpenEPK={handleOpenEPK}
-        />
+            {/* 3. Sonic Manifesto & Artist About */}
+            <AboutSection
+              onOpenBooking={handleOpenBooking}
+              onOpenEPK={handleOpenEPK}
+            />
 
-        {/* 4. Discography & Interactive Audio Player */}
-        <DiscographySection />
+            {/* 4. Discography & Interactive Audio Player */}
+            <DiscographySection />
 
-        {/* 5. 3D Perspective Stage Carousel */}
-        <StageCarouselSection />
+            {/* 5. 3D Perspective Stage Carousel with direct link to Full Gallery */}
+            <StageCarouselSection
+              onOpenFullGallery={() => navigateTo('gallery')}
+            />
 
-        {/* 6. Interactive 30-Day Club & Festival Calendar */}
-        <EventCalendarSection
-          events={eventsList}
-          onSelectEvent={handleSelectEvent}
-          onOpenBooking={handleOpenBooking}
-          onOpenAdmin={handleOpenAdmin}
-        />
+            {/* 6. Interactive 30-Day Club & Festival Calendar */}
+            <EventCalendarSection
+              events={eventsList}
+              onSelectEvent={handleSelectEvent}
+              onOpenBooking={handleOpenBooking}
+              onOpenAdmin={handleOpenAdmin}
+            />
+          </>
+        )}
       </main>
 
       {/* 8. High-End Footer */}
@@ -122,6 +186,7 @@ export const App: React.FC = () => {
         onOpenBooking={handleOpenBooking}
         onOpenEPK={handleOpenEPK}
         onOpenAdmin={handleOpenAdmin}
+        onNavigate={navigateTo}
       />
 
       {/* Event Details & Flyer Pop-up Modal */}

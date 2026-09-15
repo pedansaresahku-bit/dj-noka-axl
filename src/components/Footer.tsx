@@ -8,6 +8,7 @@ interface FooterProps {
   onOpenBooking: () => void;
   onOpenEPK: () => void;
   onOpenAdmin?: () => void;
+  onNavigate?: (route: 'home' | 'gallery' | 'sounds') => void;
 }
 
 // Custom TikTok SVG Icon
@@ -17,7 +18,7 @@ const TikTokIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" })
   </svg>
 );
 
-export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpenAdmin }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpenAdmin, onNavigate }) => {
   const scrollToTop = () => {
     scrollToTarget('body', 0);
   };
@@ -136,10 +137,63 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenEPK, onOpen
           <div>
             <h4 className="text-xs font-mono text-volt uppercase tracking-widest mb-4">NAVIGATION</h4>
             <ul className="flex flex-col gap-2.5 text-xs font-kanit font-medium text-slate-400">
-              <li><a href="#about" className="hover:text-volt transition-colors uppercase">About Me</a></li>
-              <li><a href="#tracks" className="hover:text-volt transition-colors uppercase">Discography Releases</a></li>
-              <li><a href="#gallery" className="hover:text-volt transition-colors uppercase">Press Kit Gallery</a></li>
-              <li><a href="#calendar" className="hover:text-volt transition-colors uppercase">Event Calendar</a></li>
+              <li>
+                <button
+                  onClick={() => {
+                    if (onNavigate) onNavigate('home');
+                    scrollToTop();
+                  }}
+                  className="hover:text-volt transition-colors uppercase text-left"
+                >
+                  Beranda
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    if (onNavigate) onNavigate('sounds');
+                    else window.location.hash = '#/sounds';
+                    scrollToTop();
+                  }}
+                  className="hover:text-volt transition-colors uppercase text-left"
+                >
+                  Sounds of Me (Streaming)
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    if (onNavigate) onNavigate('gallery');
+                    else window.location.hash = '#/gallery';
+                    scrollToTop();
+                  }}
+                  className="hover:text-volt transition-colors uppercase text-left"
+                >
+                  Stage Gallery (Press Kit)
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    if (onNavigate) onNavigate('home');
+                    setTimeout(() => scrollToTarget('#tracks', -50), 120);
+                  }}
+                  className="hover:text-volt transition-colors uppercase text-left"
+                >
+                  Discography Releases
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    if (onNavigate) onNavigate('home');
+                    setTimeout(() => scrollToTarget('#calendar', -50), 120);
+                  }}
+                  className="hover:text-volt transition-colors uppercase text-left"
+                >
+                  Event Calendar
+                </button>
+              </li>
             </ul>
           </div>
 
