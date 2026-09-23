@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ExternalLink, Youtube, Play, Tv, Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ExternalLink, Youtube, Play, Tv, Sparkles, RefreshCw, Radio } from 'lucide-react';
 
 interface YouTubeVideo {
   id: string;
@@ -9,48 +9,114 @@ interface YouTubeVideo {
   embedUrl: string;
   thumbnail: string;
   youtubeUrl: string;
+  publishedAt?: string;
 }
 
-export const YouTubeEmbed: React.FC = () => {
-  const featuredVideos: YouTubeVideo[] = [
-    {
-      id: 'video-1',
-      videoId: 'L696eMmxeGQ',
-      title: 'NOKA AXL MIXTAPE - LATEST BREAKBEAT VOL. 1',
-      category: 'LATEST MIXTAPE',
-      embedUrl: 'https://www.youtube-nocookie.com/embed/L696eMmxeGQ',
-      thumbnail: 'https://img.youtube.com/vi/L696eMmxeGQ/hqdefault.jpg',
-      youtubeUrl: 'https://www.youtube.com/watch?v=L696eMmxeGQ',
-    },
-    {
-      id: 'video-2',
-      videoId: 'qg_48RlVhvg',
-      title: 'NOKA AXL MIXTAPE - EXCLUSIVE BREAKBEAT FULL BASS',
-      category: 'EXCLUSIVE MIXTAPE',
-      embedUrl: 'https://www.youtube-nocookie.com/embed/qg_48RlVhvg',
-      thumbnail: 'https://img.youtube.com/vi/qg_48RlVhvg/hqdefault.jpg',
-      youtubeUrl: 'https://www.youtube.com/watch?v=qg_48RlVhvg',
-    },
-    {
-      id: 'video-3',
-      videoId: 'TncMXhnTdGc',
-      title: 'NOKA AXL MIXTAPE - CLUB & FESTIVAL REMIX SET',
-      category: 'FESTIVAL ANTHEM',
-      embedUrl: 'https://www.youtube-nocookie.com/embed/TncMXhnTdGc',
-      thumbnail: 'https://img.youtube.com/vi/TncMXhnTdGc/hqdefault.jpg',
-      youtubeUrl: 'https://www.youtube.com/watch?v=TncMXhnTdGc',
-    },
-  ];
+const DEFAULT_VIDEOS: YouTubeVideo[] = [
+  {
+    id: 'video-1',
+    videoId: 'L696eMmxeGQ',
+    title: 'NOKA AXL MIXTAPE - LATEST BREAKBEAT VOL. 1',
+    category: 'LATEST MIXTAPE',
+    embedUrl: 'https://www.youtube-nocookie.com/embed/L696eMmxeGQ',
+    thumbnail: 'https://img.youtube.com/vi/L696eMmxeGQ/hqdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=L696eMmxeGQ',
+  },
+  {
+    id: 'video-2',
+    videoId: 'qg_48RlVhvg',
+    title: 'NOKA AXL MIXTAPE - EXCLUSIVE BREAKBEAT FULL BASS',
+    category: 'EXCLUSIVE MIXTAPE',
+    embedUrl: 'https://www.youtube-nocookie.com/embed/qg_48RlVhvg',
+    thumbnail: 'https://img.youtube.com/vi/qg_48RlVhvg/hqdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=qg_48RlVhvg',
+  },
+  {
+    id: 'video-3',
+    videoId: 'TncMXhnTdGc',
+    title: 'NOKA AXL MIXTAPE - CLUB & FESTIVAL REMIX SET',
+    category: 'FESTIVAL ANTHEM',
+    embedUrl: 'https://www.youtube-nocookie.com/embed/TncMXhnTdGc',
+    thumbnail: 'https://img.youtube.com/vi/TncMXhnTdGc/hqdefault.jpg',
+    youtubeUrl: 'https://www.youtube.com/watch?v=TncMXhnTdGc',
+  },
+];
 
-  const [activeVideo, setActiveVideo] = useState<YouTubeVideo>(featuredVideos[0]);
+export const YouTubeEmbed: React.FC = () => {
+  const [videos, setVideos] = useState<YouTubeVideo[]>(DEFAULT_VIDEOS);
+  const [activeVideo, setActiveVideo] = useState<YouTubeVideo>(DEFAULT_VIDEOS[0]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLiveSynced, setIsLiveSynced] = useState(false);
+
+  const channelHandle = 'NokaAxLMixtape';
+  const channelUrl = `https://www.youtube.com/@${channelHandle}`;
+
+  const fetchLatestVideos = async () => {
+    setIsLoading(true);
+    try {
+      // 1. Try internal Cloudflare Pages serverless function
+      const res = await fetch(`/api/youtube?handle=${channelHandle}&limit=3`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.videos) && data.videos.length > 0) {
+          setVideos(data.videos);
+          setActiveVideo((prev) => {
+            const match = data.videos.find((v: YouTubeVideo) => v.videoId === prev.videoId);
+            return match || data.videos[0];
+          });
+          setIsLiveSynced(true);
+          setIsLoading(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Could not auto-fetch from /api/youtube, trying fallback:', err);
+    }
+
+    // 2. Client-side fallback to public RSS-to-JSON if local dev server or function not ready
+    try {
+      const rss2jsonUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(
+        `https://www.youtube.com/feeds/videos.xml?channel_id=UC${channelHandle}`
+      )}`;
+      const fallbackRes = await fetch(rss2jsonUrl);
+      if (fallbackRes.ok) {
+        const fallbackData = await fallbackRes.json();
+        if (fallbackData.items && fallbackData.items.length > 0) {
+          const parsed: YouTubeVideo[] = fallbackData.items.slice(0, 3).map((item: any, idx: number) => {
+            const vidId = item.guid?.replace('yt:video:', '') || item.link?.split('v=')[1] || '';
+            return {
+              id: `yt-fb-${vidId || idx}`,
+              videoId: vidId,
+              title: item.title,
+              category: idx === 0 ? 'LATEST UPLOAD' : 'OFFICIAL MIXTAPE',
+              embedUrl: `https://www.youtube-nocookie.com/embed/${vidId}`,
+              thumbnail: `https://img.youtube.com/vi/${vidId}/hqdefault.jpg`,
+              youtubeUrl: item.link || `https://www.youtube.com/watch?v=${vidId}`,
+            };
+          });
+          if (parsed.length > 0) {
+            setVideos(parsed);
+            setActiveVideo(parsed[0]);
+            setIsLiveSynced(true);
+          }
+        }
+      }
+    } catch {
+      // Retain default videos
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLatestVideos();
+  }, []);
 
   const handleSelectVideo = (video: YouTubeVideo) => {
     setActiveVideo(video);
     setIsPlaying(true);
   };
-
-  const channelUrl = 'https://www.youtube.com/@NokaAxLMixtape';
 
   return (
     <div className="w-full bg-[#0E0E14] border border-white/10 rounded-3xl p-5 sm:p-8 shadow-2xl relative overflow-hidden">
@@ -64,7 +130,7 @@ export const YouTubeEmbed: React.FC = () => {
             <Youtube className="w-7 h-7" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <h3 className="font-kanit font-black text-xl sm:text-2xl text-white uppercase tracking-wider">
                 YOUTUBE OFFICIAL MIXTAPE
               </h3>
@@ -74,25 +140,41 @@ export const YouTubeEmbed: React.FC = () => {
                 rel="noopener noreferrer"
                 className="px-2.5 py-0.5 rounded-full bg-[#FF0000]/20 hover:bg-[#FF0000] hover:text-white text-[#FF0000] text-[11px] font-mono font-bold uppercase tracking-wider border border-[#FF0000]/40 transition-colors"
               >
-                @NokaAxLMixtape
+                @{channelHandle}
               </a>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-mono font-bold text-emerald-400">
+                <Radio className="w-2.5 h-2.5 animate-pulse text-emerald-400" />
+                {isLiveSynced ? 'AUTO-SYNC ACTIVE' : 'AUTO-SYNC READY'}
+              </span>
             </div>
-            <p className="text-xs font-mono text-slate-400">
-              Mixtape Resmi • 3 Video Terbaru • Putar Langsung di Sini Tanpa Pindah Halaman
+            <p className="text-xs font-mono text-slate-400 mt-0.5">
+              Sinkronisasi Otomatis Video Terbaru • Putar Langsung di Sini Tanpa Pindah Halaman
             </p>
           </div>
         </div>
 
-        <a
-          href={channelUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FF0000] hover:bg-[#e60000] text-white font-kanit font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(255,0,0,0.4)] active:scale-95 shrink-0"
-        >
-          <Tv className="w-4 h-4" />
-          <span>Buka Channel Mixtape</span>
-          <ExternalLink className="w-3.5 h-3.5 ml-0.5" />
-        </a>
+        <div className="flex items-center gap-2 self-stretch sm:self-auto justify-between sm:justify-end">
+          <button
+            onClick={fetchLatestVideos}
+            disabled={isLoading}
+            title="Refresh Video Terbaru"
+            className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all disabled:opacity-50"
+            aria-label="Refresh Video Terbaru"
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-volt' : ''}`} />
+          </button>
+
+          <a
+            href={channelUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FF0000] hover:bg-[#e60000] text-white font-kanit font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(255,0,0,0.4)] active:scale-95 shrink-0"
+          >
+            <Tv className="w-4 h-4" />
+            <span>Buka Channel</span>
+            <ExternalLink className="w-3.5 h-3.5 ml-0.5" />
+          </a>
+        </div>
       </div>
 
       {/* YouTube Featured Video Showcase */}
@@ -142,7 +224,7 @@ export const YouTubeEmbed: React.FC = () => {
 
               {/* Bottom Info Banner */}
               <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
-                <div>
+                <div className="min-w-0 flex-1">
                   <span className="text-[10px] font-mono text-volt uppercase tracking-wider block mb-1">
                     KLIK PLAY UNTUK MEMUTAR LANGSUNG
                   </span>
@@ -171,15 +253,15 @@ export const YouTubeEmbed: React.FC = () => {
               PILIH LIVE SET (LANGSUNG PUTAR)
             </span>
             <span className="text-[11px] font-mono text-slate-400">
-              3 Video
+              {videos.length} Video
             </span>
           </div>
 
-          {featuredVideos.map((item) => {
-            const isSelected = activeVideo.id === item.id;
+          {videos.map((item) => {
+            const isSelected = activeVideo.videoId === item.videoId;
             return (
               <button
-                key={item.id}
+                key={item.id || item.videoId}
                 onClick={() => handleSelectVideo(item)}
                 className={`w-full text-left p-3 rounded-2xl border transition-all duration-300 flex items-center gap-3 cursor-pointer ${
                   isSelected
@@ -216,7 +298,7 @@ export const YouTubeEmbed: React.FC = () => {
             rel="noopener noreferrer"
             className="w-full mt-2 py-3 rounded-2xl bg-white/5 hover:bg-[#FF0000]/20 border border-white/10 hover:border-[#FF0000]/40 text-slate-200 hover:text-white font-kanit font-bold text-xs uppercase tracking-wider text-center transition-all duration-300 flex items-center justify-center gap-2"
           >
-            <span>Kunjungi Channel Resmi @NokaAxLMixtape</span>
+            <span>Kunjungi Channel Resmi @{channelHandle}</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </div>
@@ -224,3 +306,4 @@ export const YouTubeEmbed: React.FC = () => {
     </div>
   );
 };
+

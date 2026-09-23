@@ -29,20 +29,19 @@ Management Desk: ${ARTIST_INFO.managementEmail}
 * Hubungi Manager DJ Noka AxL (+62 819-0777-9998 - Dina) untuk penawaran resmi.
 
 -----------------------------------------------------
-[ OFFICIAL RIDERS ]
-- 2 TICKET ( GARUDA / CITILINK )
-- HOTEL 4 / 5 STARS 1 ROOMS NON SMOKING
-- 1 Bottle Martel / Cordigo
-- 5 Mineral Water
-- Snack & Fruits
-- MEAL ALLOWANCE 2 PACK
-- DOWN PAYMENT 20 %
-- FULL PAYMENT H - 1
+[ 1. HOSPITALITY & TERMS RIDERS ]
+- Flight & Transport: 2 Ticket (Garuda / Citilink / Batik)
+- Accommodation: Hotel 4 Stars (Non-Smoking)
+- Beverages: 1 Bottle Martell / Codigo
+- Refreshments: 5 Mineral Water
+- Snacks: Mix Platter & Fruits Platter
+- Meal Allowance: 2 Pack
+- Payment Terms: DP 20%, Full Payment H-1
 
 -----------------------------------------------------
-[ TECHNICAL DECK SETUP ]
-- 4x Pioneer CDJ-3000 (Linked via LAN Hub)
-- 1x Pioneer DJM-V10 or DJM-900NXS2 Mixer
+[ 2. TECHNICAL DECK SETUP (EQUIPMENT) ]
+- Pioneer CDJ-2000 / 3000
+- Pioneer DJM-A9
 - 2x Heavy-Duty Stereo Booth Monitors (L-Acoustics / d&b)
 
 For booking confirmation & official contract:
@@ -142,11 +141,11 @@ Email          : ${ARTIST_INFO.managementEmail}
               </div>
             </div>
 
-            {/* Section 2: RIDERS */}
+            {/* Section 1: HOSPITALITY & TERMS RIDERS */}
             <div className="mb-6">
               <div className="inline-block bg-black border-2 border-white px-3 py-1 mb-3.5 shadow-[3px_3px_0px_rgba(255,255,255,1)]">
                 <h4 className="font-kanit font-black text-base sm:text-lg text-white uppercase tracking-wider">
-                  RIDERS
+                  1. HOSPITALITY & TERMS RIDER
                 </h4>
               </div>
 
@@ -178,19 +177,39 @@ Email          : ${ARTIST_INFO.managementEmail}
               </div>
             </div>
 
+            {/* Section 2: TECHNICAL DECK SETUP */}
+            <div className="mb-6">
+              <div className="inline-block bg-black border-2 border-volt px-3 py-1 mb-3.5 shadow-[3px_3px_0px_rgba(212,255,0,0.8)]">
+                <h4 className="font-kanit font-black text-base sm:text-lg text-volt uppercase tracking-wider">
+                  2. TECHNICAL DECK SETUP (EQUIPMENT)
+                </h4>
+              </div>
+
+              <div className="bg-black/50 border border-volt/30 rounded-2xl p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-volt/[0.05] border border-volt/30">
+                  <CheckCircle2 className="w-5 h-5 text-volt shrink-0" />
+                  <div>
+                    <span className="text-[10px] font-mono text-volt uppercase tracking-widest block">DECK PLAYERS</span>
+                    <span className="font-kanit font-bold text-sm sm:text-base text-white uppercase tracking-wide">Pioneer CDJ-2000 / 3000</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-volt/[0.05] border border-volt/30">
+                  <CheckCircle2 className="w-5 h-5 text-volt shrink-0" />
+                  <div>
+                    <span className="text-[10px] font-mono text-volt uppercase tracking-widest block">MIXER CONSOLE</span>
+                    <span className="font-kanit font-bold text-sm sm:text-base text-white uppercase tracking-wide">Pioneer DJM-A9</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Highlighted Note Banner */}
             <div className="mb-6 border-2 border-red-500/80 bg-red-950/30 rounded-xl p-3.5 flex items-center gap-3 shadow-[3px_3px_0px_rgba(239,68,68,0.3)]">
               <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
               <p className="font-mono font-bold text-xs sm:text-sm text-red-200 uppercase tracking-wide">
                 NOTE : {RIDERS_INFO.note}
               </p>
-            </div>
-
-            {/* Technical Deck Hardware Note */}
-            <div className="bg-white/[0.02] border border-white/10 rounded-xl p-3.5 mb-6 text-xs font-mono text-slate-400 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <div>
-                <span className="text-volt font-bold uppercase">STANDARD DECK HARDWARE:</span> 4x Pioneer CDJ-3000 + 1x DJM-V10 / 900NXS2 + 2x Stereo Booth Monitors.
-              </div>
             </div>
 
             {/* Footer Actions */}

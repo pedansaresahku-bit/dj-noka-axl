@@ -37,14 +37,18 @@ export const RATECARD_INFO = [
 
 export const RIDERS_INFO = {
   items: [
-    { label: "FLIGHT & TRANSPORT", desc: "2 TICKET ( GARUDA / CITILINK )", highlight: true },
-    { label: "ACCOMMODATION", desc: "HOTEL 4 / 5 STARS 1 ROOMS NON SMOKING", highlight: true },
-    { label: "BEVERAGES", desc: "1 Bottle Martel / Cordigo", highlight: false },
-    { label: "REFRESHMENTS", desc: "5 Mineral Water", highlight: false },
-    { label: "SNACKS", desc: "Snack & Fruits", highlight: false },
+    { label: "FLIGHT & TRANSPORT", desc: "2 TICKET ( GARUDA / CITILINK / BATIK )", highlight: true },
+    { label: "ACCOMMODATION", desc: "HOTEL 4 STARS ( NON SMOKING )", highlight: true },
+    { label: "BEVERAGES", desc: "1 BOTTLE MARTELL / CODIGO", highlight: false },
+    { label: "REFRESHMENTS", desc: "5 MINERAL WATER", highlight: false },
+    { label: "SNACKS", desc: "MIX PLATTER & FRUITS PLATTER", highlight: false },
     { label: "MEAL ALLOWANCE", desc: "MEAL ALLOWANCE 2 PACK", highlight: false },
     { label: "DOWN PAYMENT", desc: "DOWN PAYMENT 20 %", highlight: true },
     { label: "FINAL PAYMENT", desc: "FULL PAYMENT H - 1", highlight: true },
+  ],
+  technicalItems: [
+    "Pioneer CDJ-2000 / 3000",
+    "Pioneer DJM-A9"
   ],
   note: "UNTUK INFORMASI RATE MENYESUAIKAN DENGAN SKALA ACARA & LOKASI"
 };

@@ -262,6 +262,105 @@ app.patch('/api/bookings/:id', verifyAdminAuth, (req: Request, res: Response) =>
   res.json({ success: true, message: 'Booking status updated' });
 });
 
+// 12. YouTube - Get Latest Videos (Public)
+app.get('/api/youtube', async (req: Request, res: Response) => {
+  const handle = ((req.query.handle as string) || 'NokaAxLMixtape').replace(/^@/, '');
+  const limit = Math.min(parseInt((req.query.limit as string) || '3', 10), 10);
+
+  const fallbackVideos = [
+    {
+      id: 'video-1',
+      videoId: 'L696eMmxeGQ',
+      title: 'NOKA AXL MIXTAPE - LATEST BREAKBEAT VOL. 1',
+      category: 'LATEST MIXTAPE',
+      embedUrl: 'https://www.youtube-nocookie.com/embed/L696eMmxeGQ',
+      thumbnail: 'https://img.youtube.com/vi/L696eMmxeGQ/hqdefault.jpg',
+      youtubeUrl: 'https://www.youtube.com/watch?v=L696eMmxeGQ',
+    },
+    {
+      id: 'video-2',
+      videoId: 'qg_48RlVhvg',
+      title: 'NOKA AXL MIXTAPE - EXCLUSIVE BREAKBEAT FULL BASS',
+      category: 'EXCLUSIVE MIXTAPE',
+      embedUrl: 'https://www.youtube-nocookie.com/embed/qg_48RlVhvg',
+      thumbnail: 'https://img.youtube.com/vi/qg_48RlVhvg/hqdefault.jpg',
+      youtubeUrl: 'https://www.youtube.com/watch?v=qg_48RlVhvg',
+    },
+    {
+      id: 'video-3',
+      videoId: 'TncMXhnTdGc',
+      title: 'NOKA AXL MIXTAPE - CLUB & FESTIVAL REMIX SET',
+      category: 'FESTIVAL ANTHEM',
+      embedUrl: 'https://www.youtube-nocookie.com/embed/TncMXhnTdGc',
+      thumbnail: 'https://img.youtube.com/vi/TncMXhnTdGc/hqdefault.jpg',
+      youtubeUrl: 'https://www.youtube.com/watch?v=TncMXhnTdGc',
+    },
+  ];
+
+  try {
+    const channelUrl = `https://www.youtube.com/@${handle}/videos`;
+    const response = await fetch(channelUrl, {
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept-Language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+      },
+    });
+
+    if (response.ok) {
+      const html = await response.text();
+      let channelId: string | null = null;
+      const channelIdMatch =
+        html.match(/<meta\s+itemprop="channelId"\s+content="([^"]+)"/i) ||
+        html.match(/"channelId":"(UC[a-zA-Z0-9_-]{22})"/i) ||
+        html.match(/<link\s+rel="alternate"\s+type="application\/rss\+xml"\s+title="RSS"\s+href="https:\/\/www\.youtube\.com\/feeds\/videos\.xml\?channel_id=([^"]+)"/i);
+
+      if (channelIdMatch && channelIdMatch[1]) {
+        channelId = channelIdMatch[1];
+      }
+
+      if (channelId) {
+        const rssRes = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`);
+        if (rssRes.ok) {
+          const xml = await rssRes.text();
+          const videos: any[] = [];
+          const entryRegex = /<entry>([\s\S]*?)<\/entry>/g;
+          let match: RegExpExecArray | null;
+          while ((match = entryRegex.exec(xml)) !== null && videos.length < limit) {
+            const entry = match[1];
+            const vidMatch = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
+            const titleMatch = entry.match(/<title>([^<]+)<\/title>/);
+            if (vidMatch && vidMatch[1]) {
+              const videoId = vidMatch[1].trim();
+              const cleanTitle = (titleMatch ? titleMatch[1].trim() : 'NOKA AXL MIXTAPE')
+                .replace(/&amp;/g, '&')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'");
+              videos.push({
+                id: `yt-${videoId}`,
+                videoId,
+                title: cleanTitle,
+                category: videos.length === 0 ? 'LATEST UPLOAD' : 'OFFICIAL MIXTAPE',
+                embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
+                thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+                youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
+              });
+            }
+          }
+          if (videos.length > 0) {
+            res.json({ success: true, source: 'youtube_rss', handle: `@${handle}`, videos });
+            return;
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Local express YouTube fetch error:', e);
+  }
+
+  res.json({ success: true, source: 'fallback_default', handle: `@${handle}`, videos: fallbackVideos.slice(0, limit) });
+});
+
 app.listen(PORT, () => {
   console.log(`⚡ NOKA AXL Backend API Server running on http://localhost:${PORT}`);
 });
