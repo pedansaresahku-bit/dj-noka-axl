@@ -20,12 +20,12 @@ export const ARTIST_INFO = {
   whatsappFormatted: "+62 819-0777-9998",
   whatsappUrl: "https://wa.me/6281907779998?text=Halo%20Kak%20Dina,%20saya%20tertarik%20untuk%20booking%20DJ%20NOKA%20AXL.%20Mohon%20info%20ketersediaan%20jadwal%20dan%20rate.",
   socialLinks: {
-    spotify: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    spotify: "https://open.spotify.com/artist/6fPkynXVm133hWFeoHgQGv",
     soundCloud: "https://soundcloud.com/nk-bounce",
     instagram: "https://www.instagram.com/nokaaxlofficial/",
     tiktok: "https://www.tiktok.com/@nokaaxlofficial",
     youtube: "https://www.youtube.com/@NokaAxL",
-    beatport: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT"
+    beatport: "https://open.spotify.com/artist/6fPkynXVm133hWFeoHgQGv"
   }
 };
 
@@ -64,7 +64,7 @@ export const TRACKS_DATA: Track[] = [
     genre: "Breakbeat Full Bass",
     releaseYear: 2026,
     coverImage: "/assets/image-1.jpeg",
-    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    spotifyUrl: "https://open.spotify.com/artist/6fPkynXVm133hWFeoHgQGv",
     soundCloudUrl: "https://soundcloud.com/nk-bounce",
     youtubeUrl: "https://www.youtube.com/@NokaAxL",
     audioUrl: "/audio/track-1.mp3",
@@ -81,7 +81,7 @@ export const TRACKS_DATA: Track[] = [
     genre: "Jungle Dutch / Breakbeat",
     releaseYear: 2025,
     coverImage: "/assets/image-2.jpeg",
-    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    spotifyUrl: "https://open.spotify.com/artist/6fPkynXVm133hWFeoHgQGv",
     soundCloudUrl: "https://soundcloud.com/nk-bounce",
     youtubeUrl: "https://www.youtube.com/@NokaAxL",
     audioUrl: "/audio/track-2.mp3",
@@ -98,7 +98,7 @@ export const TRACKS_DATA: Track[] = [
     genre: "Breakbeat Full Bass",
     releaseYear: 2025,
     coverImage: "/assets/image-3.jpeg",
-    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    spotifyUrl: "https://open.spotify.com/artist/6fPkynXVm133hWFeoHgQGv",
     soundCloudUrl: "https://soundcloud.com/nk-bounce",
     youtubeUrl: "https://www.youtube.com/@NokaAxL",
     audioUrl: "/audio/track-3.mp3",
@@ -115,7 +115,7 @@ export const TRACKS_DATA: Track[] = [
     genre: "Disco Breakbeat",
     releaseYear: 2024,
     coverImage: "/assets/image-4.jpeg",
-    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    spotifyUrl: "https://open.spotify.com/artist/6fPkynXVm133hWFeoHgQGv",
     soundCloudUrl: "https://soundcloud.com/nk-bounce",
     youtubeUrl: "https://www.youtube.com/@NokaAxL",
     audioUrl: "/audio/track-4.mp3",
@@ -132,7 +132,7 @@ export const TRACKS_DATA: Track[] = [
     genre: "Viral Breakbeat Hybrid",
     releaseYear: 2024,
     coverImage: "/assets/image-5.jpeg",
-    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    spotifyUrl: "https://open.spotify.com/artist/6fPkynXVm133hWFeoHgQGv",
     soundCloudUrl: "https://soundcloud.com/nk-bounce",
     youtubeUrl: "https://www.youtube.com/@NokaAxL",
     audioUrl: "/audio/track-5.mp3",
@@ -149,7 +149,7 @@ export const TRACKS_DATA: Track[] = [
     genre: "Peak Time Breakbeat",
     releaseYear: 2024,
     coverImage: "/assets/image-6.jpeg",
-    spotifyUrl: "https://open.spotify.com/artist/3a4uafjBPCy7JkOa9ikRVT",
+    spotifyUrl: "https://open.spotify.com/artist/6fPkynXVm133hWFeoHgQGv",
     soundCloudUrl: "https://soundcloud.com/nk-bounce",
     youtubeUrl: "https://www.youtube.com/@NokaAxL",
     audioUrl: "/audio/track-6.mp3",

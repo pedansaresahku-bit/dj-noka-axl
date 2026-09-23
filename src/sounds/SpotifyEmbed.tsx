@@ -49,7 +49,7 @@ export const SpotifyEmbed: React.FC = () => {
         <div className="lg:col-span-6 w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black/60 min-h-[352px]">
           <iframe
             style={{ borderRadius: '16px' }}
-            src="https://open.spotify.com/embed/artist/3a4uafjBPCy7JkOa9ikRVT?utm_source=generator&theme=0"
+            src="https://open.spotify.com/embed/artist/6fPkynXVm133hWFeoHgQGv?utm_source=generator&theme=0"
             width="100%"
             height="352"
             frameBorder="0"
